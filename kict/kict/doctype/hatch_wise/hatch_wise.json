@@ -1,0 +1,81 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:vessel",
+ "creation": "2024-04-26 17:39:03.411667",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vessel",
+  "vessel_name",
+  "total_tonnage_mt",
+  "discharge_commenced_date_time",
+  "column_break_mbnl",
+  "remarks",
+  "discharge_completed_date_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "vessel",
+   "fieldtype": "Link",
+   "label": "Vessel",
+   "options": "Vessel",
+   "unique": 1
+  },
+  {
+   "fieldname": "vessel_name",
+   "fieldtype": "Read Only",
+   "label": "Vessel name"
+  },
+  {
+   "fetch_from": "vessel.total_tonnage_mt",
+   "fieldname": "total_tonnage_mt",
+   "fieldtype": "Float",
+   "label": "Total Tonnage (MT)"
+  },
+  {
+   "fieldname": "discharge_commenced_date_time",
+   "fieldtype": "Datetime",
+   "label": "Discharge Commenced Date & Time"
+  },
+  {
+   "fieldname": "column_break_mbnl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "discharge_completed_date_time",
+   "fieldtype": "Datetime",
+   "label": "Discharge Completed Date Time"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-04-26 17:54:34.305824",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Hatch wise",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

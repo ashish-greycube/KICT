@@ -1,0 +1,213 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{vessel_name}.{DD.MM.YYYY}",
+ "creation": "2024-04-26 10:48:42.592087",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vessel_name",
+  "nrt",
+  "grt",
+  "dwt",
+  "imo_no",
+  "loa",
+  "beam",
+  "opa",
+  "last_port",
+  "next_port",
+  "vessel_closure",
+  "vessel_closed_on",
+  "company",
+  "column_break_cipf",
+  "igmjob_number",
+  "igmjob_date",
+  "total_tonnage_mt",
+  "rot_number",
+  "rot_date",
+  "agent_name",
+  "discharge_type",
+  "terminal_code",
+  "type_of_vessel",
+  "costal_foreign_vessle",
+  "flag_country",
+  "bh_bill_to",
+  "section_break_lmdg",
+  "vessel_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "vessel_name",
+   "fieldtype": "Data",
+   "label": "Vessel Name"
+  },
+  {
+   "fieldname": "nrt",
+   "fieldtype": "Int",
+   "label": "NRT"
+  },
+  {
+   "fieldname": "grt",
+   "fieldtype": "Int",
+   "label": "GRT"
+  },
+  {
+   "fieldname": "dwt",
+   "fieldtype": "Int",
+   "label": "DWT"
+  },
+  {
+   "fieldname": "loa",
+   "fieldtype": "Data",
+   "label": " LOA"
+  },
+  {
+   "fieldname": "beam",
+   "fieldtype": "Data",
+   "label": "Beam"
+  },
+  {
+   "fieldname": "opa",
+   "fieldtype": "Data",
+   "label": "OPA"
+  },
+  {
+   "fieldname": "last_port",
+   "fieldtype": "Data",
+   "label": "LAST PORT"
+  },
+  {
+   "fieldname": "next_port",
+   "fieldtype": "Data",
+   "label": "NEXT PORT"
+  },
+  {
+   "default": "0",
+   "fieldname": "vessel_closure",
+   "fieldtype": "Check",
+   "label": "Vessel Closure "
+  },
+  {
+   "fieldname": "vessel_closed_on",
+   "fieldtype": "Datetime",
+   "label": "Vessel Closed On"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "column_break_cipf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "igmjob_number",
+   "fieldtype": "Data",
+   "label": "IGMJOB NUMBER"
+  },
+  {
+   "fieldname": "igmjob_date",
+   "fieldtype": "Date",
+   "label": "IGMJOB DATE"
+  },
+  {
+   "fieldname": "total_tonnage_mt",
+   "fieldtype": "Float",
+   "label": "Total Tonnage (MT)"
+  },
+  {
+   "fieldname": "rot_number",
+   "fieldtype": "Data",
+   "label": "ROT NUMBER"
+  },
+  {
+   "fieldname": "rot_date",
+   "fieldtype": "Date",
+   "label": "ROT Date"
+  },
+  {
+   "fieldname": "agent_name",
+   "fieldtype": "Link",
+   "label": "Agent Name ",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "discharge_type",
+   "fieldtype": "Select",
+   "label": "Discharge Type",
+   "options": "\nFull\nLightrate\nLightening"
+  },
+  {
+   "fieldname": "terminal_code",
+   "fieldtype": "Data",
+   "label": "Terminal Code"
+  },
+  {
+   "fieldname": "type_of_vessel",
+   "fieldtype": "Link",
+   "label": "Type of Vessel",
+   "options": "Vessel Type"
+  },
+  {
+   "fieldname": "bh_bill_to",
+   "fieldtype": "Select",
+   "label": "B/H Bill To ?",
+   "options": "\nAgent\nCustomer"
+  },
+  {
+   "fieldname": "flag_country",
+   "fieldtype": "Link",
+   "label": "Flag / Country",
+   "options": "Country"
+  },
+  {
+   "default": "Foreign",
+   "fieldname": "costal_foreign_vessle",
+   "fieldtype": "Select",
+   "label": "Costal / Foreign Vessle",
+   "options": "\nCostal\nForeign"
+  },
+  {
+   "fieldname": "section_break_lmdg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vessel_details",
+   "fieldtype": "Table",
+   "label": "Vessel Details",
+   "options": "Vessel Details"
+  },
+  {
+   "fieldname": "imo_no",
+   "fieldtype": "Data",
+   "label": "IMO  No"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-04-26 16:30:38.459016",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Vessel",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

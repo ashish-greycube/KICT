@@ -1,0 +1,109 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-04-26 14:44:09.089752",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "customer_name",
+  "bl_no",
+  "bl_date",
+  "bl_order_ref_no",
+  "commodity",
+  "grade",
+  "column_break_ynnp",
+  "moisture_content_at_shipment",
+  "moisture_content_at_discharge_port",
+  "customer_po_no",
+  "tonnage_mt",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer Name",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "bl_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "BL No"
+  },
+  {
+   "fieldname": "bl_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "BL Date"
+  },
+  {
+   "fieldname": "commodity",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Commodity",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "commodity.item_group",
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Grade",
+   "options": "Item Group"
+  },
+  {
+   "fieldname": "tonnage_mt",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Tonnage (MT)"
+  },
+  {
+   "fieldname": "bl_order_ref_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "BL/order Ref No"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "moisture_content_at_shipment",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Moisture Content at Shipment"
+  },
+  {
+   "fieldname": "moisture_content_at_discharge_port",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Moisture Content at Discharge Port"
+  },
+  {
+   "fieldname": "customer_po_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer PO No"
+  },
+  {
+   "fieldname": "column_break_ynnp",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-04-26 15:04:48.036022",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Vessel Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

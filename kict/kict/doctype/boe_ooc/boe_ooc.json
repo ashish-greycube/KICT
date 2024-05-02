@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:vessel",
  "creation": "2024-05-02 10:18:57.414464",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -19,7 +20,8 @@
    "fieldname": "vessel",
    "fieldtype": "Link",
    "label": "Vessel",
-   "options": "Vessel"
+   "options": "Vessel",
+   "unique": 1
   },
   {
    "fieldname": "column_break_vyuy",
@@ -63,10 +65,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-02 11:19:43.898304",
+ "modified": "2024-05-02 14:57:51.170673",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "BOE OOC",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

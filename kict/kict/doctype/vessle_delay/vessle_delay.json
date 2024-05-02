@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:vessel",
  "creation": "2024-04-30 16:28:16.632842",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -14,7 +15,8 @@
    "fieldname": "vessel",
    "fieldtype": "Link",
    "label": "Vessel",
-   "options": "Vessel"
+   "options": "Vessel",
+   "unique": 1
   },
   {
    "fieldname": "column_break_suik",
@@ -29,10 +31,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-30 16:32:03.832326",
+ "modified": "2024-05-02 14:58:36.986427",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessle Delay",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

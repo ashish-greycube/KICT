@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:vessel",
  "creation": "2024-05-02 11:41:38.391462",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -19,7 +20,8 @@
    "fieldname": "vessel",
    "fieldtype": "Link",
    "label": "Vessel",
-   "options": "Vessel"
+   "options": "Vessel",
+   "unique": 1
   },
   {
    "fieldname": "column_break_ozwo",
@@ -63,10 +65,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-02 12:38:45.822946",
+ "modified": "2024-05-02 14:57:31.663421",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Agents DO",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

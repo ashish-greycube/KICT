@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:vessel",
  "creation": "2024-04-30 16:02:55.091105",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -23,7 +24,8 @@
    "fieldname": "vessel",
    "fieldtype": "Link",
    "label": "Vessel",
-   "options": "Vessel"
+   "options": "Vessel",
+   "unique": 1
   },
   {
    "fieldname": "all_fast",
@@ -87,10 +89,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-30 16:26:45.381273",
+ "modified": "2024-05-02 14:58:11.141144",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Equipemnts In and Out",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

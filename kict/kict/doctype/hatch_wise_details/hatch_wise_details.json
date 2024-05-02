@@ -1,0 +1,79 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-04-26 18:03:17.133138",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "hatch",
+  "cargo_grade",
+  "arrival_qty",
+  "discharged_qty",
+  "balance_qty",
+  "column_break_rniy",
+  "commenced_discharge_hatch_wise_time_date",
+  "completed_discharge_hatch_wise_time_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "hatch",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Hatch",
+   "options": "\nH-1\nH-2\nH-3\nH-4\nH-5\nH-6\nH-7\nH-8\nH-9"
+  },
+  {
+   "fieldname": "cargo_grade",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cargo Grade",
+   "options": "Item Group"
+  },
+  {
+   "fieldname": "arrival_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": " Arrival Qty "
+  },
+  {
+   "fieldname": "discharged_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Discharged Qty "
+  },
+  {
+   "fieldname": "balance_qty",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "Balance Qty"
+  },
+  {
+   "fieldname": "commenced_discharge_hatch_wise_time_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Commenced  Discharge Hatch Wise Time & Date"
+  },
+  {
+   "fieldname": "column_break_rniy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "completed_discharge_hatch_wise_time_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Completed  Discharge Hatch Wise Time & Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-04-26 18:15:33.163955",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Hatch wise Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

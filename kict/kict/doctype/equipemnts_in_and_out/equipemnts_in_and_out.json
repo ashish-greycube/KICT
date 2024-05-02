@@ -1,0 +1,112 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-04-30 16:02:55.091105",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vessel",
+  "all_fast",
+  "commodity_code",
+  "opeation_completion_date_time",
+  "column_break_dvlp",
+  "vessel_name",
+  "atb",
+  "total_tonnage_mt",
+  "opeation_start_date_time",
+  "remarks",
+  "section_break_ycbu",
+  "equipemnts_in_and_out_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "vessel",
+   "fieldtype": "Link",
+   "label": "Vessel",
+   "options": "Vessel"
+  },
+  {
+   "fieldname": "all_fast",
+   "fieldtype": "Datetime",
+   "label": "All Fast"
+  },
+  {
+   "fieldname": "commodity_code",
+   "fieldtype": "Link",
+   "label": "Commodity code",
+   "options": "Item"
+  },
+  {
+   "fieldname": "opeation_completion_date_time",
+   "fieldtype": "Datetime",
+   "label": "Opeation Completion Date & Time"
+  },
+  {
+   "fieldname": "column_break_dvlp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vessel.vessel_name",
+   "fieldname": "vessel_name",
+   "fieldtype": "Data",
+   "label": "Vessel Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "atb",
+   "fieldtype": "Data",
+   "label": "ATB"
+  },
+  {
+   "fetch_from": "vessel.total_tonnage_mt",
+   "fieldname": "total_tonnage_mt",
+   "fieldtype": "Float",
+   "label": "Total Tonnage (MT)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "opeation_start_date_time",
+   "fieldtype": "Datetime",
+   "label": "Opeation Start Date & Time"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_ycbu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "equipemnts_in_and_out_details",
+   "fieldtype": "Table",
+   "label": "Equipemnts In and Out Details",
+   "options": "Equipemnts In and Out Details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-04-30 16:26:45.381273",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Equipemnts In and Out",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

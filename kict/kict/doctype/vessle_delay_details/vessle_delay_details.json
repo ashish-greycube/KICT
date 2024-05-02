@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-04-30 16:32:44.553803",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "account_delays",
+  "delay_start_time",
+  "total_hours",
+  "column_break_dzwc",
+  "type_of_delays",
+  "delay_end_time",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "account_delays",
+   "fieldtype": "Link",
+   "label": "Account Delays",
+   "options": "Vessle Delay Account"
+  },
+  {
+   "fieldname": "delay_start_time",
+   "fieldtype": "Datetime",
+   "label": "Delay Start Time"
+  },
+  {
+   "fieldname": "delay_end_time",
+   "fieldtype": "Datetime",
+   "label": "Delay End Time"
+  },
+  {
+   "fieldname": "total_hours",
+   "fieldtype": "Data",
+   "label": "Total Hours"
+  },
+  {
+   "fieldname": "type_of_delays",
+   "fieldtype": "Link",
+   "label": "Type of Delays",
+   "options": "Vessle Delay Type"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "column_break_dzwc",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-04-30 16:39:40.523240",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Vessle Delay Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-04-30 16:16:40.470609",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "hatch_no",
+  "type_of_equipments",
+  "remarks",
+  "column_break_vqtg",
+  "equipment_in_date_time",
+  "equipment_out_date_time",
+  "total_engaged_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "hatch_no",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Hatch No",
+   "options": "\nH1\nH2\nH3\nH4\nH5\nH6\nH7\nH8\nH9"
+  },
+  {
+   "fieldname": "type_of_equipments",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Type of Equipments",
+   "options": "Type of Equipments"
+  },
+  {
+   "fieldname": "equipment_in_date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Equipment In date & Time"
+  },
+  {
+   "fieldname": "equipment_out_date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Equipment Out date & Time"
+  },
+  {
+   "fieldname": "total_engaged_time",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Total Engaged Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_vqtg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "in_standard_filter": 1,
+   "label": "Remarks"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-04-30 16:26:13.937590",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Equipemnts In and Out Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

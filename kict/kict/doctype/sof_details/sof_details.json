@@ -13,11 +13,11 @@
   "pilot_on_board_for_berthing",
   "first_line_ashore",
   "vessel_made_all_fast",
-  "gangway_securedplaced",
+  "gangway_secured_placed",
   "initial_draught_survey_commenced",
   "vessel_opened_hatch_cover",
   "initial_draught_survey_completed",
-  "datetime_bpck",
+  "interim_one_commenced",
   "interim_one_completed",
   "interim_two_commenced",
   "interim_two_completed",
@@ -30,13 +30,13 @@
   "discharge_commenced",
   "discharge_completed",
   "final_draught_survey_commenced",
-  "final_draught_survey_complet\u00e9d",
-  "documentation__completed",
-  "vessel_converted__to_coastal_run",
-  "vessel_given_readiness__for__sailing",
-  "pilot_on_board_for__sailing_shifting",
+  "final_draught_survey_completed",
+  "documentation_completed",
+  "vessel_converted_to_coastal_run",
+  "vessel_given_readiness_for_sailing",
+  "pilot_on_board_for_sailing_shifting",
   "all_line_cast_off",
-  "vessel_sailedpilot_disembarked",
+  "vessel_sailed_pilot_disembarked",
   "dlosl"
  ],
  "fields": [
@@ -89,12 +89,6 @@
    "label": "Vessel Made All Fast"
   },
   {
-   "fieldname": "gangway_securedplaced",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Gangway Secured/Placed"
-  },
-  {
    "fieldname": "initial_draught_survey_commenced",
    "fieldtype": "Datetime",
    "in_list_view": 1,
@@ -111,12 +105,6 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Initial Draught Survey Completed"
-  },
-  {
-   "fieldname": "datetime_bpck",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Interim-1(Commenced)"
   },
   {
    "fieldname": "interim_one_completed",
@@ -161,46 +149,10 @@
    "label": "Final Draught Survey Commenced"
   },
   {
-   "fieldname": "final_draught_survey_complet\u00e9d",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Final Draught Survey Complet\u00e9d"
-  },
-  {
-   "fieldname": "documentation__completed",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Documentation  Completed"
-  },
-  {
-   "fieldname": "vessel_converted__to_coastal_run",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Vessel Converted  to Coastal Run"
-  },
-  {
-   "fieldname": "vessel_given_readiness__for__sailing",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Vessel Given Readiness  for  Sailing "
-  },
-  {
-   "fieldname": "pilot_on_board_for__sailing_shifting",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Pilot on Board for  Sailing /Shifting"
-  },
-  {
    "fieldname": "all_line_cast_off",
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "All Line Cast Off"
-  },
-  {
-   "fieldname": "vessel_sailedpilot_disembarked",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Vessel sailed/Pilot Disembarked"
   },
   {
    "fieldname": "dlosl",
@@ -235,12 +187,60 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Interim-4(Completed)"
+  },
+  {
+   "fieldname": "gangway_secured_placed",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Gangway Secured/Placed"
+  },
+  {
+   "fieldname": "interim_one_commenced",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Interim-1(Commenced)"
+  },
+  {
+   "fieldname": "final_draught_survey_completed",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Final Draught Survey Completed"
+  },
+  {
+   "fieldname": "documentation_completed",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Documentation  Completed"
+  },
+  {
+   "fieldname": "vessel_converted_to_coastal_run",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Vessel Converted  to Coastal Run"
+  },
+  {
+   "fieldname": "vessel_given_readiness_for_sailing",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Vessel Given Readiness  for  Sailing "
+  },
+  {
+   "fieldname": "pilot_on_board_for_sailing_shifting",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Pilot on Board for  Sailing /Shifting"
+  },
+  {
+   "fieldname": "vessel_sailed_pilot_disembarked",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Vessel sailed/Pilot Disembarked"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-04-26 17:32:55.704930",
+ "modified": "2024-04-26 18:20:03.484415",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "SOF Details",

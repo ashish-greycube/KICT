@@ -2,19 +2,20 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "field:vessel",
- "creation": "2024-04-26 17:39:03.411667",
+ "creation": "2024-04-30 13:26:01.479430",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "vessel",
-  "vessel_name",
   "total_tonnage_mt",
   "discharge_commenced_date_time",
-  "column_break_mbnl",
   "remarks",
+  "column_break_unwr",
+  "vessel_name",
+  "balance",
   "discharge_completed_date_time",
-  "section_break_eklz",
-  "hatch_wise_details"
+  "section_break_vmmp",
+  "hourly_operation_details"
  ],
  "fields": [
   {
@@ -25,14 +26,9 @@
    "unique": 1
   },
   {
-   "fieldname": "vessel_name",
-   "fieldtype": "Read Only",
-   "label": "Vessel name"
-  },
-  {
    "fetch_from": "vessel.total_tonnage_mt",
    "fieldname": "total_tonnage_mt",
-   "fieldtype": "Float",
+   "fieldtype": "Read Only",
    "label": "Total Tonnage (MT)"
   },
   {
@@ -41,8 +37,24 @@
    "label": "Discharge Commenced Date & Time"
   },
   {
-   "fieldname": "column_break_mbnl",
+   "fieldname": "column_break_unwr",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vessel.vessel_name",
+   "fieldname": "vessel_name",
+   "fieldtype": "Read Only",
+   "label": "Vessel Name"
+  },
+  {
+   "fieldname": "balance",
+   "fieldtype": "Float",
+   "label": "Balance"
+  },
+  {
+   "fieldname": "discharge_completed_date_time",
+   "fieldtype": "Datetime",
+   "label": "Discharge Completed Date & Time"
   },
   {
    "fieldname": "remarks",
@@ -50,27 +62,22 @@
    "label": "Remarks"
   },
   {
-   "fieldname": "discharge_completed_date_time",
-   "fieldtype": "Datetime",
-   "label": "Discharge Completed Date Time"
-  },
-  {
-   "fieldname": "section_break_eklz",
+   "fieldname": "section_break_vmmp",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "hatch_wise_details",
+   "fieldname": "hourly_operation_details",
    "fieldtype": "Table",
-   "label": "Hatch wise Details",
-   "options": "Hatch wise Details"
+   "label": "Hourly Operation Details",
+   "options": "Hourly Operation Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-26 18:06:37.831006",
+ "modified": "2024-04-30 13:50:22.463306",
  "modified_by": "Administrator",
  "module": "Kict",
- "name": "Hatch wise",
+ "name": "Hourly Operations",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

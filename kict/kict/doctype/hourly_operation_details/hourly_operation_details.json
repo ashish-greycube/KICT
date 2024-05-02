@@ -1,0 +1,135 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-04-30 13:43:59.674730",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "date_time",
+  "hourly_receipt_qty",
+  "period_tonnage_running_total",
+  "day_tonnage",
+  "sul1_1a",
+  "sul1_1b",
+  "sul1_total",
+  "no_of_grab_cycle_sul1a",
+  "no_of_grab_cycle_sul1b",
+  "sul1_total_grab_cycle",
+  "column_break_vduk",
+  "remarks",
+  "sul2_1a",
+  "sul2_1b",
+  "sul2_total",
+  "sul1a_no_of_grab_cycle",
+  "sul1b_no_of_grab_cycle",
+  "sul2_total_grab_cycle"
+ ],
+ "fields": [
+  {
+   "fieldname": "date_time",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date & Time "
+  },
+  {
+   "fieldname": "hourly_receipt_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Hourly Receipt Qty "
+  },
+  {
+   "fieldname": "period_tonnage_running_total",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Period Tonnage (running total)"
+  },
+  {
+   "fieldname": "day_tonnage",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Day Tonnage"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "column_break_vduk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "no_of_grab_cycle_sul1a",
+   "fieldtype": "Float",
+   "label": "No of grab cycle SUL1A"
+  },
+  {
+   "fieldname": "no_of_grab_cycle_sul1b",
+   "fieldtype": "Float",
+   "label": "No of grab cycle SUL1B"
+  },
+  {
+   "fieldname": "sul2_1a",
+   "fieldtype": "Float",
+   "label": "SUL2 1A"
+  },
+  {
+   "fieldname": "sul1_1a",
+   "fieldtype": "Float",
+   "label": "SUL1-1A"
+  },
+  {
+   "fieldname": "sul1_1b",
+   "fieldtype": "Float",
+   "label": "SUL1-1B"
+  },
+  {
+   "fieldname": "sul1_total",
+   "fieldtype": "Float",
+   "label": "SUL1 TOTAL"
+  },
+  {
+   "fieldname": "sul2_1b",
+   "fieldtype": "Float",
+   "label": "SUL2-1B"
+  },
+  {
+   "fieldname": "sul2_total",
+   "fieldtype": "Float",
+   "label": "SUL2 TOTAL"
+  },
+  {
+   "fieldname": "sul1a_no_of_grab_cycle",
+   "fieldtype": "Float",
+   "label": "SUL1A no of grab cycle"
+  },
+  {
+   "fieldname": "sul1b_no_of_grab_cycle",
+   "fieldtype": "Float",
+   "label": "SUL1B no of grab cycle"
+  },
+  {
+   "fieldname": "sul1_total_grab_cycle",
+   "fieldtype": "Float",
+   "label": "SUL1 Total Grab Cycle"
+  },
+  {
+   "fieldname": "sul2_total_grab_cycle",
+   "fieldtype": "Float",
+   "label": "SUL2 Total Grab Cycle"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-04-30 14:57:33.840197",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Hourly Operation Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

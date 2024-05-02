@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-02 10:18:57.414464",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vessel",
+  "importer_name",
+  "flag_country",
+  "column_break_vyuy",
+  "vessel_name",
+  "total_tonnage_mt",
+  "section_break_frei",
+  "boe_ooc_detail"
+ ],
+ "fields": [
+  {
+   "fieldname": "vessel",
+   "fieldtype": "Link",
+   "label": "Vessel",
+   "options": "Vessel"
+  },
+  {
+   "fieldname": "column_break_vyuy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vessel_name",
+   "fieldtype": "Data",
+   "label": "Vessel Name"
+  },
+  {
+   "fieldname": "importer_name",
+   "fieldtype": "Data",
+   "label": "IMPORTER NAME"
+  },
+  {
+   "fetch_from": "vessel.total_tonnage_mt",
+   "fieldname": "total_tonnage_mt",
+   "fieldtype": "Float",
+   "label": "Total Tonnage (MT)",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vessel.flag_country",
+   "fieldname": "flag_country",
+   "fieldtype": "Link",
+   "label": "FLAG/ Country",
+   "options": "Country",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_frei",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "boe_ooc_detail",
+   "fieldtype": "Table",
+   "label": "BOE OOC Detail",
+   "options": "BOE OOC Detail"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-05-02 11:19:43.898304",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "BOE OOC",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

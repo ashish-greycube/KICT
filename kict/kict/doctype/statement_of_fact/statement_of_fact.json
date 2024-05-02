@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{vessel_name}.{DD}{MM}{YYYY}",
+ "autoname": "field:vessel",
  "creation": "2024-04-26 15:44:06.212890",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -30,7 +30,8 @@
    "fieldname": "vessel",
    "fieldtype": "Link",
    "label": "Vessel",
-   "options": "Vessel"
+   "options": "Vessel",
+   "unique": 1
   },
   {
    "fieldname": "column_break_bkwa",
@@ -39,68 +40,80 @@
   {
    "fetch_from": "vessel.vessel_name",
    "fieldname": "vessel_name",
-   "fieldtype": "Read Only",
-   "label": "Vessel name"
+   "fieldtype": "Data",
+   "label": "Vessel name",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.nrt",
    "fieldname": "nrt",
-   "fieldtype": "Read Only",
-   "label": "NRT"
+   "fieldtype": "Int",
+   "label": "NRT",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.grt",
    "fieldname": "grt",
-   "fieldtype": "Read Only",
-   "label": "GRT"
+   "fieldtype": "Int",
+   "label": "GRT",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.dwt",
    "fieldname": "dwt",
-   "fieldtype": "Read Only",
-   "label": "DWT"
+   "fieldtype": "Int",
+   "label": "DWT",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.loa",
    "fieldname": "loa",
-   "fieldtype": "Read Only",
-   "label": " LOA"
+   "fieldtype": "Data",
+   "label": " LOA",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.beam",
    "fieldname": "beam",
-   "fieldtype": "Read Only",
-   "label": "Beam"
+   "fieldtype": "Data",
+   "label": "Beam",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.igmjob_number",
    "fieldname": "igmjob_number",
-   "fieldtype": "Read Only",
-   "label": "IGMJOB NUMBER"
+   "fieldtype": "Data",
+   "label": "IGMJOB NUMBER",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.total_tonnage_mt",
    "fieldname": "total_tonnage_mt",
-   "fieldtype": "Read Only",
-   "label": "Total Tonnage (MT)"
+   "fieldtype": "Float",
+   "label": "Total Tonnage (MT)",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.rot_number",
    "fieldname": "rot_number",
-   "fieldtype": "Read Only",
-   "label": "ROT NUMBER"
+   "fieldtype": "Data",
+   "label": "ROT NUMBER",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.agent_name",
    "fieldname": "agent_name",
-   "fieldtype": "Read Only",
-   "label": "Agent Name "
+   "fieldtype": "Link",
+   "label": "Agent Name ",
+   "options": "Customer",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.opa",
    "fieldname": "opa",
-   "fieldtype": "Read Only",
-   "label": "OPA"
+   "fieldtype": "Data",
+   "label": "OPA",
+   "read_only": 1
   },
   {
    "fieldname": "vessel_moisture",
@@ -120,8 +133,9 @@
   {
    "fetch_from": "vessel.imo_no",
    "fieldname": "imo_no",
-   "fieldtype": "Read Only",
-   "label": "IMO  No"
+   "fieldtype": "Data",
+   "label": "IMO  No",
+   "read_only": 1
   },
   {
    "fetch_from": "vessel.flag_country",
@@ -132,11 +146,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-26 18:20:45.911471",
+ "modified": "2024-05-02 14:42:13.766925",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",
- "naming_rule": "Expression",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

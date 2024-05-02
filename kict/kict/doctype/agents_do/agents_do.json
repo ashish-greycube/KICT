@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-02 11:41:38.391462",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vessel",
+  "importer_name",
+  "agent_name",
+  "column_break_ozwo",
+  "vessel_name",
+  "total_tonnage_mt",
+  "section_break_jtan",
+  "agents_do_detail"
+ ],
+ "fields": [
+  {
+   "fieldname": "vessel",
+   "fieldtype": "Link",
+   "label": "Vessel",
+   "options": "Vessel"
+  },
+  {
+   "fieldname": "column_break_ozwo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "vessel.vessel_name",
+   "fieldname": "vessel_name",
+   "fieldtype": "Data",
+   "label": "Vessel Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "importer_name",
+   "fieldtype": "Data",
+   "label": "IMPORTER NAME"
+  },
+  {
+   "fetch_from": "vessel.total_tonnage_mt",
+   "fieldname": "total_tonnage_mt",
+   "fieldtype": "Float",
+   "label": "Total Tonnage (MT)"
+  },
+  {
+   "fetch_from": "vessel.agent_name",
+   "fieldname": "agent_name",
+   "fieldtype": "Link",
+   "label": "Agent Name",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "section_break_jtan",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "agents_do_detail",
+   "fieldtype": "Table",
+   "label": "Agents DO Detail",
+   "options": "Agents DO Detail"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-05-02 12:38:45.822946",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Agents DO",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

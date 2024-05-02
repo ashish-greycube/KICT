@@ -43,8 +43,9 @@
   {
    "fetch_from": "vessel.vessel_name",
    "fieldname": "vessel_name",
-   "fieldtype": "Read Only",
-   "label": "Vessel Name"
+   "fieldtype": "Data",
+   "label": "Vessel Name",
+   "read_only": 1
   },
   {
    "fieldname": "balance",
@@ -74,7 +75,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-30 13:50:22.463306",
+ "modified": "2024-05-02 14:49:39.766383",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hourly Operations",

@@ -1,0 +1,107 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-02 10:25:45.628956",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "cargo_name",
+  "unloading_qty",
+  "boe_ooc_no",
+  "boe_ooc_date",
+  "inward_entry_date",
+  "boe_ooc_qty",
+  "column_break_szth",
+  "total_assessable_value",
+  "total_duty",
+  "boe_address",
+  "ooc_date",
+  "port_of_loading"
+ ],
+ "fields": [
+  {
+   "fieldname": "cargo_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "CARGO NAME",
+   "options": "Item"
+  },
+  {
+   "fieldname": "unloading_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "UNLOADING QTY"
+  },
+  {
+   "fieldname": "boe_ooc_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "BOE/OOC NO"
+  },
+  {
+   "fieldname": "boe_ooc_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "BOE/OOC DATE"
+  },
+  {
+   "fieldname": "inward_entry_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "INWARD ENTRY DATE"
+  },
+  {
+   "fieldname": "boe_ooc_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "BOE/OOC QTY"
+  },
+  {
+   "fieldname": "total_assessable_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "TOTAL ASSESSABLE VALUE"
+  },
+  {
+   "fieldname": "total_duty",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "TOTAL DUTY"
+  },
+  {
+   "fieldname": "column_break_szth",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "boe_address",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "BOE Address"
+  },
+  {
+   "fieldname": "ooc_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "OOC DATE"
+  },
+  {
+   "fieldname": "port_of_loading",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Port of Loading"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-05-02 11:20:23.939185",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "BOE OOC Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

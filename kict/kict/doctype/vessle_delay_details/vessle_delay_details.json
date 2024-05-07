@@ -17,33 +17,39 @@
   {
    "fieldname": "account_delays",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Account Delays",
    "options": "Vessle Delay Account"
   },
   {
    "fieldname": "delay_start_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Delay Start Time"
   },
   {
    "fieldname": "delay_end_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Delay End Time"
   },
   {
    "fieldname": "total_hours",
-   "fieldtype": "Data",
+   "fieldtype": "Duration",
+   "in_list_view": 1,
    "label": "Total Hours"
   },
   {
    "fieldname": "type_of_delays",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Type of Delays",
    "options": "Vessle Delay Type"
   },
   {
    "fieldname": "remarks",
    "fieldtype": "Small Text",
+   "in_list_view": 1,
    "label": "Remarks"
   },
   {
@@ -54,7 +60,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-04-30 16:39:40.523240",
+ "modified": "2024-05-06 11:39:01.341464",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessle Delay Details",

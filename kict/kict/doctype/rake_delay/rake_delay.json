@@ -1,52 +1,52 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:vessel",
- "creation": "2024-04-30 16:28:16.632842",
+ "autoname": "field:rcn_no",
+ "creation": "2024-05-06 13:48:51.184548",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "vessel",
-  "column_break_suik",
-  "vessel_name",
-  "section_break_cqmk",
-  "vessel_delay_details"
+  "rcn_no",
+  "column_break_cjoe",
+  "fnr_no",
+  "section_break_npvw",
+  "rake_delay_reason"
  ],
  "fields": [
   {
-   "fieldname": "vessel",
+   "fieldname": "rcn_no",
    "fieldtype": "Link",
-   "label": "Vessel",
-   "options": "Vessel",
+   "label": "RCN No",
+   "options": "Railway Receipt",
    "unique": 1
   },
   {
-   "fieldname": "column_break_suik",
+   "fieldname": "column_break_cjoe",
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "vessel.vessel_name",
-   "fieldname": "vessel_name",
+   "fetch_from": "rcn_no.fnr_no",
+   "fieldname": "fnr_no",
    "fieldtype": "Data",
-   "label": "Vessel Name"
+   "label": "FNR No"
   },
   {
-   "fieldname": "section_break_cqmk",
+   "fieldname": "section_break_npvw",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "vessel_delay_details",
+   "fieldname": "rake_delay_reason",
    "fieldtype": "Table",
-   "label": "Vessel delay Details",
-   "options": "Vessle Delay Details"
+   "label": "Rake Delay Reason",
+   "options": "Rake Delay Reason"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-06 11:38:05.686279",
+ "modified": "2024-05-06 14:11:32.434992",
  "modified_by": "Administrator",
  "module": "Kict",
- "name": "Vessle Delay",
+ "name": "Rake Delay",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

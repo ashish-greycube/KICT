@@ -1,0 +1,231 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:rcn_unique_no",
+ "creation": "2024-05-03 17:49:03.456068",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "rcn_unique_no",
+  "fnr_no",
+  "rr_no",
+  "rr_date",
+  "rr_weight",
+  "chargable_weight",
+  "over_weight_qty",
+  "over_weight_normal_rate",
+  "punitive_qty",
+  "freight",
+  "destination_terminal_charges",
+  "rebate_any",
+  "pol1",
+  "pol2",
+  "total_punitive_amount",
+  "fauc",
+  "column_break_vwca",
+  "enhc",
+  "pba",
+  "pcla",
+  "gst",
+  "total_freight",
+  "total_dispatched_qty",
+  "permisible_carrying_capacity",
+  "owing_railway_if_gpwis_no",
+  "misc_charges",
+  "class",
+  "rate",
+  "rr_invoice",
+  "micr_no",
+  "tax_invoice",
+  "railway_receipt_remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "rcn_unique_no",
+   "fieldtype": "Link",
+   "label": "RCN Unique No",
+   "options": "Rake Dispatch",
+   "unique": 1
+  },
+  {
+   "fetch_from": "rcn_unique_no.fnr_no",
+   "fieldname": "fnr_no",
+   "fieldtype": "Data",
+   "label": "FNR NO"
+  },
+  {
+   "fieldname": "rr_no",
+   "fieldtype": "Data",
+   "label": "RR No"
+  },
+  {
+   "fieldname": "rr_date",
+   "fieldtype": "Date",
+   "label": "RR Date"
+  },
+  {
+   "fieldname": "rr_weight",
+   "fieldtype": "Float",
+   "label": "RR Weight"
+  },
+  {
+   "fieldname": "chargable_weight",
+   "fieldtype": "Float",
+   "label": "Chargable Weight"
+  },
+  {
+   "fieldname": "over_weight_qty",
+   "fieldtype": "Float",
+   "label": "Over Weight Qty"
+  },
+  {
+   "fieldname": "column_break_vwca",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "over_weight_normal_rate",
+   "fieldtype": "Float",
+   "label": "Over weight normal rate"
+  },
+  {
+   "fieldname": "punitive_qty",
+   "fieldtype": "Float",
+   "label": "Punitive Qty"
+  },
+  {
+   "fieldname": "freight",
+   "fieldtype": "Float",
+   "label": "Freight"
+  },
+  {
+   "fieldname": "destination_terminal_charges",
+   "fieldtype": "Float",
+   "label": "Destination Terminal Charges"
+  },
+  {
+   "fieldname": "rebate_any",
+   "fieldtype": "Currency",
+   "label": "Rebate Any"
+  },
+  {
+   "fieldname": "pol1",
+   "fieldtype": "Currency",
+   "label": "POL1"
+  },
+  {
+   "fieldname": "pol2",
+   "fieldtype": "Currency",
+   "label": "POL2"
+  },
+  {
+   "fieldname": "total_punitive_amount",
+   "fieldtype": "Currency",
+   "label": "Total Punitive Amount"
+  },
+  {
+   "fieldname": "fauc",
+   "fieldtype": "Currency",
+   "label": "FAUC"
+  },
+  {
+   "fieldname": "enhc",
+   "fieldtype": "Currency",
+   "label": "ENHC"
+  },
+  {
+   "fieldname": "pba",
+   "fieldtype": "Currency",
+   "label": "PBA"
+  },
+  {
+   "fieldname": "pcla",
+   "fieldtype": "Currency",
+   "label": "PCLA"
+  },
+  {
+   "fieldname": "gst",
+   "fieldtype": "Currency",
+   "label": "GST"
+  },
+  {
+   "fieldname": "total_freight",
+   "fieldtype": "Currency",
+   "label": "Total Freight"
+  },
+  {
+   "fieldname": "total_dispatched_qty",
+   "fieldtype": "Float",
+   "label": "Total Dispatched Qty"
+  },
+  {
+   "fieldname": "permisible_carrying_capacity",
+   "fieldtype": "Float",
+   "label": "Permisible Carrying Capacity"
+  },
+  {
+   "fieldname": "owing_railway_if_gpwis_no",
+   "fieldtype": "Data",
+   "label": "Owing Railway (If GPWIS /No)"
+  },
+  {
+   "fieldname": "misc_charges",
+   "fieldtype": "Currency",
+   "label": "Misc Charges"
+  },
+  {
+   "fieldname": "class",
+   "fieldtype": "Data",
+   "label": "Class"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "label": "Rate"
+  },
+  {
+   "fieldname": "rr_invoice",
+   "fieldtype": "Data",
+   "label": "RR invoice"
+  },
+  {
+   "fieldname": "micr_no",
+   "fieldtype": "Data",
+   "label": "MICR No"
+  },
+  {
+   "fieldname": "tax_invoice",
+   "fieldtype": "Data",
+   "label": "Tax invoice"
+  },
+  {
+   "fieldname": "railway_receipt_remark",
+   "fieldtype": "Small Text",
+   "label": "Railway Receipt Remark"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-05-06 13:01:03.587634",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Railway Receipt",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

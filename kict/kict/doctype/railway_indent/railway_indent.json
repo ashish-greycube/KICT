@@ -1,24 +1,90 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:fnr_no",
  "creation": "2024-05-02 14:56:48.812188",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_cdhg"
+  "railyway_indent_no",
+  "customer_name",
+  "e_demand_reference_id",
+  "priority",
+  "commodity",
+  "column_break_mvqt",
+  "demand_datetime",
+  "destination",
+  "fnr_no",
+  "scheme_code",
+  "remark"
  ],
  "fields": [
   {
-   "fieldname": "section_break_cdhg",
-   "fieldtype": "Section Break"
+   "fieldname": "railyway_indent_no",
+   "fieldtype": "Int",
+   "label": "Railyway Indent No"
+  },
+  {
+   "fieldname": "demand_datetime",
+   "fieldtype": "Datetime",
+   "label": "Demand Date/Time"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Link",
+   "label": "Customer Name",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "destination",
+   "fieldtype": "Data",
+   "label": "Destination"
+  },
+  {
+   "fieldname": "e_demand_reference_id",
+   "fieldtype": "Data",
+   "label": "E Demand Reference ID"
+  },
+  {
+   "fieldname": "fnr_no",
+   "fieldtype": "Data",
+   "label": "FNR NO",
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_mvqt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Data",
+   "label": "Priority"
+  },
+  {
+   "fieldname": "commodity",
+   "fieldtype": "Link",
+   "label": "Commodity",
+   "options": "Item"
+  },
+  {
+   "fieldname": "scheme_code",
+   "fieldtype": "Select",
+   "label": "Scheme code",
+   "options": "\nGPWIS\nIR\nPREMIUM"
+  },
+  {
+   "fieldname": "remark",
+   "fieldtype": "Data",
+   "label": "Remark"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-02 14:56:48.812188",
+ "modified": "2024-05-02 17:57:35.698382",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Indent",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

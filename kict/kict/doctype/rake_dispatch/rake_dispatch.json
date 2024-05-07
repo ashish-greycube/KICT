@@ -1,0 +1,117 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{RC}-{DD}{MM}{YYYY}",
+ "creation": "2024-05-02 17:53:21.671175",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "railway_indent",
+  "fnr_no",
+  "e_demand_reference_id",
+  "demand_datetime",
+  "railyway_indent_no",
+  "column_break_vjav",
+  "priority",
+  "commodity",
+  "scheme_code",
+  "rake_no",
+  "section_break_xqur",
+  "rake_prelim_entry"
+ ],
+ "fields": [
+  {
+   "fetch_from": "railway_indent.fnr_no",
+   "fieldname": "fnr_no",
+   "fieldtype": "Data",
+   "label": "FNR NO"
+  },
+  {
+   "fieldname": "railway_indent",
+   "fieldtype": "Link",
+   "label": "Railway Indent",
+   "options": "Railway Indent"
+  },
+  {
+   "fetch_from": "railway_indent.e_demand_reference_id",
+   "fieldname": "e_demand_reference_id",
+   "fieldtype": "Data",
+   "label": "E Demand Reference ID"
+  },
+  {
+   "fetch_from": "railway_indent.demand_datetime",
+   "fieldname": "demand_datetime",
+   "fieldtype": "Datetime",
+   "label": "Demand Date/Time"
+  },
+  {
+   "fetch_from": "railway_indent.railyway_indent_no",
+   "fieldname": "railyway_indent_no",
+   "fieldtype": "Int",
+   "label": "Railyway Indent No"
+  },
+  {
+   "fieldname": "column_break_vjav",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "railway_indent.priority",
+   "fieldname": "priority",
+   "fieldtype": "Data",
+   "label": "Priority"
+  },
+  {
+   "fetch_from": "railway_indent.commodity",
+   "fieldname": "commodity",
+   "fieldtype": "Link",
+   "label": "Commodity",
+   "options": "Item"
+  },
+  {
+   "fieldname": "scheme_code",
+   "fieldtype": "Select",
+   "label": "Scheme code",
+   "options": "\nGPWIS\nIR\nPREMIUM"
+  },
+  {
+   "fieldname": "rake_no",
+   "fieldtype": "Data",
+   "label": "Rake No"
+  },
+  {
+   "fieldname": "section_break_xqur",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "rake_prelim_entry",
+   "fieldtype": "Table",
+   "label": "Rake Prelim Entry",
+   "options": "Rake Prelim Entry"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-05-06 13:03:33.121816",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Rake Dispatch",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,160 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-06 13:06:33.903988",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "dead_freight_qty",
+  "dead_freight_amount",
+  "wagon_mismatch_qty",
+  "wagon_mismatch_amount",
+  "dc_for_terminal",
+  "dc_for_customer",
+  "enhc_for_terminal",
+  "enhc_for_customer",
+  "tac_on_customer",
+  "freight_on_customer_collected_as_fauc",
+  "foreign_material_reject_amount",
+  "column_break_borc",
+  "manual_rake_no",
+  "sto_no",
+  "load_adjustment_station_name",
+  "enroute_detaintion_charges",
+  "load_adjustment_start_time",
+  "load_adjustment_end_time",
+  "moisture_percentage",
+  "misc_amount_in_rpc",
+  "rake_performance_calculations_remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "dead_freight_qty",
+   "fieldtype": "Float",
+   "label": "Dead Freight Qty"
+  },
+  {
+   "fieldname": "dead_freight_amount",
+   "fieldtype": "Currency",
+   "label": "Dead Freight Amount"
+  },
+  {
+   "fieldname": "wagon_mismatch_qty",
+   "fieldtype": "Float",
+   "label": "Wagon Mismatch Qty"
+  },
+  {
+   "fieldname": "wagon_mismatch_amount",
+   "fieldtype": "Currency",
+   "label": "Wagon Mismatch Amount"
+  },
+  {
+   "fieldname": "dc_for_terminal",
+   "fieldtype": "Currency",
+   "label": "DC for Terminal"
+  },
+  {
+   "fieldname": "dc_for_customer",
+   "fieldtype": "Currency",
+   "label": "DC for Customer"
+  },
+  {
+   "fieldname": "enhc_for_terminal",
+   "fieldtype": "Currency",
+   "label": "ENHC for Terminal"
+  },
+  {
+   "fieldname": "enhc_for_customer",
+   "fieldtype": "Currency",
+   "label": "ENHC for Customer"
+  },
+  {
+   "fieldname": "tac_on_customer",
+   "fieldtype": "Currency",
+   "label": "TAC on Customer"
+  },
+  {
+   "fieldname": "column_break_borc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "freight_on_customer_collected_as_fauc",
+   "fieldtype": "Currency",
+   "label": "Freight on customer collected as FAUC"
+  },
+  {
+   "fieldname": "foreign_material_reject_amount",
+   "fieldtype": "Currency",
+   "label": "Foreign material Reject amount"
+  },
+  {
+   "fieldname": "manual_rake_no",
+   "fieldtype": "Data",
+   "label": "Manual Rake no"
+  },
+  {
+   "fieldname": "sto_no",
+   "fieldtype": "Data",
+   "label": "STO NO"
+  },
+  {
+   "fieldname": "load_adjustment_station_name",
+   "fieldtype": "Data",
+   "label": "Load Adjustment Station Name"
+  },
+  {
+   "fieldname": "enroute_detaintion_charges",
+   "fieldtype": "Currency",
+   "label": "Enroute detaintion charges"
+  },
+  {
+   "fieldname": "load_adjustment_start_time",
+   "fieldtype": "Datetime",
+   "label": "Load Adjustment Start Time"
+  },
+  {
+   "fieldname": "load_adjustment_end_time",
+   "fieldtype": "Datetime",
+   "label": "Load Adjustment End Time"
+  },
+  {
+   "fieldname": "moisture_percentage",
+   "fieldtype": "Data",
+   "label": "Moisture %"
+  },
+  {
+   "fieldname": "misc_amount_in_rpc",
+   "fieldtype": "Data",
+   "label": "Misc Amount in RPC"
+  },
+  {
+   "fieldname": "rake_performance_calculations_remark",
+   "fieldtype": "Data",
+   "label": "Rake Performance Calculations Remark"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-05-06 13:23:30.694345",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Rake Performance Calculation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

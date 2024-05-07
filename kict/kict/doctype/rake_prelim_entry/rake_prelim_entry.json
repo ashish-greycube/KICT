@@ -1,0 +1,292 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-02 18:09:25.521656",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "loading_date",
+  "silo",
+  "customer_name",
+  "vcn_no",
+  "vessel_name",
+  "grade",
+  "railway_indent",
+  "indent_no",
+  "demand_datetime",
+  "fnr_no",
+  "placement_time",
+  "cleaning_start",
+  "cleaning_complete",
+  "column_break_zcto",
+  "loading_start",
+  "loading_complete",
+  "release_time",
+  "covering_required",
+  "covering_start",
+  "covering_complete",
+  "wagon_type",
+  "indent_rake_type",
+  "no_of_wagons_placed",
+  "no_of_wagons_loaded",
+  "no_of_wagons_reject",
+  "silo_loading_weight",
+  "column_break_kuys",
+  "no_of_wagon_rejected_due_to_foreign_material",
+  "no_of_wagon_rejected_by_railway",
+  "carriage_arrival",
+  "carriage_complete",
+  "nos_of_box_repair",
+  "loading_type",
+  "drawn_out_time",
+  "plot_no",
+  "incoming_rake_no",
+  "rake_prelim_entry_remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "loading_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Loading date"
+  },
+  {
+   "fieldname": "silo",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Silo",
+   "options": "\nRLS-1\nRLS-2"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer Name",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "vcn_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "VCN NO",
+   "options": "Vessel"
+  },
+  {
+   "fetch_from": "vcn_no.vessel_name",
+   "fieldname": "vessel_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vessel Name"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Grade",
+   "options": "Item Group"
+  },
+  {
+   "fetch_from": "railway_indent.railyway_indent_no",
+   "fieldname": "indent_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Indent No"
+  },
+  {
+   "fieldname": "railway_indent",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Railway Indent",
+   "options": "Railway Indent"
+  },
+  {
+   "fetch_from": "railway_indent.demand_datetime",
+   "fieldname": "demand_datetime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Demand Date/Time"
+  },
+  {
+   "fieldname": "column_break_zcto",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "railway_indent.fnr_no",
+   "fieldname": "fnr_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "FNR NO"
+  },
+  {
+   "fieldname": "placement_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Placement Time"
+  },
+  {
+   "fieldname": "cleaning_start",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Cleaning Start"
+  },
+  {
+   "fieldname": "cleaning_complete",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Cleaning Complete"
+  },
+  {
+   "fieldname": "loading_start",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Loading Start"
+  },
+  {
+   "fieldname": "loading_complete",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Loading Complete"
+  },
+  {
+   "fieldname": "release_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Release Time"
+  },
+  {
+   "fieldname": "covering_required",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Covering Required",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "covering_start",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Covering Start"
+  },
+  {
+   "fieldname": "covering_complete",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Covering Complete"
+  },
+  {
+   "fieldname": "wagon_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Wagon Type",
+   "options": "Wagon Type"
+  },
+  {
+   "fieldname": "indent_rake_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Indent Rake Type",
+   "options": "Indent Rake Type"
+  },
+  {
+   "fieldname": "no_of_wagons_placed",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Wagons Placed"
+  },
+  {
+   "fieldname": "no_of_wagons_loaded",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Wagons Loaded"
+  },
+  {
+   "fieldname": "no_of_wagons_reject",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Wagons Reject"
+  },
+  {
+   "fieldname": "silo_loading_weight",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Silo Loading Weight"
+  },
+  {
+   "fieldname": "no_of_wagon_rejected_by_railway",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Wagon Rejected by Railway"
+  },
+  {
+   "fieldname": "no_of_wagon_rejected_due_to_foreign_material",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Wagon Rejected due to Foreign Material"
+  },
+  {
+   "fieldname": "carriage_arrival",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Carriage Arrival"
+  },
+  {
+   "fieldname": "carriage_complete",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Carriage Complete"
+  },
+  {
+   "fieldname": "nos_of_box_repair",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Nos of Box Repair"
+  },
+  {
+   "fieldname": "loading_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Loading Type",
+   "options": "\nOnline\noffline\nOffline\n5%"
+  },
+  {
+   "fieldname": "column_break_kuys",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "drawn_out_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Drawn out Time"
+  },
+  {
+   "fieldname": "plot_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Plot No"
+  },
+  {
+   "fieldname": "incoming_rake_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Incoming Rake No"
+  },
+  {
+   "fieldname": "rake_prelim_entry_remark",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Rake Prelim Entry Remark"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-05-03 12:58:22.747963",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Rake Prelim Entry",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

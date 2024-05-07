@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-06 14:00:35.429105",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rake_stoppage_reason",
+  "from",
+  "column_break_ijxt",
+  "rake_delay_department",
+  "to",
+  "total"
+ ],
+ "fields": [
+  {
+   "fieldname": "rake_stoppage_reason",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Rake Stoppage Reason",
+   "options": "Rake Stoppage Reason"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "From"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "To"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Duration",
+   "in_list_view": 1,
+   "label": "Total"
+  },
+  {
+   "fieldname": "column_break_ijxt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rake_delay_department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Rake Delay Department",
+   "options": "Rake Delay Department"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-05-06 14:09:13.192184",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Rake Delay Reason",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

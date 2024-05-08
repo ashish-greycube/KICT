@@ -63,7 +63,8 @@
    "fieldname": "bl_order_ref_no",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "BL/order Ref No"
+   "label": "BL/order Ref No",
+   "read_only": 1
   },
   {
    "fieldname": "remarks",
@@ -97,7 +98,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-04-26 15:04:48.036022",
+ "modified": "2024-05-08 17:25:57.093371",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Details",

@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestVessleDelayType(FrappeTestCase):
+class TestVesselDelay(FrappeTestCase):
 	pass

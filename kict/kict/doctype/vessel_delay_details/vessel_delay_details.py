@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class VessleDelay(Document):
+class VesselDelayDetails(Document):
 	pass

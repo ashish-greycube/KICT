@@ -19,7 +19,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Account Delays",
-   "options": "Vessle Delay Account"
+   "options": "Vessel Delay Account"
   },
   {
    "fieldname": "delay_start_time",
@@ -44,7 +44,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Type of Delays",
-   "options": "Vessle Delay Type"
+   "options": "Vessel Delay Type"
   },
   {
    "fieldname": "remarks",
@@ -60,10 +60,10 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-06 11:39:01.341464",
+ "modified": "2024-05-09 10:42:20.913930",
  "modified_by": "Administrator",
  "module": "Kict",
- "name": "Vessle Delay Details",
+ "name": "Vessel Delay Details",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

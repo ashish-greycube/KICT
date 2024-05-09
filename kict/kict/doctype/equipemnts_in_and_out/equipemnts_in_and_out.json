@@ -32,7 +32,8 @@
    "fieldname": "all_fast",
    "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "All Fast"
+   "label": "All Fast",
+   "read_only": 1
   },
   {
    "fieldname": "commodity_code",
@@ -98,7 +99,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-09 10:29:17.819967",
+ "modified": "2024-05-09 11:02:36.726400",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Equipemnts In and Out",

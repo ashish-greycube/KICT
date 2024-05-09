@@ -1,27 +1,27 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:vessle_delay_account",
- "creation": "2024-04-30 16:33:43.192147",
+ "autoname": "field:vessle_delay_type",
+ "creation": "2024-04-30 16:37:00.777823",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "vessle_delay_account"
+  "vessle_delay_type"
  ],
  "fields": [
   {
-   "fieldname": "vessle_delay_account",
+   "fieldname": "vessle_delay_type",
    "fieldtype": "Data",
-   "label": "Vessle Delay Account",
+   "label": "Vessle Delay Type",
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-30 16:34:19.014094",
+ "modified": "2024-04-30 16:37:39.280696",
  "modified_by": "Administrator",
  "module": "Kict",
- "name": "Vessle Delay Account",
+ "name": "Vessel Delay Type",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

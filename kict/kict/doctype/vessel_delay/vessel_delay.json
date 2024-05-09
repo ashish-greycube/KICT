@@ -16,6 +16,7 @@
   {
    "fieldname": "vessel",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Vessel",
    "options": "Vessel",
    "unique": 1
@@ -28,6 +29,7 @@
    "fetch_from": "vessel.vessel_name",
    "fieldname": "vessel_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Vessel Name"
   },
   {
@@ -38,15 +40,15 @@
    "fieldname": "vessel_delay_details",
    "fieldtype": "Table",
    "label": "Vessel delay Details",
-   "options": "Vessle Delay Details"
+   "options": "Vessel Delay Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-06 11:38:05.686279",
+ "modified": "2024-05-09 10:41:35.218761",
  "modified_by": "Administrator",
  "module": "Kict",
- "name": "Vessle Delay",
+ "name": "Vessel Delay",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

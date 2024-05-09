@@ -19,6 +19,7 @@
   {
    "fieldname": "vessel",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Vessel",
    "options": "Vessel",
    "unique": 1
@@ -30,11 +31,13 @@
   {
    "fieldname": "vessel_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Vessel Name"
   },
   {
    "fieldname": "importer_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "IMPORTER NAME",
    "options": "Customer"
   },
@@ -42,6 +45,7 @@
    "fetch_from": "vessel.total_tonnage_mt",
    "fieldname": "total_tonnage_mt",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Total Tonnage (MT)",
    "read_only": 1
   },
@@ -49,6 +53,7 @@
    "fetch_from": "vessel.flag_country",
    "fieldname": "flag_country",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "FLAG/ Country",
    "options": "Country",
    "read_only": 1
@@ -66,7 +71,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-09 10:19:55.859794",
+ "modified": "2024-05-09 10:43:28.195302",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "BOE OOC",

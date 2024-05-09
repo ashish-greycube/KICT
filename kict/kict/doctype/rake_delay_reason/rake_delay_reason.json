@@ -7,10 +7,10 @@
  "engine": "InnoDB",
  "field_order": [
   "rake_stoppage_reason",
-  "from",
+  "from_delay",
   "column_break_ijxt",
   "rake_delay_department",
-  "to",
+  "to_delay",
   "total"
  ],
  "fields": [
@@ -20,18 +20,6 @@
    "in_list_view": 1,
    "label": "Rake Stoppage Reason",
    "options": "Rake Stoppage Reason"
-  },
-  {
-   "fieldname": "from",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "From"
-  },
-  {
-   "fieldname": "to",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "To"
   },
   {
    "fieldname": "total",
@@ -49,12 +37,24 @@
    "in_list_view": 1,
    "label": "Rake Delay Department",
    "options": "Rake Delay Department"
+  },
+  {
+   "fieldname": "from_delay",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "From"
+  },
+  {
+   "fieldname": "to_delay",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "To"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-06 14:09:13.192184",
+ "modified": "2024-05-09 13:48:05.268424",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Delay Reason",

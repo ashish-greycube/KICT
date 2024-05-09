@@ -29,10 +29,12 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "vessel.vessel_name",
    "fieldname": "vessel_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Vessel Name"
+   "label": "Vessel Name",
+   "read_only": 1
   },
   {
    "fieldname": "importer_name",
@@ -71,7 +73,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-09 10:43:28.195302",
+ "modified": "2024-05-09 13:51:37.909156",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "BOE OOC",

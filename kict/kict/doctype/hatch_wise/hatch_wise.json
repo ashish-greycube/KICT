@@ -20,6 +20,7 @@
   {
    "fieldname": "vessel",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Vessel",
    "options": "Vessel",
    "unique": 1
@@ -28,6 +29,7 @@
    "fetch_from": "vessel.vessel_name",
    "fieldname": "vessel_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Vessel name",
    "read_only": 1
   },
@@ -35,12 +37,14 @@
    "fetch_from": "vessel.total_tonnage_mt",
    "fieldname": "total_tonnage_mt",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Total Tonnage (MT)",
    "read_only": 1
   },
   {
    "fieldname": "discharge_commenced_date_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Discharge Commenced Date & Time"
   },
   {
@@ -50,11 +54,13 @@
   {
    "fieldname": "remarks",
    "fieldtype": "Small Text",
+   "in_list_view": 1,
    "label": "Remarks"
   },
   {
    "fieldname": "discharge_completed_date_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Discharge Completed Date Time"
   },
   {
@@ -70,7 +76,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-02 14:46:47.322744",
+ "modified": "2024-05-09 10:26:18.753634",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hatch wise",

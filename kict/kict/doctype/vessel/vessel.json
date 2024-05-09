@@ -39,62 +39,74 @@
   {
    "fieldname": "vessel_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Vessel Name"
   },
   {
    "fieldname": "nrt",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "NRT"
   },
   {
    "fieldname": "grt",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "GRT"
   },
   {
    "fieldname": "dwt",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "DWT"
   },
   {
    "fieldname": "loa",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": " LOA"
   },
   {
    "fieldname": "beam",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Beam"
   },
   {
    "fieldname": "opa",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "OPA"
   },
   {
    "fieldname": "last_port",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "LAST PORT"
   },
   {
    "fieldname": "next_port",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "NEXT PORT"
   },
   {
    "default": "0",
    "fieldname": "vessel_closure",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Vessel Closure "
   },
   {
    "fieldname": "vessel_closed_on",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Vessel Closed On"
   },
   {
    "fieldname": "company",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Company",
    "options": "Company"
   },
@@ -105,61 +117,73 @@
   {
    "fieldname": "igmjob_number",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "IGMJOB NUMBER"
   },
   {
    "fieldname": "igmjob_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "IGMJOB DATE"
   },
   {
    "fieldname": "total_tonnage_mt",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Total Tonnage (MT)",
    "read_only": 1
   },
   {
    "fieldname": "rot_number",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "ROT NUMBER"
   },
   {
    "fieldname": "rot_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "ROT Date"
   },
   {
    "fieldname": "agent_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Agent Name ",
    "options": "Customer"
   },
   {
    "fieldname": "discharge_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Discharge Type",
    "options": "\nFull\nLightrate\nLightening"
   },
   {
    "fieldname": "terminal_code",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Terminal Code"
   },
   {
    "fieldname": "type_of_vessel",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Type of Vessel",
    "options": "Vessel Type"
   },
   {
    "fieldname": "bh_bill_to",
    "fieldtype": "Select",
-   "label": "B/H Bill To ?",
-   "options": "\nAgent\nCustomer"
+   "in_list_view": 1,
+   "label": "Berth Hire Bill To ?",
+   "options": "\nAgent\nCustomer",
+   "reqd": 1
   },
   {
    "fieldname": "flag_country",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Flag / Country",
    "options": "Country"
   },
@@ -167,6 +191,7 @@
    "default": "Foreign",
    "fieldname": "costal_foreign_vessle",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Costal / Foreign Vessle",
    "options": "\nCostal\nForeign"
   },
@@ -183,12 +208,13 @@
   {
    "fieldname": "imo_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "IMO  No"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-08 17:26:58.837866",
+ "modified": "2024-05-09 10:23:06.215729",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

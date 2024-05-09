@@ -21,6 +21,7 @@
   {
    "fieldname": "vessel",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Vessel",
    "options": "Vessel",
    "unique": 1
@@ -29,11 +30,13 @@
    "fetch_from": "vessel.total_tonnage_mt",
    "fieldname": "total_tonnage_mt",
    "fieldtype": "Read Only",
+   "in_list_view": 1,
    "label": "Total Tonnage (MT)"
   },
   {
    "fieldname": "discharge_commenced_date_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Discharge Commenced Date & Time"
   },
   {
@@ -44,22 +47,26 @@
    "fetch_from": "vessel.vessel_name",
    "fieldname": "vessel_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Vessel Name",
    "read_only": 1
   },
   {
    "fieldname": "balance",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Balance"
   },
   {
    "fieldname": "discharge_completed_date_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Discharge Completed Date & Time"
   },
   {
    "fieldname": "remarks",
    "fieldtype": "Small Text",
+   "in_list_view": 1,
    "label": "Remarks"
   },
   {
@@ -75,7 +82,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-02 14:49:39.766383",
+ "modified": "2024-05-09 10:27:01.476298",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hourly Operations",

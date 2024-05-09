@@ -36,8 +36,9 @@
   },
   {
    "fieldname": "importer_name",
-   "fieldtype": "Data",
-   "label": "IMPORTER NAME"
+   "fieldtype": "Link",
+   "label": "IMPORTER NAME",
+   "options": "Customer"
   },
   {
    "fetch_from": "vessel.total_tonnage_mt",
@@ -65,7 +66,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-02 14:57:31.663421",
+ "modified": "2024-05-09 10:19:25.301238",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Agents DO",

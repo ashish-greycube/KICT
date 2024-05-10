@@ -1,9 +1,22 @@
 # Copyright (c) 2024, GreyCube Technologies and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
 class RakeDispatch(Document):
 	pass
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_unique_grade_list(doctype, txt, searchfield, start, page_len, filters):
+	vcn_no = filters.get("vessel_name")
+	print('vcn_no',vcn_no,filters)
+	return frappe.get_all(
+		"Vessel Details",
+		filters={"parent": vcn_no},
+		fields=["distinct grade"],
+		as_list=1,
+	)

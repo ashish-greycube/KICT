@@ -69,6 +69,7 @@
    "options": "Item"
   },
   {
+   "fetch_from": "railway_indent.scheme_code",
    "fieldname": "scheme_code",
    "fieldtype": "Select",
    "label": "Scheme code",
@@ -92,7 +93,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-10 10:09:53.991721",
+ "modified": "2024-05-10 15:46:31.701948",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

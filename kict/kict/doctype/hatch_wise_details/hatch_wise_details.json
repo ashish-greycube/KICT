@@ -20,7 +20,8 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Hatch",
-   "options": "\nH-1\nH-2\nH-3\nH-4\nH-5\nH-6\nH-7\nH-8\nH-9"
+   "options": "\nH-1\nH-2\nH-3\nH-4\nH-5\nH-6\nH-7\nH-8\nH-9",
+   "reqd": 1
   },
   {
    "fieldname": "cargo_grade",
@@ -67,7 +68,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-04-26 18:15:33.163955",
+ "modified": "2024-05-10 13:03:22.106707",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hatch wise Details",

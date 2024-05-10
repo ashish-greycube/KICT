@@ -8,10 +8,10 @@
  "field_order": [
   "rake_stoppage_reason",
   "from_delay",
-  "column_break_ijxt",
-  "rake_delay_department",
   "to_delay",
-  "total"
+  "column_break_ijxt",
+  "total",
+  "rake_delay_department"
  ],
  "fields": [
   {
@@ -54,7 +54,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-09 13:48:05.268424",
+ "modified": "2024-05-10 13:08:14.145707",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Delay Reason",

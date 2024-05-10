@@ -7,10 +7,10 @@
  "field_order": [
   "account_delays",
   "delay_start_time",
+  "delay_end_time",
   "total_hours",
   "column_break_dzwc",
   "type_of_delays",
-  "delay_end_time",
   "remarks"
  ],
  "fields": [
@@ -37,7 +37,8 @@
    "fieldname": "total_hours",
    "fieldtype": "Duration",
    "in_list_view": 1,
-   "label": "Total Hours"
+   "label": "Total Hours",
+   "read_only": 1
   },
   {
    "fieldname": "type_of_delays",
@@ -60,7 +61,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-09 10:42:20.913930",
+ "modified": "2024-05-10 13:07:01.486207",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Delay Details",

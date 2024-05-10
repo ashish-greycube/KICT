@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{vessel_name}.{DD.MM.YYYY}",
+ "autoname": "format:{vessel_name}{DD}{MM}{YYYY}",
  "creation": "2024-04-26 10:48:42.592087",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -98,6 +98,7 @@
    "label": "Vessel Closure "
   },
   {
+   "depends_on": "eval:doc.vessel_closure == \"1\"",
    "fieldname": "vessel_closed_on",
    "fieldtype": "Datetime",
    "in_list_view": 1,
@@ -203,7 +204,8 @@
    "fieldname": "vessel_details",
    "fieldtype": "Table",
    "label": "Vessel Details",
-   "options": "Vessel Details"
+   "options": "Vessel Details",
+   "reqd": 1
   },
   {
    "fieldname": "imo_no",
@@ -214,7 +216,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-09 10:23:06.215729",
+ "modified": "2024-05-10 13:47:56.458988",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

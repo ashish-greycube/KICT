@@ -28,7 +28,8 @@
    "fetch_from": "rcn_no.fnr_no",
    "fieldname": "fnr_no",
    "fieldtype": "Data",
-   "label": "FNR No"
+   "label": "FNR No",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_npvw",
@@ -43,7 +44,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-06 14:11:32.434992",
+ "modified": "2024-05-10 13:09:06.427282",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Delay",

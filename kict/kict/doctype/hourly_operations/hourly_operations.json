@@ -9,11 +9,11 @@
   "vessel",
   "total_tonnage_mt",
   "discharge_commenced_date_time",
-  "remarks",
+  "discharge_completed_date_time",
   "column_break_unwr",
   "vessel_name",
   "balance",
-  "discharge_completed_date_time",
+  "remarks",
   "section_break_vmmp",
   "hourly_operation_details"
  ],
@@ -55,7 +55,8 @@
    "fieldname": "balance",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Balance"
+   "label": "Balance",
+   "read_only": 1
   },
   {
    "fieldname": "discharge_completed_date_time",
@@ -82,7 +83,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-09 10:27:01.476298",
+ "modified": "2024-05-10 14:08:00.537326",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hourly Operations",

@@ -1,0 +1,258 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"LFDHgpF1Sa\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">KICT</span>\",\"col\":12}},{\"id\":\"8B63SGI3D8\",\"type\":\"card\",\"data\":{\"card_name\":\"Vessel Doctype\",\"col\":4}},{\"id\":\"7vN-lajsL3\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Doctype\",\"col\":4}}]",
+ "creation": "2024-05-09 13:13:13.628115",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "heart",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "KICT",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Rake Doctype",
+   "link_count": 9,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Rake Delay",
+   "link_count": 0,
+   "link_to": "Rake Delay",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Rake Dispatch",
+   "link_count": 0,
+   "link_to": "Rake Dispatch",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Railway Receipt",
+   "link_count": 0,
+   "link_to": "Railway Receipt",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Railway Indent",
+   "link_count": 0,
+   "link_to": "Railway Indent",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Indent Rake Type",
+   "link_count": 0,
+   "link_to": "Indent Rake Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Wagon Type",
+   "link_count": 0,
+   "link_to": "Wagon Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Rake Delay Department",
+   "link_count": 0,
+   "link_to": "Rake Delay Department",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Rake Performance Calculation",
+   "link_count": 0,
+   "link_to": "Rake Performance Calculation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Rake Stoppage Reason",
+   "link_count": 0,
+   "link_to": "Rake Stoppage Reason",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vessel Doctype",
+   "link_count": 12,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vessel",
+   "link_count": 0,
+   "link_to": "Vessel",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hatch wise",
+   "link_count": 0,
+   "link_to": "Hatch wise",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Equipemnts In and Out",
+   "link_count": 0,
+   "link_to": "Equipemnts In and Out",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Statement of Fact",
+   "link_count": 0,
+   "link_to": "Statement of Fact",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hourly Operations",
+   "link_count": 0,
+   "link_to": "Hourly Operations",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vessel Delay",
+   "link_count": 0,
+   "link_to": "Vessel Delay",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "BOE OOC",
+   "link_count": 0,
+   "link_to": "BOE OOC",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Agents DO",
+   "link_count": 0,
+   "link_to": "Agents DO",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vessel Delay Account",
+   "link_count": 0,
+   "link_to": "Vessel Delay Account",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vessel Delay Type",
+   "link_count": 0,
+   "link_to": "Vessel Delay Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vessel Type",
+   "link_count": 0,
+   "link_to": "Vessel Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Type of Equipments",
+   "link_count": 0,
+   "link_to": "Type of Equipments",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2024-05-09 15:41:23.137635",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "KICT",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 39.0,
+ "shortcuts": [],
+ "title": "KICT"
+}

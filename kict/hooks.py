@@ -69,6 +69,7 @@ app_license = "unlicense"
 
 # before_install = "kict.install.before_install"
 # after_install = "kict.install.after_install"
+after_migrate = "kict.migrate.after_migrate"
 
 # Uninstallation
 # ------------

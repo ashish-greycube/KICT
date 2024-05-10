@@ -18,3 +18,13 @@ class EquipemntsInandOut(Document):
 				diff=frappe.utils.time_diff_in_seconds(end_date,start_date)
 				row.total_engaged_time = diff
 
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_unique_commodity(doctype, txt, searchfield, start, page_len, filters):
+	vessel = filters.get("vessel")
+	return frappe.get_all(
+		"Vessel Details",
+		filters={"parent": vessel},
+		fields=["distinct commodity"],
+		as_list=1,
+	)

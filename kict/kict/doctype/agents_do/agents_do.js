@@ -1,70 +1,39 @@
 frappe.ui.form.on("Agents DO", {
-    onload(frm) {
-        frm.trigger("item_and_customer_filter")
-    },
-    vessel(frm) {
-        frm.trigger("item_and_customer_filter")
-    },
-    item_and_customer_filter: function (frm) {
-        frappe.db.get_list("Vessel Details", {
-            parent_doctype: "Vessel",
-            filters: {
-                "parent": frm.doc.vessel
-            },
-            fields: ["commodity", "grade", "customer_name"]
-        }).then(records => {
-                let cargo_commodity = []
-                let grade = []
-                let customer_list = []
-    
-                records.forEach(r => {
-                    cargo_commodity.push(r.commodity)
-                    grade.push(r.grade)
-                    customer_list.push(r.customer_name)
-                })
-                let unique_commodity = [...new Set(cargo_commodity)];
-                let unique_grade = [...new Set(grade)];
-                let unique_customer_list = [...new Set(customer_list)];
-    
-                frm.set_query("cargo__name", "agents_do_detail", function () {
-                    let return_filters = {}
-                    if(frm.doc.vessel){
-                        return_filters["name"]= ["in", unique_commodity]
-                    }
-                    else{
-                        return_filters["name"]=["in", '']
-                    }
-                    return {
-                        filters:return_filters
-                    }
+    setup(frm) {
+        frm.set_query("importer_name", function () {
+            if (frm.doc.vessel) {
+                return {
+                    query: "kict.kict.doctype.agents_do.agents_do.get_unique_customer_list",
+                    filters: {
+                        vessel: frm.doc.vessel
+                    },
+                };
+            }
+        });
 
-                });
-                frm.set_query("cargo_grade", "agents_do_detail", function () {
-                    let return_filters = {}
-                    if(frm.doc.vessel){
-                        return_filters["name"]= ["in", unique_grade]
-                    }
-                    else{
-                        return_filters["name"]=["in", '']
-                    }
-                    return {
-                        filters:return_filters
-                    }
-                });
-                frm.set_query("importer_name", function () {
-                    let return_filters = {}
-                    if(frm.doc.vessel){
-                        return_filters["name"]= ["in", unique_customer_list]
-                    }
-                    else{
-                        return_filters["name"]=["in", '']
-                    }
-                    return {
-                        filters:return_filters
-                    }
-                });
-        })
-    }
+        frm.set_query("cargo__name", "agents_do_detail", function () {
+            if (frm.doc.vessel) {
+                return {
+                    query: "kict.kict.doctype.agents_do.agents_do.get_unique_cargo_list",
+                    filters: {
+                        vessel: frm.doc.vessel
+                    },
+                };
+            }
+
+        });
+
+        frm.set_query("cargo_grade", "agents_do_detail", function () {
+            if (frm.doc.vessel) {
+                return {
+                    query: "kict.kict.doctype.agents_do.agents_do.get_unique_grade_list",
+                    filters: {
+                        vessel: frm.doc.vessel
+                    },
+                };
+            }
+        });
+    },
 });
 
 frappe.ui.form.on("Agents DO Detail", {

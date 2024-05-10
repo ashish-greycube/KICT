@@ -3,39 +3,17 @@
 
 frappe.ui.form.on("Hatch wise", {
 
-    onload(frm) {
-        frm.trigger("grade_filter")
-    },
-    vessel(frm) {
-        frm.trigger("grade_filter")
-    },
-    grade_filter: function (frm) {
-        frappe.db.get_list("Vessel Details", {
-            parent_doctype: "Vessel",
-            filters: {
-                "parent": frm.doc.vessel
-            },
-            fields: ["grade"]
-        }).then(records => {
-            let cargo = records
-            let grade = []
-            cargo.forEach(r => {
-                grade.push(r.grade)
-            })
-            let unique_grade = [...new Set(grade)]
-            frm.set_query("cargo_grade", "hatch_wise_details", function () {
-                let return_filters = {}
-                if (frm.doc.vessel) {
-                    return_filters["name"] = ["in", unique_grade]
-                }
-                else {
-                    return_filters["name"] = ["in", '']
-                }
+    setup(frm) {
+        frm.set_query("cargo_grade", "hatch_wise_details", function () {
+            if (frm.doc.vessel) {
                 return {
-                    filters: return_filters
-                }
-            });
-        })
+                    query: "kict.kict.doctype.hatch_wise.hatch_wise.get_unique_grade_list",
+                    filters: {
+                        vessel: frm.doc.vessel
+                    },
+                };
+            }
+        });
     }
 });
 

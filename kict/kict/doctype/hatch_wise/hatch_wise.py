@@ -23,3 +23,15 @@ class Hatchwise(Document):
 				hatch.append(ele.hatch)
 			else:
 				frappe.throw(_("Row{0}: You cannot select {1} again").format(ele.idx,ele.hatch))
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_unique_grade_list(doctype, txt, searchfield, start, page_len, filters):
+	vessel = filters.get("vessel")
+	return frappe.get_all(
+		"Vessel Details",
+		filters={"parent": vessel},
+		fields=["distinct grade"],
+		as_list=1,
+	)

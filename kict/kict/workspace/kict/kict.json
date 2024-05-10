@@ -218,16 +218,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Rake Dispatch",
-   "link_count": 0,
-   "link_to": "Rake Dispatch",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Rake Delay",
    "link_count": 0,
    "link_to": "Rake Delay",
@@ -238,9 +228,29 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Rake Dispatch",
+   "link_count": 0,
+   "link_to": "Rake Dispatch",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Railway Receipt",
    "link_count": 0,
    "link_to": "Railway Receipt",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Rake Performance Calculation",
+   "link_count": 0,
+   "link_to": "Rake Performance Calculation",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -278,16 +288,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Rake Performance Calculation",
-   "link_count": 0,
-   "link_to": "Rake Performance Calculation",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Rake Stoppage Reason",
    "link_count": 0,
    "link_to": "Rake Stoppage Reason",
@@ -296,7 +296,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-05-10 15:45:40.220558",
+ "modified": "2024-05-10 15:59:37.695116",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "KICT",

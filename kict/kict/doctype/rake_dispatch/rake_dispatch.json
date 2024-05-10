@@ -24,7 +24,8 @@
    "fetch_from": "railway_indent.fnr_no",
    "fieldname": "fnr_no",
    "fieldtype": "Data",
-   "label": "FNR NO"
+   "label": "FNR NO",
+   "unique": 1
   },
   {
    "fieldname": "railway_indent",
@@ -91,7 +92,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-06 13:03:33.121816",
+ "modified": "2024-05-10 10:09:53.991721",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

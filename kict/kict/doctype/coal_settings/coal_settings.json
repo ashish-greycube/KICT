@@ -1,0 +1,54 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-11 10:34:52.596741",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_b7lv",
+  "birth_hire_item_for_coastal_vessel",
+  "birth_hire_item_for_foreign_vessel"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_b7lv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "birth_hire_item_for_coastal_vessel",
+   "fieldtype": "Link",
+   "label": "B/H Charges for coastal ",
+   "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
+   "options": "Item"
+  },
+  {
+   "fieldname": "birth_hire_item_for_foreign_vessel",
+   "fieldtype": "Link",
+   "label": "B/H Charges for Foreign ",
+   "options": "Item"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-05-11 10:38:59.177394",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Coal Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

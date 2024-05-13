@@ -22,8 +22,40 @@
   "opa",
   "vessel_moisture",
   "flag_country",
-  "section_break_aart",
-  "sof_details"
+  "section_break_ppjb",
+  "radio_pratique_granted",
+  "free_pratique_granted",
+  "vessel_arrived_at_paradip_roads",
+  "notice_of_readiness_tendered",
+  "notice_of_readiness_accepted",
+  "pilot_on_board_for_berthing",
+  "first_line_ashore",
+  "vessel_made_all_fast",
+  "gangway_secured_placed",
+  "initial_draught_survey_commenced",
+  "vessel_opened_hatch_cover",
+  "initial_draught_survey_completed",
+  "interim_1_commenced",
+  "interim_1_completed",
+  "interim_2_commenced",
+  "interim_2_completed",
+  "column_break_jpnj",
+  "interim_3_commenced",
+  "interim_3_completed",
+  "interim_4_commenced",
+  "interim_4_completed",
+  "custom_clearance_granted",
+  "discharge_commenced",
+  "discharge_completed",
+  "final_draught_survey_commenced",
+  "final_draught_survey_completed",
+  "documentation_completed",
+  "vessel_converted__to_coastal_run",
+  "vessel_given_readiness__for_sailing",
+  "pilot_on_board_for_sailing_shifting",
+  "all_line_cast_off",
+  "vessel_sailedpilot_disembarked",
+  "dlosl"
  ],
  "fields": [
   {
@@ -134,16 +166,6 @@
    "label": "Vessel Moisture "
   },
   {
-   "fieldname": "section_break_aart",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "sof_details",
-   "fieldtype": "Table",
-   "label": "SOF Details",
-   "options": "SOF Details"
-  },
-  {
    "fetch_from": "vessel.imo_no",
    "fieldname": "imo_no",
    "fieldtype": "Data",
@@ -157,11 +179,180 @@
    "fieldtype": "Read Only",
    "in_list_view": 1,
    "label": "Flag / Country"
+  },
+  {
+   "fieldname": "section_break_ppjb",
+   "fieldtype": "Section Break",
+   "label": "SOF Details"
+  },
+  {
+   "fieldname": "radio_pratique_granted",
+   "fieldtype": "Datetime",
+   "label": "Radio Pratique Granted"
+  },
+  {
+   "fieldname": "free_pratique_granted",
+   "fieldtype": "Datetime",
+   "label": "Free Pratique Granted"
+  },
+  {
+   "fieldname": "vessel_arrived_at_paradip_roads",
+   "fieldtype": "Datetime",
+   "label": "Vessel Arrived at Paradip Roads"
+  },
+  {
+   "fieldname": "notice_of_readiness_tendered",
+   "fieldtype": "Datetime",
+   "label": "Notice of Readiness Tendered"
+  },
+  {
+   "fieldname": "notice_of_readiness_accepted",
+   "fieldtype": "Datetime",
+   "label": "Notice of Readiness Accepted"
+  },
+  {
+   "fieldname": "pilot_on_board_for_berthing",
+   "fieldtype": "Datetime",
+   "label": "Pilot On Board For Berthing "
+  },
+  {
+   "fieldname": "first_line_ashore",
+   "fieldtype": "Datetime",
+   "label": "First Line Ashore"
+  },
+  {
+   "fieldname": "vessel_made_all_fast",
+   "fieldtype": "Datetime",
+   "label": "Vessel Made All Fast"
+  },
+  {
+   "fieldname": "gangway_secured_placed",
+   "fieldtype": "Datetime",
+   "label": "Gangway Secured/Placed"
+  },
+  {
+   "fieldname": "initial_draught_survey_commenced",
+   "fieldtype": "Datetime",
+   "label": "Initial Draught Survey Commenced"
+  },
+  {
+   "fieldname": "vessel_opened_hatch_cover",
+   "fieldtype": "Datetime",
+   "label": "Vessel opened Hatch cover"
+  },
+  {
+   "fieldname": "initial_draught_survey_completed",
+   "fieldtype": "Datetime",
+   "label": "Initial Draught Survey Completed"
+  },
+  {
+   "fieldname": "interim_1_commenced",
+   "fieldtype": "Datetime",
+   "label": "Interim 1(Commenced)"
+  },
+  {
+   "fieldname": "interim_1_completed",
+   "fieldtype": "Datetime",
+   "label": "Interim-1(Completed)"
+  },
+  {
+   "fieldname": "interim_2_commenced",
+   "fieldtype": "Datetime",
+   "label": "Interim-2(Commenced)"
+  },
+  {
+   "fieldname": "interim_2_completed",
+   "fieldtype": "Datetime",
+   "label": "Interim-2(Completed)"
+  },
+  {
+   "fieldname": "column_break_jpnj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "interim_3_commenced",
+   "fieldtype": "Datetime",
+   "label": "Interim-3(Commenced)"
+  },
+  {
+   "fieldname": "interim_3_completed",
+   "fieldtype": "Datetime",
+   "label": "Interim-3(Completed)"
+  },
+  {
+   "fieldname": "interim_4_commenced",
+   "fieldtype": "Datetime",
+   "label": "Interim-4(Commenced)"
+  },
+  {
+   "fieldname": "interim_4_completed",
+   "fieldtype": "Datetime",
+   "label": "Interim-4(Completed)"
+  },
+  {
+   "fieldname": "custom_clearance_granted",
+   "fieldtype": "Datetime",
+   "label": "Custom Clearance Granted"
+  },
+  {
+   "fieldname": "discharge_commenced",
+   "fieldtype": "Datetime",
+   "label": "Discharge Commenced"
+  },
+  {
+   "fieldname": "discharge_completed",
+   "fieldtype": "Datetime",
+   "label": "Discharge Completed"
+  },
+  {
+   "fieldname": "final_draught_survey_commenced",
+   "fieldtype": "Datetime",
+   "label": "Final Draught Survey Commenced"
+  },
+  {
+   "fieldname": "final_draught_survey_completed",
+   "fieldtype": "Datetime",
+   "label": "Final Draught Survey Completed"
+  },
+  {
+   "fieldname": "documentation_completed",
+   "fieldtype": "Datetime",
+   "label": "Documentation Completed"
+  },
+  {
+   "fieldname": "vessel_converted__to_coastal_run",
+   "fieldtype": "Datetime",
+   "label": "Vessel Converted  to Coastal Run"
+  },
+  {
+   "fieldname": "vessel_given_readiness__for_sailing",
+   "fieldtype": "Datetime",
+   "label": "Vessel Given Readiness  for Sailing "
+  },
+  {
+   "fieldname": "pilot_on_board_for_sailing_shifting",
+   "fieldtype": "Datetime",
+   "label": "Pilot on Board for Sailing/Shifting"
+  },
+  {
+   "fieldname": "all_line_cast_off",
+   "fieldtype": "Datetime",
+   "label": "All Line Cast Off"
+  },
+  {
+   "fieldname": "vessel_sailedpilot_disembarked",
+   "fieldtype": "Datetime",
+   "label": "Vessel sailed/Pilot Disembarked"
+  },
+  {
+   "fieldname": "dlosl",
+   "fieldtype": "Datetime",
+   "label": "DLOSL"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-09 10:25:32.722866",
+ "modified": "2024-05-13 10:11:40.451361",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

@@ -14,11 +14,10 @@ frappe.ui.form.on("Equipemnts In and Out", {
             }
         });
     },
-    get_all_fast(frm) {
-        frappe.db.get_list("SOF Details", {
-            parent_doctype: "Statement of Fact",
+    vessel(frm) {
+        frappe.db.get_list("Statement of Fact", {
             filters: {
-                parent: frm.doc.vessel
+                name: frm.doc.vessel
             },
             fields: ["vessel_made_all_fast"]
         }).then(records => {

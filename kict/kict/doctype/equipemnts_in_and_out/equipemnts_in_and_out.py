@@ -9,6 +9,7 @@ from frappe.model.document import Document
 class EquipemntsInandOut(Document):
 	def validate(self):
 		self.set_total_engaged_time()
+		self.set_all_fast()
 		
 	def set_total_engaged_time(self):	
 		for row in self.get("equipemnts_in_and_out_details"):
@@ -17,6 +18,11 @@ class EquipemntsInandOut(Document):
 				start_date = row.equipment_in_date_time
 				diff=frappe.utils.time_diff_in_seconds(end_date,start_date)
 				row.total_engaged_time = diff
+	
+	def set_all_fast(self):
+		sof = frappe.db.get_list("Statement of Fact",filters ={"name":self.vessel},fields=["vessel_made_all_fast"])
+		if len(sof) > 0:
+			self.all_fast = sof[0].vessel_made_all_fast
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs

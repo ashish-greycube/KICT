@@ -1,0 +1,44 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:coal_commodity",
+ "creation": "2024-05-14 18:01:03.332233",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "coal_commodity"
+ ],
+ "fields": [
+  {
+   "fieldname": "coal_commodity",
+   "fieldtype": "Data",
+   "label": "Coal Commodity",
+   "unique": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-05-14 18:01:37.250211",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Coal Commodity",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

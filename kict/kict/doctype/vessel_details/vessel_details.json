@@ -10,7 +10,7 @@
   "bl_date",
   "bl_order_ref_no",
   "item",
-  "item_group",
+  "coal_commodity",
   "grade",
   "column_break_ynnp",
   "moisture_content_at_shipment",
@@ -99,24 +99,24 @@
    "options": "Item"
   },
   {
-   "fetch_from": "item.item_group",
-   "fieldname": "item_group",
-   "fieldtype": "Link",
-   "label": "Commodity(Item Group)",
-   "options": "Item Group",
-   "read_only": 1
-  },
-  {
    "fieldname": "customer_specific_grt",
    "fieldtype": "Int",
    "label": "Customer Specific GRT",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "item.custom_coal_commodity",
+   "fieldname": "coal_commodity",
+   "fieldtype": "Link",
+   "label": "Commodity",
+   "options": "Coal Commodity",
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-14 16:07:42.308635",
+ "modified": "2024-05-14 18:16:57.359462",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Details",

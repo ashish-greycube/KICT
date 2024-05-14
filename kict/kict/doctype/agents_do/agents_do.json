@@ -70,8 +70,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-05-09 10:44:26.124229",
+ "links": [
+  {
+   "link_doctype": "Vessel",
+   "link_fieldname": "name"
+  }
+ ],
+ "modified": "2024-05-14 15:39:56.209411",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Agents DO",

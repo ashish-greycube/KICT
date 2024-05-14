@@ -72,8 +72,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-05-14 11:32:17.190526",
+ "links": [
+  {
+   "link_doctype": "Vessel",
+   "link_fieldname": "name"
+  }
+ ],
+ "modified": "2024-05-14 14:45:27.454736",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "BOE OOC",

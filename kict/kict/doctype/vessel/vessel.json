@@ -119,6 +119,7 @@
    "fieldname": "igmjob_number",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "IGMJOB NUMBER"
   },
   {
@@ -138,18 +139,21 @@
    "fieldname": "rot_number",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "ROT NUMBER"
   },
   {
    "fieldname": "rot_date",
    "fieldtype": "Date",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "ROT Date"
   },
   {
    "fieldname": "agent_name",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Agent Name ",
    "mandatory_depends_on": "eval: doc.bh_bill_to == 'Agent'",
    "options": "Customer"
@@ -205,19 +209,50 @@
    "fieldname": "imo_no",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "IMO  No"
+   "in_standard_filter": 1,
+   "label": "IMO No"
   },
   {
    "fieldname": "flag",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Flag",
    "options": "Country"
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-05-13 13:51:04.675853",
+ "links": [
+  {
+   "link_doctype": "Vessel Delay",
+   "link_fieldname": "vessel"
+  },
+  {
+   "link_doctype": "Statement of Fact",
+   "link_fieldname": "vessel"
+  },
+  {
+   "link_doctype": "Hatch wise",
+   "link_fieldname": "vessel"
+  },
+  {
+   "link_doctype": "BOE OOC",
+   "link_fieldname": "vessel"
+  },
+  {
+   "link_doctype": "Hourly Operations",
+   "link_fieldname": "vessel"
+  },
+  {
+   "link_doctype": "Equipemnts In and Out",
+   "link_fieldname": "vessel"
+  },
+  {
+   "link_doctype": "Agents DO",
+   "link_fieldname": "vessel"
+  }
+ ],
+ "modified": "2024-05-14 16:04:21.683019",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

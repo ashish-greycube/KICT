@@ -91,8 +91,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-05-13 13:39:30.537099",
+ "links": [
+  {
+   "link_doctype": "Vessel",
+   "link_fieldname": "name"
+  }
+ ],
+ "modified": "2024-05-14 14:47:58.240984",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Equipemnts In and Out",

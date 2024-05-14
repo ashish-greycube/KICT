@@ -82,8 +82,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-05-10 14:08:00.537326",
+ "links": [
+  {
+   "link_doctype": "Vessel",
+   "link_fieldname": "name"
+  }
+ ],
+ "modified": "2024-05-14 14:47:08.579364",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hourly Operations",

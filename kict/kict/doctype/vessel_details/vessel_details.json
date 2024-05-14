@@ -11,13 +11,13 @@
   "bl_order_ref_no",
   "item",
   "item_group",
-  "item_name",
   "grade",
   "column_break_ynnp",
   "moisture_content_at_shipment",
   "moisture_content_at_discharge_port",
   "customer_po_no",
   "tonnage_mt",
+  "customer_specific_grt",
   "remarks"
  ],
  "fields": [
@@ -46,7 +46,7 @@
    "fieldname": "grade",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Grade",
+   "label": "Commodity Grade",
    "options": "Commodity Grade",
    "read_only": 1
   },
@@ -102,22 +102,21 @@
    "fetch_from": "item.item_group",
    "fieldname": "item_group",
    "fieldtype": "Link",
-   "label": "Commodity",
+   "label": "Commodity(Item Group)",
    "options": "Item Group",
    "read_only": 1
   },
   {
-   "fetch_from": "item.item_name",
-   "fieldname": "item_name",
-   "fieldtype": "Data",
-   "label": "Item Name",
+   "fieldname": "customer_specific_grt",
+   "fieldtype": "Int",
+   "label": "Customer Specific GRT",
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-13 17:05:29.283548",
+ "modified": "2024-05-14 16:07:42.308635",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Details",

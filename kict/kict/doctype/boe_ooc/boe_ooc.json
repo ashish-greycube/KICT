@@ -52,7 +52,7 @@
    "read_only": 1
   },
   {
-   "fetch_from": "vessel.flag_country",
+   "fetch_from": "vessel.flag",
    "fieldname": "flag_country",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -73,7 +73,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-09 13:51:37.909156",
+ "modified": "2024-05-14 11:32:17.190526",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "BOE OOC",

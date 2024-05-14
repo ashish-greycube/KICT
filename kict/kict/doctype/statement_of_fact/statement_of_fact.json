@@ -167,7 +167,7 @@
    "read_only": 1
   },
   {
-   "fetch_from": "vessel.flag_country",
+   "fetch_from": "vessel.flag",
    "fieldname": "flag_country",
    "fieldtype": "Read Only",
    "in_list_view": 1,
@@ -345,7 +345,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-13 13:27:25.835948",
+ "modified": "2024-05-14 11:32:44.855342",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

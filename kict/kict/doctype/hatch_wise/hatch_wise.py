@@ -33,6 +33,6 @@ def get_unique_grade_list(doctype, txt, searchfield, start, page_len, filters):
 		"Vessel Details",
 		parent_doctype="Vessel",
 		filters={"parent": vessel},
-		fields=["distinct item_group"],
+		fields=["distinct grade"],
 		as_list=1,
 	)

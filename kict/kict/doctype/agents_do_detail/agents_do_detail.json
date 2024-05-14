@@ -8,6 +8,7 @@
   "customer_name",
   "item",
   "commodity_grade",
+  "coal_commodity",
   "column_break_jwzq",
   "do_received_qty",
   "do_balance_qty",
@@ -57,12 +58,19 @@
    "in_list_view": 1,
    "label": "Customer's item",
    "options": "Item"
+  },
+  {
+   "fetch_from": "item.custom_coal_commodity",
+   "fieldname": "coal_commodity",
+   "fieldtype": "Link",
+   "label": "Commodity",
+   "options": "Coal Commodity"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-14 16:18:20.755372",
+ "modified": "2024-05-14 18:35:24.287399",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Agents DO Detail",

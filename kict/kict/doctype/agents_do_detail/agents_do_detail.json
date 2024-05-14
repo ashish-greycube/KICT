@@ -48,21 +48,21 @@
    "fieldname": "commodity_grade",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Cargo Grade",
+   "label": "Commodity Grade",
    "options": "Commodity Grade"
   },
   {
    "fieldname": "item",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Cargo Name",
+   "label": "Customer's item",
    "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-13 17:19:01.236220",
+ "modified": "2024-05-14 16:18:20.755372",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Agents DO Detail",

@@ -1,7 +1,7 @@
 // Copyright (c) 2024, GreyCube Technologies and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Equipemnts In and Out", {
+frappe.ui.form.on("Equipments In and Out", {
     setup(frm) {
         frm.set_query("commodity_code", function () {
             if (frm.doc.vessel) {
@@ -31,7 +31,7 @@ frappe.ui.form.on("Equipemnts In and Out", {
     }
 });
 
-frappe.ui.form.on("Equipemnts In and Out Details", {
+frappe.ui.form.on("Equipments In and Out Details", {
     equipment_in_date_time(frm, cdt, cdn) {
         set_total_engaged_time(frm, cdt, cdn)
     },

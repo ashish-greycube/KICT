@@ -61,6 +61,7 @@
    "fieldname": "vessel",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Vessel",
    "options": "Vessel",
    "unique": 1
@@ -122,6 +123,7 @@
    "fieldname": "igmjob_number",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "IGMJOB NUMBER",
    "read_only": 1
   },
@@ -138,6 +140,7 @@
    "fieldname": "rot_number",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "ROT NUMBER",
    "read_only": 1
   },
@@ -146,6 +149,7 @@
    "fieldname": "agent_name",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Agent Name ",
    "options": "Customer",
    "read_only": 1
@@ -163,6 +167,7 @@
    "fieldname": "imo_no",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "IMO  No",
    "read_only": 1
   },
@@ -171,7 +176,8 @@
    "fieldname": "flag_country",
    "fieldtype": "Read Only",
    "in_list_view": 1,
-   "label": "Flag / Country"
+   "in_standard_filter": 1,
+   "label": "Flag"
   },
   {
    "fieldname": "section_break_ppjb",
@@ -350,7 +356,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-14 14:39:51.964996",
+ "modified": "2024-05-14 16:20:58.153107",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

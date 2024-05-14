@@ -6,13 +6,13 @@ from frappe.utils import date_diff,flt
 from frappe.model.document import Document
 
 
-class EquipemntsInandOut(Document):
+class EquipmentsInandOut(Document):
 	def validate(self):
 		self.set_total_engaged_time()
 		self.set_all_fast()
 		
 	def set_total_engaged_time(self):	
-		for row in self.get("equipemnts_in_and_out_details"):
+		for row in self.get("equipments_in_and_out_details"):
 			if row.equipment_in_date_time and row.equipment_out_date_time:
 				end_date = row.equipment_out_date_time
 				start_date = row.equipment_in_date_time

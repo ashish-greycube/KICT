@@ -21,6 +21,7 @@
    "fieldname": "vessel",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Vessel",
    "options": "Vessel",
    "unique": 1
@@ -81,7 +82,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-14 14:44:07.289644",
+ "modified": "2024-05-14 16:21:52.886986",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hatch wise",

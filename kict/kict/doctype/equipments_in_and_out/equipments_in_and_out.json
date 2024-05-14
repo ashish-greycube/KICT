@@ -23,6 +23,7 @@
    "fieldname": "vessel",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Vessel",
    "options": "Vessel",
    "unique": 1
@@ -38,7 +39,8 @@
    "fieldname": "commodity_code",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Commodity code",
+   "in_standard_filter": 1,
+   "label": "Customer's Item",
    "options": "Item"
   },
   {
@@ -87,7 +89,7 @@
    "fieldname": "equipemnts_in_and_out_details",
    "fieldtype": "Table",
    "label": "Equipemnts In and Out Details",
-   "options": "Equipemnts In and Out Details"
+   "options": "Equipments In and Out Details"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -97,10 +99,10 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-14 14:47:58.240984",
+ "modified": "2024-05-14 16:24:17.699281",
  "modified_by": "Administrator",
  "module": "Kict",
- "name": "Equipemnts In and Out",
+ "name": "Equipments In and Out",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

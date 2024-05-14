@@ -20,6 +20,7 @@
    "fieldname": "vessel",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Vessel",
    "options": "Vessel",
    "unique": 1
@@ -40,6 +41,7 @@
    "fieldname": "importer_name",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "IMPORTER NAME",
    "options": "Customer"
   },
@@ -55,6 +57,7 @@
    "fieldname": "agent_name",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Agent Name",
    "options": "Customer"
   },
@@ -76,7 +79,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-14 15:39:56.209411",
+ "modified": "2024-05-14 16:24:54.376735",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Agents DO",

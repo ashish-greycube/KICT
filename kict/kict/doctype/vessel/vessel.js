@@ -38,7 +38,7 @@ frappe.ui.form.on("Vessel Details", {
                 } else {
                     frappe.msgprint(__("Row {0}: You cannot select {1} again", [ele.idx, ele.item]))
                     frappe.model.set_value(cdt, cdn, "item",)
-                    frappe.model.set_value(cdt, cdn, "item_group",)
+                    // frappe.model.set_value(cdt, cdn, "item_group",)
                     frappe.model.set_value(cdt, cdn, "item_name",)
                 }
             }
@@ -128,7 +128,6 @@ function create_sales_order_from_vessel(frm) {
                 fields: dialog_field,
                 primary_action_label: 'Create Proforma Invoice',
                 primary_action: function (values) {
-                    console.log("primary_action")
                     frappe.call({
                         method: "kict.kict.doctype.vessel.vessel.create_sales_order_from_vessel",
                         args: {
@@ -139,7 +138,6 @@ function create_sales_order_from_vessel(frm) {
                             "doctype": frm.doc.doctype
                         },
                         callback: function (response) {
-                            console.log('response', response.message)
                             if (response.message) {
                                 let url_list = '<a href="/app/sales-order/' + response.message + '" target="_blank">' + response.message + '</a><br>'
                                 frappe.show_alert({

@@ -5,15 +5,20 @@ import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe import _
+from frappe.utils import flt
 from frappe.utils import today
 
 
 class Vessel(Document):
 	
 	def validate(self):
+		self.validate_duplicate_entry_of_item()
 		self.set_total_tonnage()
 		self.set_unique_bl_no()
-		self.validate_duplicate_entry_of_item()
+		self.set_customer_specific_grt()
+
+	def set_customer_specific_grt(self):
+		pass
 
 	def set_total_tonnage(self):
 		total_tonnage = 0
@@ -43,7 +48,6 @@ class Vessel(Document):
 
 @frappe.whitelist()
 def get_all_unique_customer_from_vessel(docname):
-	print("get_all_unique_customer_from_vessel")
 	customer_list = frappe.db.get_all("Vessel Details", 
 							 filters={"parent": docname}, 
 							   fields=["distinct customer_name"])
@@ -51,43 +55,41 @@ def get_all_unique_customer_from_vessel(docname):
 
 @frappe.whitelist()
 def create_sales_order_from_vessel(source_name, target_doc=None, hrs=None, customer=None,doctype=None):
-	print(source_name,"--------------")
 	def update_item(source, target,source_parent):
 		pass
 	
 	def set_missing_values(source, target):
-		print(source)
-		print(target,"target----------")
-		print(customer)
-		target.customer=customer
-		target.delivery_date = today()
-		price_list, currency = frappe.db.get_value(
+
+		bh_bill_to = frappe.db.get_value(doctype,source_name,"bh_bill_to")
+		vessel_details_filter_for_cargo={"parent":source_name}
+		if bh_bill_to=='Agent':
+			pass
+			
+		elif bh_bill_to=='Customer':
+			vessel_details_filter_for_cargo['customer_name']=customer
+			price_list, currency = frappe.db.get_value(
 			"Customer", {"name": customer}, ["default_price_list", "default_currency"]
-		)
-		print(price_list,"price_list---------")
-		if price_list:
-			target.selling_price_list = price_list
-		if currency:
-			target.currency = currency		
+		    )
+			if price_list:
+				target.selling_price_list = price_list
+			if currency:
+				target.currency = currency
+		cargo_name = frappe.db.get_list("Vessel Details",parent_doctype="Vessel",filters=vessel_details_filter_for_cargo,fields=["distinct item"])
+
+		target.customer=customer
+		target.delivery_date = today()		
 
 		vessel_type = frappe.db.get_value(doctype,source_name,"costal_foreign_vessle")
 		if vessel_type == "Foreign":
 			item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_foreign_vessel")
-			print(item,"birth_hire_item_for_foreign_vessel----------------")
 			item_code = item
 		else :
 			item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
 			item_code = item
-			print(item)
 		vessel_grt = frappe.db.get_value(doctype,source_name,"grt")
 
-		cargo_name = frappe.db.get_list("Vessel Details",parent_doctype="Vessel",filters={"parent":source_name},fields=["distinct item"])
-		print(cargo_name)
 		all_cargo = ",".join(ele.item for ele in cargo_name)
-		print(all_cargo)
-
-		print(hrs,"---hrs---",type(hrs))
-		qty = vessel_grt * int(hrs)
+		qty = vessel_grt * flt(hrs)
 
 		target.append("items",{"item_code":item_code,"qty":qty})
 
@@ -108,39 +110,8 @@ def create_sales_order_from_vessel(source_name, target_doc=None, hrs=None, custo
 			# "postprocess":update_item
 		},		
 	}, target_doc,set_missing_values)
-	# print(doc.as_dict())
 	doc.run_method("set_missing_values")
 	doc.run_method("calculate_taxes_and_totals")
 	doc.save()	
-	print(target_doc)
-	print(doc,"Doc")
-	print(doc.name)
 
 	return doc.name
-
-	# print("make_perfoma_invoice")
-	# so = frappe.new_doc("Sales Order")
-	# so.customer = customer
-	# so.delivery_date = today()
-	# print(today())
-	# row = so.append("items",{})
-	# row.qty = qty
-	# vessel_type = frappe.get_value(doctype,source_name,"costal_foreign_vessle")
-	# print(vessel_type)
-	# print(type(vessel_type))
-	# if vessel_type == "Foreign":
-	# 	item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_foreign_vessel")
-	# 	print(item,"birth_hire_item_for_foreign_vessel----------------")
-	# 	row.item_code = item
-	# else :
-	# 	item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
-	# 	row.item_code = item
-	# 	print(item)
-	
-	# so.flags.ignore_permission
-	# so.run_method("set_missing_values")
-	# so.run_method("calculate_taxes_and_totals")
-
-	# so.save()
-	# print(so.name)
-	# return so.name

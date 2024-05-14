@@ -11,7 +11,7 @@ frappe.ui.form.on("Agents DO", {
             }
         });
 
-        frm.set_query("cargo__name", "agents_do_detail", function () {
+        frm.set_query("item", "agents_do_detail", function () {
             if (frm.doc.vessel) {
                 return {
                     query: "kict.kict.doctype.agents_do.agents_do.get_unique_cargo_list",
@@ -23,7 +23,7 @@ frappe.ui.form.on("Agents DO", {
 
         });
 
-        frm.set_query("cargo_grade", "agents_do_detail", function () {
+        frm.set_query("commodity_grade", "agents_do_detail", function () {
             if (frm.doc.vessel) {
                 return {
                     query: "kict.kict.doctype.agents_do.agents_do.get_unique_grade_list",

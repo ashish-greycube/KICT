@@ -44,7 +44,7 @@
    "label": "Remarks"
   },
   {
-   "fetch_from": "cargo__name.custom_commodity_grade",
+   "fetch_from": "item.custom_commodity_grade",
    "fieldname": "commodity_grade",
    "fieldtype": "Link",
    "in_list_view": 1,

@@ -15,7 +15,8 @@ def get_unique_grade_list(doctype, txt, searchfield, start, page_len, filters):
 	vcn_no = filters.get("vessel_name")
 	return frappe.get_all(
 		"Vessel Details",
+		parent_doctype="Vessel",
 		filters={"parent": vcn_no},
-		fields=["distinct grade"],
+		fields=["distinct item_group"],
 		as_list=1,
 	)

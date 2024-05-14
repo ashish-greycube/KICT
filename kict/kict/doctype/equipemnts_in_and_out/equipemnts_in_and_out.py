@@ -28,9 +28,18 @@ class EquipemntsInandOut(Document):
 @frappe.validate_and_sanitize_search_inputs
 def get_unique_commodity(doctype, txt, searchfield, start, page_len, filters):
 	vessel = filters.get("vessel")
+	commodity = frappe.get_all(
+		"Vessel Details",
+		parent_doctype="Vessel",
+		filters={"parent": vessel},
+		fields=["distinct item"],
+		as_list=1,
+	)
+	print(commodity,"commodity----------")
 	return frappe.get_all(
 		"Vessel Details",
+		parent_doctype="Vessel",
 		filters={"parent": vessel},
-		fields=["distinct commodity"],
+		fields=["distinct item"],
 		as_list=1,
 	)

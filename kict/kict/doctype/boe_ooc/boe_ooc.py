@@ -14,8 +14,9 @@ def get_unique_cargo_name(doctype, txt, searchfield, start, page_len, filters):
 	vessel = filters.get("vessel")
 	return frappe.get_all(
 		"Vessel Details",
+		parent_doctype="Vessel",
 		filters={"parent": vessel},
-		fields=["distinct grade"],
+		fields=["distinct item"],
 		as_list=1,
 	)
 
@@ -25,6 +26,7 @@ def get_unique_customer_name(doctype, txt, searchfield, start, page_len, filters
 	vessel = filters.get("vessel")
 	return frappe.get_all(
 		"Vessel Details",
+		parent_doctype="Vessel",
 		filters={"parent": vessel},
 		fields=["distinct customer_name"],
 		as_list=1,

@@ -1,6 +1,11 @@
 import frappe
+from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 def after_migrate():
+    custom_data_creation()
+    custom_field_creation()
+
+def custom_data_creation() :
     naming_rule = frappe.db.get_list(
         "Document Naming Rule", filters={"document_type": "Vessel Details"})
     
@@ -15,3 +20,26 @@ def after_migrate():
 
     else:
         print("Vessel Details doc is already exist in Document namin rule")
+
+
+
+def custom_field_creation():
+    custom_fields = {
+        "Item": [
+            {
+				"fieldname":"custom_commodity_grade",
+				"label":"Commodity Grade",
+				"fieldtype":"Link",
+				"insert_after": "stock_uom",
+				"is_custom_field":1,
+				"is_system_generated":0,
+                "options": "Commodity Grade",
+            }			
+        ]
+    }
+
+    for dt, fields in custom_fields.items():
+        print("*******\n %s: " % dt, [d.get("fieldname") for d in fields])
+    create_custom_fields(custom_fields)
+
+    

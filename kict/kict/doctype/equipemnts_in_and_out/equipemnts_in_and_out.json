@@ -12,7 +12,6 @@
   "opeation_completion_date_time",
   "column_break_dvlp",
   "vessel_name",
-  "atb",
   "total_tonnage_mt",
   "opeation_start_date_time",
   "remarks",
@@ -61,12 +60,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "atb",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "ATB"
-  },
-  {
    "fetch_from": "vessel.total_tonnage_mt",
    "fieldname": "total_tonnage_mt",
    "fieldtype": "Float",
@@ -99,7 +92,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-09 11:02:36.726400",
+ "modified": "2024-05-13 13:39:30.537099",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Equipemnts In and Out",

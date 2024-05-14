@@ -30,7 +30,7 @@
   "terminal_code",
   "type_of_vessel",
   "costal_foreign_vessle",
-  "flag_country",
+  "flag",
   "bh_bill_to",
   "section_break_lmdg",
   "vessel_details"
@@ -151,6 +151,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Agent Name ",
+   "mandatory_depends_on": "eval: doc.bh_bill_to == 'Agent'",
    "options": "Customer"
   },
   {
@@ -182,13 +183,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "flag_country",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Flag / Country",
-   "options": "Country"
-  },
-  {
    "default": "Foreign",
    "fieldname": "costal_foreign_vessle",
    "fieldtype": "Select",
@@ -212,11 +206,18 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "IMO  No"
+  },
+  {
+   "fieldname": "flag",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Flag",
+   "options": "Country"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-10 13:47:56.458988",
+ "modified": "2024-05-13 13:51:04.675853",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

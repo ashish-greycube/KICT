@@ -7,6 +7,7 @@
  "field_order": [
   "hatch",
   "cargo_grade",
+  "coal_commodity",
   "arrival_qty",
   "discharged_qty",
   "balance_qty",
@@ -63,12 +64,18 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Completed  Discharge Hatch Wise Time & Date"
+  },
+  {
+   "fieldname": "coal_commodity",
+   "fieldtype": "Link",
+   "label": "Commodity",
+   "options": "Coal Commodity"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-14 16:09:16.518700",
+ "modified": "2024-05-14 18:20:29.846136",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hatch wise Details",

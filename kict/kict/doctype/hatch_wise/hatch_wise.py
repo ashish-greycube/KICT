@@ -36,3 +36,16 @@ def get_unique_grade_list(doctype, txt, searchfield, start, page_len, filters):
 		fields=["distinct grade"],
 		as_list=1,
 	)
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_unique_coal_commodity_list(doctype, txt, searchfield, start, page_len, filters):
+	vessel = filters.get("vessel")
+	return frappe.get_all(
+		"Vessel Details",
+		parent_doctype="Vessel",
+		filters={"parent": vessel},
+		fields=["distinct coal_commodity"],
+		as_list=1,
+	)

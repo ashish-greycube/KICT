@@ -14,6 +14,16 @@ frappe.ui.form.on("Hatch wise", {
                 };
             }
         });
+        frm.set_query("coal_commodity", "hatch_wise_details", function () {
+            if (frm.doc.vessel) {
+                return {
+                    query: "kict.kict.doctype.hatch_wise.hatch_wise.get_unique_coal_commodity_list",
+                    filters: {
+                        vessel: frm.doc.vessel
+                    },
+                };
+            }
+        });        
     }
 });
 

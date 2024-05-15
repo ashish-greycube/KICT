@@ -33,6 +33,17 @@ frappe.ui.form.on("Agents DO", {
                 };
             }
         });
+
+        frm.set_query("coal_commodity", "agents_do_detail", function () {
+            if (frm.doc.vessel) {
+                return {
+                    query: "kict.kict.doctype.agents_do.agents_do.get_unique_coal_commodity_list",
+                    filters: {
+                        vessel: frm.doc.vessel
+                    },
+                };
+            }
+        });        
     },
 });
 

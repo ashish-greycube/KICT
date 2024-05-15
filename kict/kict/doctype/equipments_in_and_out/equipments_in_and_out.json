@@ -16,7 +16,7 @@
   "opeation_start_date_time",
   "remarks",
   "section_break_ycbu",
-  "equipemnts_in_and_out_details"
+  "equipments_in_and_out_details"
  ],
  "fields": [
   {
@@ -86,7 +86,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "equipemnts_in_and_out_details",
+   "fieldname": "equipments_in_and_out_details",
    "fieldtype": "Table",
    "label": "Equipemnts In and Out Details",
    "options": "Equipments In and Out Details"
@@ -99,7 +99,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-14 16:24:17.699281",
+ "modified": "2024-05-15 15:13:33.621022",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Equipments In and Out",

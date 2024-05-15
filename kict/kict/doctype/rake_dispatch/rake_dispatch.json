@@ -92,8 +92,25 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-05-10 15:46:31.701948",
+ "links": [
+  {
+   "link_doctype": "Railway Receipt",
+   "link_fieldname": "name"
+  },
+  {
+   "link_doctype": "Rake Performance Calculation",
+   "link_fieldname": "name"
+  },
+  {
+   "link_doctype": "Rake Delay",
+   "link_fieldname": "name"
+  },
+  {
+   "link_doctype": "Railway Indent",
+   "link_fieldname": "name"
+  }
+ ],
+ "modified": "2024-05-15 14:49:16.311866",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

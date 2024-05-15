@@ -204,8 +204,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-05-09 15:11:36.771301",
+ "links": [
+  {
+   "link_doctype": "Rake Dispatch",
+   "link_fieldname": "name"
+  }
+ ],
+ "modified": "2024-05-15 14:24:24.972563",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

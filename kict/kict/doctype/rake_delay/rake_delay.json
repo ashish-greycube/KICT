@@ -43,8 +43,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-05-10 13:09:06.427282",
+ "links": [
+  {
+   "link_doctype": "Rake Dispatch",
+   "link_fieldname": "name"
+  }
+ ],
+ "modified": "2024-05-15 14:25:20.411393",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Delay",

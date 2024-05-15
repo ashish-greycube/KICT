@@ -18,7 +18,8 @@
   "customer_po_no",
   "tonnage_mt",
   "customer_specific_grt",
-  "remarks"
+  "remarks",
+  "cargo_closure"
  ],
  "fields": [
   {
@@ -111,12 +112,18 @@
    "label": "Commodity",
    "options": "Coal Commodity",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cargo_closure",
+   "fieldtype": "Check",
+   "label": "Cargo Closure"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-14 18:16:57.359462",
+ "modified": "2024-05-15 14:29:43.545955",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Details",

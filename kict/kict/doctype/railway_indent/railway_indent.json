@@ -79,8 +79,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-05-02 17:57:35.698382",
+ "links": [
+  {
+   "link_doctype": "Rake Dispatch",
+   "link_fieldname": "fnr_no"
+  }
+ ],
+ "modified": "2024-05-15 14:36:26.363314",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Indent",

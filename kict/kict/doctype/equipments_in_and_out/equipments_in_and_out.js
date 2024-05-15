@@ -6,7 +6,7 @@ frappe.ui.form.on("Equipments In and Out", {
         frm.set_query("commodity_code", function () {
             if (frm.doc.vessel) {
                 return {
-                    query: "kict.kict.doctype.equipemnts_in_and_out.equipemnts_in_and_out.get_unique_commodity",
+                    query: "kict.kict.doctype.equipments_in_and_out.equipments_in_and_out.get_unique_commodity",
                     filters: {
                         vessel: frm.doc.vessel
                     },

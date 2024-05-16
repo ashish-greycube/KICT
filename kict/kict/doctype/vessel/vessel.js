@@ -73,6 +73,7 @@ let total_tonnage_of_vessel = function (frm, cdt, cdn) {
 }
 
 function create_sales_order_from_vessel(frm) {
+    let dialog = undefined
     const dialog_field = []
     frappe.call({
         method: "kict.kict.doctype.vessel.vessel.get_all_unique_customer_from_vessel",
@@ -80,62 +81,162 @@ function create_sales_order_from_vessel(frm) {
             docname: cur_frm.doc.name
         },
         callback: function (r) {
-            let customer = r.message
-            let unique_customer = [""]
-            customer.forEach(ele => {
+            console.log(r.message)
+            let customer_with_grt = r.message
+            let unique_customer = []
+            customer_with_grt.forEach(ele => {
                 unique_customer.push(ele.customer_name)
             })
-            if (dialog_field.length == 0) {
-                if (cur_frm.doc.bh_bill_to == "Agent") {
-                    let bill_to = {
-                        fieldtype: "Data",
-                        fieldname: "bill_to",
-                        label: __("Bill To"),
-                        read_only: 1,
-                        in_list_view: 1,
-                        columns: 2,
-                        default: cur_frm.doc.agent_name,
-                        reqd: 1
-                    }
-                    dialog_field.push(bill_to)
-                }
-                else {
-                    if (customer.length == 1) {
-                        let bill_to = {
-                            fieldtype: "Data",
-                            fieldname: "bill_to",
-                            label: __("Bill To"),
-                            read_only: 1,
-                            in_list_view: 1,
-                            columns: 2,
-                            default: customer[0].customer_name,
-                            reqd: 1
-                        }
-                        dialog_field.push(bill_to)
-                    } else {
-                        let bill_to = {
-                            fieldtype: "Select",
-                            fieldname: "bill_to",
-                            label: __("Bill To"),
-                            options: unique_customer,
-                            in_list_view: 1,
-                            columns: 2,
-                            reqd: 1
-                        }
-                        dialog_field.push(bill_to)
-                    }
-                }
+
+            let is_bill_to = frm.doc.bh_bill_to
+            let agent_name = frm.doc.agent_name
+            let is_single_customer = false
+            let customer_specific_grt_value=frm.doc.grt
+            let customer_name
+            if (customer_with_grt.length == 1) {
+                is_single_customer = true
+                customer_name = customer_with_grt[0].customer_name
+                customer_specific_grt_value=customer_with_grt[0].customer_specific_grt
             }
-            if (dialog_field.length < 2) {
-                dialog_field.push({
-                    fieldtype: "Float",
-                    fieldname: "bill_hours",
-                    label: __("Expected Hours"),
+            let bill_to
+            let customer_specific_grt
+            if (is_bill_to == "Customer" && is_single_customer == false) {
+                bill_to = {
+                    fieldtype: "Select",
+                    fieldname: "bill_to",
+                    label: __("Bill To"),
+                    options: unique_customer,
                     in_list_view: 1,
-                })
+                    columns: 2,
+                    reqd: 1,
+                    onchange: function () {
+                        let bill_to_name = dialog.get_field("bill_to")
+                        console.log(bill_to_name.value)
+                        for (customer of customer_with_grt) {
+                            if (bill_to_name.value == customer.customer_name) {
+                                dialog.set_value("customer_specific_grt", customer.customer_specific_grt)
+                            }
+                        }
+
+                    }
+                }
+                customer_specific_grt={
+                    fieldtype: "Float",
+                    fieldname: "customer_specific_grt",
+                    label: __("Customer Specific GRT"),
+                    in_list_view: 1,
+                    read_only: 1,
+                }
             }
 
-            const dialog = new frappe.ui.Dialog({
+            if (is_bill_to == "Agent" ) {
+                bill_to = {
+                    fieldtype: "Data",
+                    fieldname: "bill_to",
+                    label: __("Bill To"),
+                    read_only: 1,
+                    in_list_view: 1,
+                    columns: 2,
+                    default: agent_name,
+                    reqd: 1
+                },
+                customer_specific_grt={
+                    fieldtype: "Float",
+                    fieldname: "customer_specific_grt",
+                    label: __("Customer Specific GRT"),
+                    in_list_view: 1,
+                    read_only: 1,
+                    default:customer_specific_grt_value
+                }                
+
+            }
+            if (is_bill_to == "Customer" && is_single_customer == true) {
+                bill_to = {
+                    fieldtype: "Data",
+                    fieldname: "bill_to",
+                    label: __("Bill To"),
+                    read_only: 1,
+                    in_list_view: 1,
+                    columns: 2,
+                    default: customer_name,
+                    reqd: 1
+                },
+                customer_specific_grt={
+                    fieldtype: "Float",
+                    fieldname: "customer_specific_grt",
+                    label: __("Customer Specific GRT"),
+                    in_list_view: 1,
+                    read_only: 1,
+                    default:customer_specific_grt_value
+                }                 
+
+            }
+            dialog_field.push(bill_to)
+
+      
+            dialog_field.push({
+                fieldtype: "Section Break",
+                fieldname: "section_break_1",
+            })
+            dialog_field.push({
+                fieldtype: "Float",
+                fieldname: "bill_hours",
+                label: __("Expected Hours"),
+                in_list_view: 1,
+                onchange: function () {
+                    let hrs = dialog.get_field("bill_hours")
+                    let grt = dialog.get_field("customer_specific_grt")
+                    if (grt.value) {
+                        let total_qty = hrs.value * grt.value
+                        dialog.set_value("total_qty", total_qty)
+                    }
+                    else {
+                        if (frm.doc.bh_bill_to == "Agent") {
+                            let total_qty = hrs.value * frm.doc.grt
+                            dialog.set_value("total_qty", total_qty)
+                        }
+                        else {
+                            grt = customer_with_grt[0].customer_specific_grt
+                            let total_qty = hrs.value * grt
+                            dialog.set_value("total_qty", total_qty)
+                        }
+                    }
+                }
+            })
+            dialog_field.push({
+                fieldtype: "Column Break",
+                fieldname: "column_break_1",
+            })
+            dialog_field.push(customer_specific_grt)
+            dialog_field.push({
+                fieldtype: "Column Break",
+                fieldname: "column_break_2",
+            })
+            dialog_field.push({
+                fieldtype: "Float",
+                fieldname: "total_qty",
+                label: __("Total Qty"),
+                in_list_view: 1,
+                read_only: 1,
+            })
+
+            // if (customer_with_grt.length == 1){
+            //     let bill_to_name = dialog.get_field("bill_to")
+            //     console.log(bill_to_name)
+            //     for (customer of customer_with_grt) {
+            //         if (bill_to_name.value == customer.customer_name) {
+            //             dialog.set_value("customer_specific_grt", customer.customer_specific_grt)
+            //         }
+            //     }
+            // }
+            //     let bill_to_name = dialog.get_field("bill_to")
+            // for (customer of customer_with_grt) {
+            //     if (bill_to_name.value == customer.customer_name) {
+            //         dialog.set_value("customer_specific_grt", customer.customer_specific_grt)
+            //     }
+            // }
+
+            dialog = new frappe.ui.Dialog({
                 title: __("Enter Details for Berth Hire Charges"),
                 fields: dialog_field,
                 primary_action_label: 'Create Proforma Invoice',
@@ -143,9 +244,10 @@ function create_sales_order_from_vessel(frm) {
                     frappe.call({
                         method: "kict.kict.doctype.vessel.vessel.create_sales_order_from_vessel",
                         args: {
-                            "source_name": cur_frm.doc.name,
+                            "source_name": frm.doc.name,
                             "target_doc": undefined,
                             "hrs": values.bill_hours,
+                            "qty": values.total_qty,
                             "customer": values.bill_to,
                             "doctype": frm.doc.doctype
                         },

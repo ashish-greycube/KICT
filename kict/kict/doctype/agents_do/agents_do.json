@@ -79,7 +79,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-14 16:24:54.376735",
+ "modified": "2024-05-16 12:12:12.631649",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Agents DO",
@@ -95,6 +95,30 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operations Team",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operations MIS",
    "share": 1,
    "write": 1
   }

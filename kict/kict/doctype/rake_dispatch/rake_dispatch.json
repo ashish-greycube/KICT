@@ -110,7 +110,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-15 14:49:16.311866",
+ "modified": "2024-05-16 12:07:42.391924",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",
@@ -126,6 +126,30 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operations Team",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operations MIS",
    "share": 1,
    "write": 1
   }

@@ -18,7 +18,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-06 14:07:32.835636",
+ "modified": "2024-05-16 12:07:55.647830",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Delay Department",
@@ -34,6 +34,30 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operations MIS",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operations Team",
    "share": 1,
    "write": 1
   }

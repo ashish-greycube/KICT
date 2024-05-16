@@ -83,7 +83,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-05-13 09:44:29.874890",
+ "modified": "2024-05-16 12:16:14.753087",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",
@@ -96,6 +96,26 @@
    "print": 1,
    "read": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Operations MIS",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Operations Team",
    "share": 1,
    "write": 1
   }

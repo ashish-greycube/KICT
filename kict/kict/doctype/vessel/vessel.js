@@ -13,6 +13,18 @@ frappe.ui.form.on("Vessel", {
                 },
             };
         });
+
+
+        frappe.db.get_single_value('Coal Settings', 'customer_group_for_agent').then(group => {
+            frm.set_query("agent_name", function () {
+                return {
+                    filters: {
+                        customer_group: group
+                    }
+                }
+            })
+        })
+
         frm.trigger('vessel_on_refresh_load')
     },
     refresh(frm) {

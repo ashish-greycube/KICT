@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "vessel",
+  "vessel_total_delay_hours",
   "column_break_suik",
   "vessel_name",
   "section_break_cqmk",
@@ -41,11 +42,16 @@
    "fieldtype": "Table",
    "label": "Vessel delay Details",
    "options": "Vessel Delay Details"
+  },
+  {
+   "fieldname": "vessel_total_delay_hours",
+   "fieldtype": "Duration",
+   "label": "Vessel Total Delay Hours"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-16 12:14:22.693446",
+ "modified": "2024-05-17 17:30:48.499029",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Delay",

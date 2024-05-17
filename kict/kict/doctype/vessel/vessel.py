@@ -19,8 +19,6 @@ class Vessel(Document):
 
 	def set_customer_specific_grt(self):
 		get_unique_customer = frappe.db.get_list("Vessel Details",parent_doctype="Vessel",filters={"parent":self.name},fields=['distinct customer_name'])
-		print(get_unique_customer)
-		print(self.name)
 		final_customer_specific_grt = []
 		for customer in get_unique_customer:
 			customer_specific_total = 0
@@ -32,11 +30,8 @@ class Vessel(Document):
 			customer_specific_grt["customer"]=customer.customer_name
 			customer_specific_grt["grt"]=customer_specific_total
 			final_customer_specific_grt.append(customer_specific_grt)
-		print(final_customer_specific_grt,"---------final_customer_specific_grt")
 		for row in self.get("vessel_details"):
 			for ele in final_customer_specific_grt:
-				print(ele)
-				print(ele.get("customer"))
 				if row.customer_name == ele.get("customer"):
 					row.customer_specific_grt = ele.get("grt")
 
@@ -67,14 +62,14 @@ class Vessel(Document):
 
 
 @frappe.whitelist()
-def get_all_unique_customer_from_vessel(docname):
+def get_unique_customer_and_customer_specific_grt_from_vessel(docname):
 	customer_list = frappe.db.get_all("Vessel Details", 
 							 filters={"parent": docname}, 
 							   fields=["distinct customer_name","customer_specific_grt"])
 	return customer_list
 
 @frappe.whitelist()
-def create_sales_order_from_vessel(source_name, target_doc=None, hrs=None, qty=None, customer=None,doctype=None):
+def create_sales_order_from_vessel(source_name, target_doc=None, qty=None, customer=None,doctype=None):
 	def update_item(source, target,source_parent):
 		pass
 	
@@ -109,12 +104,6 @@ def create_sales_order_from_vessel(source_name, target_doc=None, hrs=None, qty=N
 		vessel_grt = frappe.db.get_value(doctype,source_name,"grt")
 
 		all_cargo = ",".join((ele.item if ele.item!=None else '') for ele in cargo_name)
-		if bh_bill_to=='Agent':
-			vessel_grt = frappe.db.get_value(doctype,source_name,"grt")
-			qty = vessel_grt * flt(hrs)
-		else :
-			customer_specific_grt = frappe.db.get_value("Vessel Details",{"parent":source_name,"customer_name":customer},["customer_specific_grt"])
-			qty = customer_specific_grt * flt(hrs)
 
 		target.append("items",{"item_code":item_code,"qty":qty})
 

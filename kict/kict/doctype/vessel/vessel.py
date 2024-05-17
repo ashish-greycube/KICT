@@ -77,7 +77,8 @@ def get_unique_customer_and_customer_specific_grt_from_vessel(docname):
 
 
 @frappe.whitelist()
-def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,customer_specific_grt_percentage=None,doctype=None):
+def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,
+													 customer_specific_grt_percentage=None,customer_specific_grt_field=None,bill_hours=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	
@@ -121,7 +122,7 @@ def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=Non
 			item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
 			item_code = item
 
-		target.append("items",{"item_code":item_code,"qty":qty})
+		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_expected_hours_of_stay":bill_hours})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {
@@ -159,7 +160,8 @@ def get_berth_stay_hours(vessel):
 
 
 @frappe.whitelist()
-def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,customer_specific_grt_percentage=None,doctype=None):
+def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,
+														customer_specific_grt_percentage=None,customer_specific_grt_field=None,bill_hours=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	
@@ -192,7 +194,7 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 		target.custom_quantity_in_mt=custom_quantity_in_mt
 		target.custom_type_of_invoice="Berth Hire Charges"
 		target.customer=customer
-		target.delivery_date = today()		
+		target.due_date = today()		
 		target.vessel=source_name
 
 		vessel_type = frappe.db.get_value(doctype,source_name,"costal_foreign_vessle")
@@ -203,7 +205,69 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 			item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
 			item_code = item
 
-		target.append("items",{"item_code":item_code,"qty":qty})
+		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_expected_hours_of_stay":bill_hours})
+	
+	doc = get_mapped_doc('Vessel', source_name, {
+		'Vessel': {
+			'doctype': 'Sales Invoice',
+			# 'field_map': {
+			# 	'agent_name':'name',
+			# },			
+			'validation': {
+				'docstatus': ['!=', 2]
+			}
+		},
+		"Vessel Details": {
+			"doctype": "Sales Invoice Item",
+			"condition":lambda doc:len(frappe.db.get_list("Vessel Details",filters={"parent":source_name}))<0,
+			# "postprocess":update_item
+		},		
+	}, target_doc,set_missing_values)
+	doc.run_method("set_missing_values")
+	doc.run_method("calculate_taxes_and_totals")
+	doc.save()	
+	return doc.name
+
+@frappe.whitelist()
+def get_unique_item_and_customer_from_vessel(docname):
+    print("Cargo Handling Charges")
+    item_list = frappe.db.get_list("Vessel Details",
+                                parent_doctype="Vessel",
+                                filters={"parent":docname},
+                                fields=["item","customer_name","name","tonnage_mt"])
+    return item_list
+
+@frappe.whitelist()
+def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,type_of_invoice=None,vessel_details_hex_code_field=None,customer_name_field=None,total_tonnage_field=None,doctype=None):
+	# def update_item(source, target,source_parent):
+	# 	pass
+	print(source_name, target_doc,cargo_item_field,type_of_invoice,vessel_details_hex_code_field,customer_name_field,total_tonnage_field,doctype)	
+	def set_missing_values(source, target):
+	
+		price_list, currency = frappe.db.get_value("Customer", {"name": customer_name_field}, ["default_price_list", "default_currency"])
+		if price_list:
+			target.selling_price_list = price_list
+		if currency:
+			target.currency = currency
+
+		# cargo_name = frappe.db.get_list("Vessel Details",parent_doctype="Vessel",filters=vessel_details_filter_for_cargo,fields=["distinct item"])
+		# all_cargo = ",".join((ele.item if ele.item!=None else '') for ele in cargo_name)
+		# target.custom_cargo_item=all_cargo
+		# target.custom_quantity_in_mt=custom_quantity_in_mt
+
+		# target.type_of_invoice=type_of_invoice
+		target.custom_type_of_invoice="Cargo Handling Charges"
+		target.customer=customer_name_field
+		target.due_date = today()		
+		target.vessel=source_name
+		item_code = frappe.db.get_single_value("Coal Settings","ch_charges")
+
+		# nothing on vessel type
+
+		item_row=target.append("items",{"item_code":item_code,"qty":total_tonnage_field,"description":cargo_item_field,"vessel_detail":vessel_details_hex_code_field})
+
+		
+		
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {

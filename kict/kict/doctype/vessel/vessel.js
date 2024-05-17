@@ -38,7 +38,11 @@ frappe.ui.form.on("Vessel", {
         if (frm.is_new() == undefined) {
             const dialog_field = []
             frm.add_custom_button(__('Tax Invoice for B/H'), () => create_sales_invoice_from_vessel_for_berth_charges(frm), __("Create"));
-        }        
+        }   
+        if (frm.is_new() == undefined) {
+            frm.add_custom_button(__('Sales Invoice for C/H'), () => create_sales_invoice_for_cargo_handling_charges_from_vessel(frm), __("Create"));
+
+        }     
     }
 });
 
@@ -300,6 +304,8 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                         "customer": values.bill_to_field,
                                         "is_single_customer":is_single_customer,
                                         "customer_specific_grt_percentage":values.customer_specific_grt_percentage,
+                                        "customer_specific_grt_field":values.customer_specific_grt_field,
+                                        "bill_hours":values.bill_hours,                                        
                                         "doctype": frm.doc.doctype
                                     },
                                     callback: function (response) {
@@ -502,6 +508,8 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                             "customer": values.bill_to_field,
                             "is_single_customer":is_single_customer,
                             "customer_specific_grt_percentage":values.customer_specific_grt_percentage,
+                            "customer_specific_grt_field":values.customer_specific_grt_field,
+                            "bill_hours":values.bill_hours,
                             "doctype": frm.doc.doctype
                         },
                         callback: function (response) {
@@ -517,6 +525,147 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                         }
                     });
                     dialog.hide();
+                }
+            })
+            dialog.show()
+        }
+    })
+}
+
+function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
+    if (frm.is_dirty()==true) {
+        frappe.throw({
+            message: __("Please save the form to proceed..."),
+            indicator: "red",
+        });       
+    }
+    let dialog = undefined
+    const dialog_field = []
+
+    frappe.call({
+        method: "kict.kict.doctype.vessel.vessel.get_unique_item_and_customer_from_vessel",
+        args: {
+            docname: cur_frm.doc.name
+        },
+        callback: function (r) {
+            console.log(r.message)
+            let vessel_details = r.message
+            let unique_cargo_item = []
+            vessel_details.forEach(ele => {
+                unique_cargo_item.push(ele.item)
+            })
+            // dialog fields
+            let cargo_item_field
+            let vessel_details_hex_code_field
+            let customer_name_field
+            let total_tonnage_field
+
+            vessel_details_hex_code_field={
+                fieldtype: "Data",
+                fieldname: "vessel_details_hex_code_field",
+                label: __("Vessel Detail Name"),
+                // hidden:1,
+            }
+            customer_name_field={
+                fieldtype: "Data",
+                fieldname: "customer_name_field",
+                label: __("Customer Name"),
+                // hidden:1,
+            }
+            total_tonnage_field={
+                fieldtype: "Data",
+                fieldname: "total_tonnage_field",
+                label: __("Total Tonnage"),
+                // hidden:1,
+            }
+            // multi item
+            if(vessel_details.length > 1){
+                cargo_item_field = {
+                    fieldtype: "Select",
+                    fieldname: "cargo_item_field",
+                    label: __("Cargo Item"),
+                    options: unique_cargo_item,
+                    columns: 2,
+                    reqd: 1,
+                    onchange : function(){
+                        let cargo_item_name = dialog.get_field("cargo_item_field")
+                        for(record of vessel_details){
+                            if(record.item == cargo_item_name.value){
+                                dialog.set_value("vessel_details_hex_code_field",record.name)
+                                dialog.set_value("customer_name_field",record.customer_name)
+                                dialog.set_value("total_tonnage_field",record.tonnage_mt)
+                            }
+                        }
+                    }
+                }
+            }
+            //  single item
+            if(vessel_details.length == 1){
+                let cargo_item=vessel_details[0].item
+                cargo_item_field = {
+                    fieldtype: "Data",
+                    fieldname: "cargo_item_field",
+                    label: __("Cargo Item"),
+                    in_list_view: 1,
+                    columns: 2,
+                    default: cargo_item,
+                    read_only: 1,
+                    reqd: 1,
+                }
+                // put defaults
+                vessel_details_hex_code_field["default"]=vessel_details[0].name
+                customer_name_field["default"]=vessel_details[0].customer_name
+                total_tonnage_field["default"]=vessel_details[0].tonnage_mt
+            }
+
+            dialog_field.push(cargo_item_field)
+            dialog_field.push({
+                fieldtype: "Section Break",
+                fieldname: "section_break_1",
+            })
+            dialog_field.push({
+                fieldtype: "Select",
+                fieldname: "type_of_invoice",
+                label: __("Type Of Invoice"),
+                options: ["Initial" , "Complete Discharge", "Periodic Dispatch"],
+                columns: 2,
+                reqd: 1,
+            })
+            dialog_field.push(vessel_details_hex_code_field)
+            dialog_field.push(customer_name_field)
+            dialog_field.push(total_tonnage_field)
+
+            dialog = new frappe.ui.Dialog({
+                title: __("Enter Details for Cargo Handling Charges"),
+                fields: dialog_field,
+                primary_action_label: 'Create Sales Invoice',
+                primary_action: function (values) {
+                    console.log(values)
+                    frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.create_sales_invoice_for_cargo_handling_charges_from_vessel",
+                        args: {
+                            "source_name": frm.doc.name,
+                            "target_doc": undefined,
+                            "cargo_item_field":values.cargo_item_field,
+                            "type_of_invoice":values.type_of_invoice,
+                            "vessel_details_hex_code_field":values.vessel_details_hex_code_field,
+                            "customer_name_field": values.customer_name_field,
+                            "total_tonnage_field":values.total_tonnage_field,
+                            "doctype": frm.doc.doctype
+                        },
+                        callback: function (response) {
+                            if (response.message) {
+                                let url_list = '<a href="/app/sales_invoice/' + response.message + '" target="_blank">' + response.message + '</a><br>'
+                                frappe.show_alert({
+                                    title: __('Sales Order is created'),
+                                    message: __(url_list),
+                                    indicator: 'green'
+                                }, 12);
+                                window.open(`/app/sales_invoice/` + response.message);
+                            }
+                        }
+                    });
+                    dialog.hide();                    
                 }
             })
             dialog.show()

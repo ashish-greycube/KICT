@@ -10,9 +10,6 @@ from frappe.utils import today
 
 
 class Vessel(Document):
-	def before_insert(self):
-		self.set_customer_specific_grt()
-
 	def validate(self):
 		self.validate_duplicate_entry_of_item()
 		self.set_total_tonnage()
@@ -20,16 +17,22 @@ class Vessel(Document):
 		self.set_customer_specific_grt()
 
 	def set_customer_specific_grt(self):
-		get_unique_customer = frappe.db.get_list("Vessel Details",parent_doctype="Vessel",filters={"parent":self.name},fields=['distinct customer_name'])
+		get_unique_customer=[]
+		for row in self.get("vessel_details"):
+			if row.customer_name not in get_unique_customer:
+				get_unique_customer.append({"customer_name":row.customer_name})
+		print(get_unique_customer)
 		final_customer_specific_grt = []
 		for customer in get_unique_customer:
+			print(customer)
 			customer_specific_total = 0
 			for item in self.get("vessel_details"):
-				if item.customer_name == customer.customer_name:
+				if item.customer_name == customer.get("customer_name"):
 					if item.tonnage_mt:
 						customer_specific_total = customer_specific_total + item.tonnage_mt
 			customer_specific_grt = {}
-			customer_specific_grt["customer"]=customer.customer_name
+			customer_specific_grt["customer"]=customer.get("customer_name")
+			print(self.total_tonnage_mt)
 			customer_specific_grt["grt"]=(customer_specific_total/self.total_tonnage_mt)*100
 			final_customer_specific_grt.append(customer_specific_grt)
 		for row in self.get("vessel_details"):
@@ -66,14 +69,15 @@ class Vessel(Document):
 @frappe.whitelist()
 def get_unique_customer_and_customer_specific_grt_from_vessel(docname):
 	customer_list = frappe.db.get_all("Vessel Details", 
-							 filters={"parent": docname}, 
-							   fields=["distinct customer_name","customer_specific_grt"])
+							parent_doctype='Vessel',
+							filters={"parent": docname}, 
+							fields=["distinct customer_name","customer_specific_grt"])
 	return customer_list
 
 
 
 @frappe.whitelist()
-def create_sales_order_from_vessel(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,customer_specific_grt_percentage=None,doctype=None):
+def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,customer_specific_grt_percentage=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	
@@ -131,6 +135,88 @@ def create_sales_order_from_vessel(source_name, target_doc=None, qty=None, custo
 		},
 		"Vessel Details": {
 			"doctype": "Sales Order Item",
+			"condition":lambda doc:len(frappe.db.get_list("Vessel Details",filters={"parent":source_name}))<0,
+			# "postprocess":update_item
+		},		
+	}, target_doc,set_missing_values)
+	doc.run_method("set_missing_values")
+	doc.run_method("calculate_taxes_and_totals")
+	doc.save()	
+	return doc.name
+
+@frappe.whitelist()
+def get_berth_stay_hours(vessel):
+	berth_stay_hours=0
+	statement_of_fact_list = frappe.db.get_all("Statement of Fact", 
+							filters={"vessel": vessel}, 
+							fields=["all_line_cast_off","first_line_ashore"])
+	if len(statement_of_fact_list)>0:
+		all_line_cast_off=statement_of_fact_list[0].all_line_cast_off
+		first_line_ashore=statement_of_fact_list[0].first_line_ashore
+		berth_stay_hours=frappe.utils.time_diff_in_hours(all_line_cast_off,first_line_ashore)
+
+	return berth_stay_hours
+
+
+@frappe.whitelist()
+def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,customer_specific_grt_percentage=None,doctype=None):
+	# def update_item(source, target,source_parent):
+	# 	pass
+	
+	def set_missing_values(source, target):
+		bh_bill_to = frappe.db.get_value(doctype,source_name,"bh_bill_to")
+		vessel_details_filter_for_cargo={"parent":source_name}
+		total_tonnage_mt=frappe.db.get_value(doctype,source_name,"total_tonnage_mt")
+
+		if bh_bill_to=='Agent':
+			custom_quantity_in_mt=total_tonnage_mt
+			
+		elif bh_bill_to=='Customer':
+			if is_single_customer=='true':
+				custom_quantity_in_mt=total_tonnage_mt
+			elif is_single_customer=='false':
+				custom_quantity_in_mt=(flt(customer_specific_grt_percentage)*total_tonnage_mt)/100
+			vessel_details_filter_for_cargo['customer_name']=customer
+
+			price_list, currency = frappe.db.get_value(
+			"Customer", {"name": customer}, ["default_price_list", "default_currency"]
+		    )
+			if price_list:
+				target.selling_price_list = price_list
+			if currency:
+				target.currency = currency
+
+		cargo_name = frappe.db.get_list("Vessel Details",parent_doctype="Vessel",filters=vessel_details_filter_for_cargo,fields=["distinct item"])
+		all_cargo = ",".join((ele.item if ele.item!=None else '') for ele in cargo_name)
+		target.custom_cargo_item=all_cargo
+		target.custom_quantity_in_mt=custom_quantity_in_mt
+		target.custom_type_of_invoice="Berth Hire Charges"
+		target.customer=customer
+		target.delivery_date = today()		
+		target.vessel=source_name
+
+		vessel_type = frappe.db.get_value(doctype,source_name,"costal_foreign_vessle")
+		if vessel_type == "Foreign":
+			item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_foreign_vessel")
+			item_code = item
+		else :
+			item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
+			item_code = item
+
+		target.append("items",{"item_code":item_code,"qty":qty})
+	
+	doc = get_mapped_doc('Vessel', source_name, {
+		'Vessel': {
+			'doctype': 'Sales Invoice',
+			# 'field_map': {
+			# 	'agent_name':'name',
+			# },			
+			'validation': {
+				'docstatus': ['!=', 2]
+			}
+		},
+		"Vessel Details": {
+			"doctype": "Sales Invoice Item",
 			"condition":lambda doc:len(frappe.db.get_list("Vessel Details",filters={"parent":source_name}))<0,
 			# "postprocess":update_item
 		},		

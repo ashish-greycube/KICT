@@ -55,7 +55,8 @@
    "fieldname": "tonnage_mt",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Tonnage (MT)"
+   "label": "Tonnage (MT)",
+   "reqd": 1
   },
   {
    "fieldname": "bl_order_ref_no",
@@ -124,7 +125,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-17 10:32:26.003362",
+ "modified": "2024-05-17 13:57:34.374006",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Details",

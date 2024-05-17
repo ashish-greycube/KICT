@@ -14,7 +14,6 @@ frappe.ui.form.on("Vessel", {
             };
         });
 
-
         frappe.db.get_single_value('Coal Settings', 'customer_group_for_agent').then(group => {
             frm.set_query("agent_name", function () {
                 return {
@@ -72,9 +71,17 @@ let total_tonnage_of_vessel = function (frm, cdt, cdn) {
     frm.set_value("total_tonnage_mt", total_tonnage)
 }
 
+
 function create_sales_order_from_vessel(frm) {
+    if (frm.is_dirty()==true) {
+        frappe.throw({
+            message: __("Please save the form to proceed..."),
+            indicator: "red",
+        });       
+    }
     let dialog = undefined
     const dialog_field = []
+
     frappe.call({
         method: "kict.kict.doctype.vessel.vessel.get_unique_customer_and_customer_specific_grt_from_vessel",
         args: {
@@ -92,46 +99,52 @@ function create_sales_order_from_vessel(frm) {
             let is_single_customer = false
             let customer_specific_grt_value = frm.doc.grt
             let customer_name
+
             if (customer_with_grt.length == 1) {
                 is_single_customer = true
                 customer_name = customer_with_grt[0].customer_name
-                customer_specific_grt_value = customer_with_grt[0].customer_specific_grt
+                customer_specific_grt_value = frm.doc.grt
             }
-            let bill_to
-            let customer_specific_grt
+            // dialog fields
+            let bill_to_field
+            let customer_specific_grt_field
+
+            // multi customer
             if (is_bill_to == "Customer" && is_single_customer == false) {
-                bill_to = {
+                bill_to_field = {
                     fieldtype: "Select",
-                    fieldname: "bill_to",
+                    fieldname: "bill_to_field",
                     label: __("Bill To"),
                     options: unique_customer,
                     in_list_view: 1,
                     columns: 2,
                     reqd: 1,
                     onchange: function () {
-                        let bill_to_name = dialog.get_field("bill_to")
+                        let bill_to_name = dialog.get_field("bill_to_field")
                         for (customer of customer_with_grt) {
                             if (bill_to_name.value == customer.customer_name) {
-                                dialog.set_value("customer_specific_grt", customer.customer_specific_grt)
+                                dialog.set_value("customer_specific_grt_field", (customer.customer_specific_grt*frm.doc.grt))
+                                dialog.set_value("customer_specific_grt_percentage",customer.customer_specific_grt)
+                                
                                 dialog.set_value("bill_hours",)
                             }
                         }
-
                     }
                 }
-                customer_specific_grt = {
+                customer_specific_grt_field = {
                     fieldtype: "Float",
-                    fieldname: "customer_specific_grt",
+                    fieldname: "customer_specific_grt_field",
                     label: __("Customer Specific GRT"),
                     in_list_view: 1,
                     read_only: 1,
                 }
+                
             }
-
+            // agent
             if (is_bill_to == "Agent") {
-                bill_to = {
+                bill_to_field = {
                     fieldtype: "Data",
-                    fieldname: "bill_to",
+                    fieldname: "bill_to_field",
                     label: __("Bill To"),
                     read_only: 1,
                     in_list_view: 1,
@@ -139,9 +152,9 @@ function create_sales_order_from_vessel(frm) {
                     default: agent_name,
                     reqd: 1
                 },
-                    customer_specific_grt = {
+                customer_specific_grt_field = {
                         fieldtype: "Float",
-                        fieldname: "customer_specific_grt",
+                        fieldname: "customer_specific_grt_field",
                         label: __("Customer Specific GRT"),
                         in_list_view: 1,
                         read_only: 1,
@@ -149,10 +162,11 @@ function create_sales_order_from_vessel(frm) {
                     }
 
             }
+            // single customer
             if (is_bill_to == "Customer" && is_single_customer == true) {
-                bill_to = {
+                bill_to_field = {
                     fieldtype: "Data",
-                    fieldname: "bill_to",
+                    fieldname: "bill_to_field",
                     label: __("Bill To"),
                     read_only: 1,
                     in_list_view: 1,
@@ -160,17 +174,17 @@ function create_sales_order_from_vessel(frm) {
                     default: customer_name,
                     reqd: 1
                 },
-                    customer_specific_grt = {
+                customer_specific_grt_field = {
                         fieldtype: "Float",
-                        fieldname: "customer_specific_grt",
+                        fieldname: "customer_specific_grt_field",
                         label: __("Customer Specific GRT"),
                         in_list_view: 1,
                         read_only: 1,
                         default: customer_specific_grt_value
-                    }
+                }
             }
-            dialog_field.push(bill_to)
-
+   
+            dialog_field.push(bill_to_field)
             dialog_field.push({
                 fieldtype: "Section Break",
                 fieldname: "section_break_1",
@@ -182,16 +196,22 @@ function create_sales_order_from_vessel(frm) {
                 in_list_view: 1,
                 onchange: function () {
                     let hrs = dialog.get_field("bill_hours")
-                    let grt = dialog.get_field("customer_specific_grt")
+                    let grt = dialog.get_field("customer_specific_grt_field")
                     let total_qty = hrs.value * grt.value
                     dialog.set_value("total_qty", total_qty)
                 }
             })
             dialog_field.push({
+                fieldtype: "Percent",
+                fieldname: "customer_specific_grt_percentage",
+                hidden:1,
+                default:0
+            })            
+            dialog_field.push({
                 fieldtype: "Column Break",
                 fieldname: "column_break_1",
             })
-            dialog_field.push(customer_specific_grt)
+            dialog_field.push(customer_specific_grt_field)
             dialog_field.push({
                 fieldtype: "Column Break",
                 fieldname: "column_break_2",
@@ -209,13 +229,24 @@ function create_sales_order_from_vessel(frm) {
                 fields: dialog_field,
                 primary_action_label: 'Create Proforma Invoice',
                 primary_action: function (values) {
+                    console.log(values)
+                    if (values.total_qty==undefined || values.total_qty==0) {
+                        frappe.utils.play_sound("error");
+                        frappe.throw({
+                            message: __("Total Qty cannot be zero."),
+                            indicator: "red",
+                        });
+                         
+                    }                    
                     frappe.call({
                         method: "kict.kict.doctype.vessel.vessel.create_sales_order_from_vessel",
                         args: {
                             "source_name": frm.doc.name,
                             "target_doc": undefined,
                             "qty": values.total_qty,
-                            "customer": values.bill_to,
+                            "customer": values.bill_to_field,
+                            "is_single_customer":is_single_customer,
+                            "customer_specific_grt_percentage":values.customer_specific_grt_percentage,
                             "doctype": frm.doc.doctype
                         },
                         callback: function (response) {

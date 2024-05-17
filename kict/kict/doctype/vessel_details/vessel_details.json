@@ -97,11 +97,12 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Customer's Item",
-   "options": "Item"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fieldname": "customer_specific_grt",
-   "fieldtype": "Float",
+   "fieldtype": "Percent",
    "label": "Customer Specific GRT",
    "read_only": 1
   },
@@ -123,7 +124,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-16 13:38:53.761065",
+ "modified": "2024-05-17 10:32:26.003362",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Details",

@@ -21,10 +21,8 @@ class Vessel(Document):
 		for row in self.get("vessel_details"):
 			if row.customer_name not in get_unique_customer:
 				get_unique_customer.append({"customer_name":row.customer_name})
-		print(get_unique_customer)
 		final_customer_specific_grt = []
 		for customer in get_unique_customer:
-			print(customer)
 			customer_specific_total = 0
 			for item in self.get("vessel_details"):
 				if item.customer_name == customer.get("customer_name"):
@@ -32,7 +30,6 @@ class Vessel(Document):
 						customer_specific_total = customer_specific_total + item.tonnage_mt
 			customer_specific_grt = {}
 			customer_specific_grt["customer"]=customer.get("customer_name")
-			print(self.total_tonnage_mt)
 			customer_specific_grt["grt"]=(customer_specific_total/self.total_tonnage_mt)*100
 			final_customer_specific_grt.append(customer_specific_grt)
 		for row in self.get("vessel_details"):
@@ -230,7 +227,6 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 
 @frappe.whitelist()
 def get_unique_item_and_customer_from_vessel(docname):
-    print("Cargo Handling Charges")
     item_list = frappe.db.get_list("Vessel Details",
                                 parent_doctype="Vessel",
                                 filters={"parent":docname},
@@ -241,7 +237,6 @@ def get_unique_item_and_customer_from_vessel(docname):
 def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,type_of_invoice=None,vessel_details_hex_code_field=None,customer_name_field=None,total_tonnage_field=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
-	print(source_name, target_doc,cargo_item_field,type_of_invoice,vessel_details_hex_code_field,customer_name_field,total_tonnage_field,doctype)	
 	def set_missing_values(source, target):
 	
 		price_list, currency = frappe.db.get_value("Customer", {"name": customer_name_field}, ["default_price_list", "default_currency"])

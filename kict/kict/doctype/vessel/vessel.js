@@ -88,14 +88,12 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
     }
 
 
-
     frappe.call({
         method: "kict.kict.doctype.vessel.vessel.get_berth_stay_hours",
         args: {
             vessel: frm.doc.name
         },
         callback: function (r) {
-            console.log(r)
             let berth_stay_hours = r.message
             if (berth_stay_hours=="0") {
                 frappe.throw({
@@ -143,8 +141,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                 fieldname: "bill_to_field",
                                 label: __("Bill To"),
                                 options: unique_customer,
-                                in_list_view: 1,
-                                columns: 2,
                                 reqd: 1,
                                 onchange: function () {
                                     let bill_to_name = dialog.get_field("bill_to_field")
@@ -161,7 +157,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                 fieldtype: "Float",
                                 fieldname: "customer_specific_grt_field",
                                 label: __("Customer Specific GRT"),
-                                in_list_view: 1,
                                 read_only: 1,
                                 onchange: function () {
                                     let hrs = dialog.get_field("bill_hours")
@@ -174,7 +169,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                 fieldtype: "Float",
                                 fieldname: "total_qty",
                                 label: __("Total Qty"),
-                                in_list_view: 1,
                                 read_only: 1,
                             }
                             
@@ -186,8 +180,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                 fieldname: "bill_to_field",
                                 label: __("Bill To"),
                                 read_only: 1,
-                                in_list_view: 1,
-                                columns: 2,
                                 default: agent_name,
                                 reqd: 1
                             },
@@ -195,7 +187,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                     fieldtype: "Float",
                                     fieldname: "customer_specific_grt_field",
                                     label: __("Customer Specific GRT"),
-                                    in_list_view: 1,
                                     read_only: 1,
                                     default: customer_specific_grt_value,
                                     onchange: function () {
@@ -209,7 +200,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                     fieldtype: "Float",
                                     fieldname: "total_qty",
                                     label: __("Total Qty"),
-                                    in_list_view: 1,
                                     read_only: 1,
                                     default:total_qty_default
                                 }                                
@@ -222,8 +212,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                 fieldname: "bill_to_field",
                                 label: __("Bill To"),
                                 read_only: 1,
-                                in_list_view: 1,
-                                columns: 2,
                                 default: customer_name,
                                 reqd: 1
                             },
@@ -231,7 +219,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                     fieldtype: "Float",
                                     fieldname: "customer_specific_grt_field",
                                     label: __("Customer Specific GRT"),
-                                    in_list_view: 1,
                                     read_only: 1,
                                     default: customer_specific_grt_value,
                                     onchange: function () {
@@ -245,7 +232,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                 fieldtype: "Float",
                                 fieldname: "total_qty",
                                 label: __("Total Qty"),
-                                in_list_view: 1,
                                 read_only: 1,
                                 default:total_qty_default
                             }                             
@@ -260,7 +246,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                             fieldtype: "Float",
                             fieldname: "bill_hours",
                             label: __("Actual Hours"),
-                            in_list_view: 1,
                             default:bill_hours,
                             read_only:1
                         })
@@ -286,7 +271,6 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                             fields: dialog_field,
                             primary_action_label: 'Create Tax Invoice',
                             primary_action: function (values) {
-                                console.log(values)
                                 if (values.total_qty==undefined || values.total_qty==0) {
                                     frappe.utils.play_sound("error");
                                     frappe.throw({
@@ -377,8 +361,6 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                     fieldname: "bill_to_field",
                     label: __("Bill To"),
                     options: unique_customer,
-                    in_list_view: 1,
-                    columns: 2,
                     reqd: 1,
                     onchange: function () {
                         let bill_to_name = dialog.get_field("bill_to_field")
@@ -396,7 +378,6 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                     fieldtype: "Float",
                     fieldname: "customer_specific_grt_field",
                     label: __("Customer Specific GRT"),
-                    in_list_view: 1,
                     read_only: 1,
                 }
                 
@@ -408,8 +389,6 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                     fieldname: "bill_to_field",
                     label: __("Bill To"),
                     read_only: 1,
-                    in_list_view: 1,
-                    columns: 2,
                     default: agent_name,
                     reqd: 1
                 },
@@ -417,7 +396,6 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                         fieldtype: "Float",
                         fieldname: "customer_specific_grt_field",
                         label: __("Customer Specific GRT"),
-                        in_list_view: 1,
                         read_only: 1,
                         default: customer_specific_grt_value
                     }
@@ -430,8 +408,6 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                     fieldname: "bill_to_field",
                     label: __("Bill To"),
                     read_only: 1,
-                    in_list_view: 1,
-                    columns: 2,
                     default: customer_name,
                     reqd: 1
                 },
@@ -439,7 +415,6 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                         fieldtype: "Float",
                         fieldname: "customer_specific_grt_field",
                         label: __("Customer Specific GRT"),
-                        in_list_view: 1,
                         read_only: 1,
                         default: customer_specific_grt_value
                 }
@@ -454,7 +429,6 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 fieldtype: "Float",
                 fieldname: "bill_hours",
                 label: __("Expected Hours"),
-                in_list_view: 1,
                 onchange: function () {
                     let hrs = dialog.get_field("bill_hours")
                     let grt = dialog.get_field("customer_specific_grt_field")
@@ -481,7 +455,6 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 fieldtype: "Float",
                 fieldname: "total_qty",
                 label: __("Total Qty"),
-                in_list_view: 1,
                 read_only: 1,
             })
 
@@ -490,7 +463,6 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 fields: dialog_field,
                 primary_action_label: 'Create Proforma Invoice',
                 primary_action: function (values) {
-                    console.log(values)
                     if (values.total_qty==undefined || values.total_qty==0) {
                         frappe.utils.play_sound("error");
                         frappe.throw({
@@ -548,7 +520,6 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
             docname: cur_frm.doc.name
         },
         callback: function (r) {
-            console.log(r.message)
             let vessel_details = r.message
             let unique_cargo_item = []
             vessel_details.forEach(ele => {
@@ -606,7 +577,6 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                     fieldtype: "Data",
                     fieldname: "cargo_item_field",
                     label: __("Cargo Item"),
-                    in_list_view: 1,
                     columns: 2,
                     default: cargo_item,
                     read_only: 1,
@@ -640,7 +610,6 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 fields: dialog_field,
                 primary_action_label: 'Create Sales Invoice',
                 primary_action: function (values) {
-                    console.log(values)
                     frappe.call({
                         method: "kict.kict.doctype.vessel.vessel.create_sales_invoice_for_cargo_handling_charges_from_vessel",
                         args: {
@@ -655,13 +624,13 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                         },
                         callback: function (response) {
                             if (response.message) {
-                                let url_list = '<a href="/app/sales_invoice/' + response.message + '" target="_blank">' + response.message + '</a><br>'
+                                let url_list = '<a href="/app/sales-invoice/' + response.message + '" target="_blank">' + response.message + '</a><br>'
                                 frappe.show_alert({
                                     title: __('Sales Order is created'),
                                     message: __(url_list),
                                     indicator: 'green'
                                 }, 12);
-                                window.open(`/app/sales_invoice/` + response.message);
+                                window.open(`/app/sales-invoice/` + response.message);
                             }
                         }
                     });

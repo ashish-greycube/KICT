@@ -32,16 +32,16 @@ frappe.ui.form.on("Vessel", {
 
     vessel_on_refresh_load: function (frm) {
         if (frm.is_new() == undefined) {
-            const dialog_field = []
             frm.add_custom_button(__('Proforma Invoice for B/H'), () => create_sales_order_from_vessel_for_berth_charges(frm), __("Create"));
         }
         if (frm.is_new() == undefined) {
-            const dialog_field = []
             frm.add_custom_button(__('Tax Invoice for B/H'), () => create_sales_invoice_from_vessel_for_berth_charges(frm), __("Create"));
         }   
         if (frm.is_new() == undefined) {
-            frm.add_custom_button(__('Sales Invoice for C/H'), () => create_sales_invoice_for_cargo_handling_charges_from_vessel(frm), __("Create"));
-
+            frm.add_custom_button(__('Tax invoice for C/H'), () => create_sales_invoice_for_cargo_handling_charges_from_vessel(frm), __("Create"));
+        }
+        if (frm.is_new() == undefined) {
+            frm.add_custom_button(__('Tax Invoice for S/C'), () => create_sales_invoice_for_storage_charges_from_vessel(frm), __("Create"));
         }     
     }
 });
@@ -627,6 +627,124 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                                 let url_list = '<a href="/app/sales-invoice/' + response.message + '" target="_blank">' + response.message + '</a><br>'
                                 frappe.show_alert({
                                     title: __('Sales Order is created'),
+                                    message: __(url_list),
+                                    indicator: 'green'
+                                }, 12);
+                                window.open(`/app/sales-invoice/` + response.message);
+                            }
+                        }
+                    });
+                    dialog.hide();                    
+                }
+            })
+            dialog.show()
+        }
+    })
+}
+
+function create_sales_invoice_for_storage_charges_from_vessel(frm){
+    if (frm.is_dirty()==true) {
+        frappe.throw({
+            message: __("Please save the form to proceed..."),
+            indicator: "red",
+        });       
+    }
+    let dialog = undefined
+    const dialog_field = []
+
+    frappe.call({
+        method: "kict.kict.doctype.vessel.vessel.get_unique_item_and_customer_from_vessel",
+        args: {
+            docname: frm.doc.name
+        },
+        callback: function (r) {
+            console.log(r.message)
+            let vessel_details = r.message
+            let unique_cargo_item = []
+            vessel_details.forEach(ele => {
+                unique_cargo_item.push(ele.item)
+            })
+            // dialog fields
+            let cargo_item_field
+            let customer_name_field
+            let total_tonnage_field
+
+            customer_name_field={
+                fieldtype: "Data",
+                fieldname: "customer_name_field",
+                label: __("Customer Name"),
+                // hidden:1,
+            }
+            total_tonnage_field={
+                fieldtype: "Data",
+                fieldname: "total_tonnage_field",
+                label: __("Total Tonnage"),
+                // hidden:1,
+            }
+            // multi item
+            if(vessel_details.length > 1){
+                cargo_item_field = {
+                    fieldtype: "Select",
+                    fieldname: "cargo_item_field",
+                    label: __("Cargo Item"),
+                    options: unique_cargo_item,
+                    columns: 2,
+                    reqd: 1,
+                    onchange : function(){
+                        let cargo_item_name = dialog.get_field("cargo_item_field")
+                        for(record of vessel_details){
+                            if(record.item == cargo_item_name.value){
+                                dialog.set_value("customer_name_field",record.customer_name)
+                                dialog.set_value("total_tonnage_field",record.tonnage_mt)
+                            }
+                        }
+                    }
+                }
+            }
+            //  single item
+            if(vessel_details.length == 1){
+                let cargo_item=vessel_details[0].item
+                cargo_item_field = {
+                    fieldtype: "Data",
+                    fieldname: "cargo_item_field",
+                    label: __("Cargo Item"),
+                    columns: 2,
+                    default: cargo_item,
+                    read_only: 1,
+                    reqd: 1,
+                }
+                // put defaults
+                customer_name_field["default"]=vessel_details[0].customer_name
+                total_tonnage_field["default"]=vessel_details[0].tonnage_mt
+            }
+            dialog_field.push(cargo_item_field)
+            dialog_field.push({
+                fieldtype: "Section Break",
+                fieldname: "section_break_1",
+            })
+            dialog_field.push(customer_name_field)
+            dialog_field.push(total_tonnage_field)
+
+            dialog = new frappe.ui.Dialog({
+                title: __("Enter Details for Storage Charges"),
+                fields: dialog_field,
+                primary_action_label: 'Create Sales Invoice',
+                primary_action: function (values) {
+                    frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.create_sales_invoice_for_storage_charges_from_vessel",
+                        args: {
+                            "source_name": frm.doc.name,
+                            "target_doc": undefined,
+                            "cargo_item_field":values.cargo_item_field,
+                            "customer_name_field": values.customer_name_field,
+                            "total_tonnage_field":values.total_tonnage_field,
+                            "doctype": frm.doc.doctype
+                        },
+                        callback: function (response) {
+                            if (response.message) {
+                                let url_list = '<a href="/app/sales-invoice/' + response.message + '" target="_blank">' + response.message + '</a><br>'
+                                frappe.show_alert({
+                                    title: __('Sales Invoice is created'),
                                     message: __(url_list),
                                     indicator: 'green'
                                 }, 12);

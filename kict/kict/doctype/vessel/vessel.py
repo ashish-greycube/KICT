@@ -259,10 +259,7 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 
 		# nothing on vessel type
 
-		item_row=target.append("items",{"item_code":item_code,"qty":total_tonnage_field,"description":cargo_item_field,"vessel_detail":vessel_details_hex_code_field})
-
-		
-		
+		item_row=target.append("items",{"item_code":item_code,"qty":total_tonnage_field,"description":cargo_item_field,"custom_vessel_detail":vessel_details_hex_code_field})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {
@@ -284,3 +281,63 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 	doc.run_method("calculate_taxes_and_totals")
 	doc.save()	
 	return doc.name
+
+@frappe.whitelist()
+def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,total_tonnage_field=None,doctype=None):
+	from erpnext.stock.report.stock_balance.stock_balance import execute
+	
+	company_name=''
+	filter_for_lv =frappe._dict({"company":company_name,"from_date":today(),"to_date":today(),"item_code":cargo_item_field,"valuation_field_type":"Currency","vessel":[source_name]})
+	data = execute(filter_for_lv)
+
+	if len(data[1])==0:
+		frappe.throw(_("There is no stock entry for {0}. <br> You can not create tax invoice of storage charges.").format(cargo_item_field))
+	else:
+		total_bal_val = 0
+		for record in data[1]:
+			total_bal_val = total_bal_val + record.bal_val
+
+		if(total_bal_val>0):
+			frappe.throw(_("{0} stock is remaining {1}.<br>  You can not create tax invoice of storage charges.").format(cargo_item_field,total_bal_val))
+		else :
+			# def update_item(source, target,source_parent):
+			# 	pass
+
+			def set_missing_values(source, target):
+			
+				price_list, currency = frappe.db.get_value("Customer", {"name": customer_name_field}, ["default_price_list", "default_currency"])
+				if price_list:
+					target.selling_price_list = price_list
+				if currency:
+					target.currency = currency
+
+				target.custom_type_of_invoice="Storage Charges"
+				target.customer=customer_name_field
+				target.due_date = today()		
+				target.vessel=source_name
+				item_code = frappe.db.get_single_value("Coal Settings","storage_charges_fixed")
+
+				# nothing on vessel type
+
+				item_row=target.append("items",{"item_code":item_code,"qty":2*flt(total_tonnage_field),"description":cargo_item_field})
+			
+			doc = get_mapped_doc('Vessel', source_name, {
+				'Vessel': {
+					'doctype': 'Sales Invoice',
+					# 'field_map': {
+					# 	'agent_name':'name',
+					# },			
+					'validation': {
+						'docstatus': ['!=', 2]
+					}
+				},
+				"Vessel Details": {
+					"doctype": "Sales Invoice Item",
+					"condition":lambda doc:len(frappe.db.get_list("Vessel Details",filters={"parent":source_name}))<0,
+					# "postprocess":update_item
+				},		
+			}, target_doc,set_missing_values)
+			doc.run_method("set_missing_values")
+			doc.run_method("calculate_taxes_and_totals")
+			doc.save()	
+			return doc.name

@@ -286,7 +286,7 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,total_tonnage_field=None,doctype=None):
 	from erpnext.stock.report.stock_balance.stock_balance import execute
 	
-	company_name=''
+	company_name=frappe.get_value(doctype,source_name,"company")
 	filter_for_lv =frappe._dict({"company":company_name,"from_date":today(),"to_date":today(),"item_code":cargo_item_field,"valuation_field_type":"Currency","vessel":[source_name]})
 	data = execute(filter_for_lv)
 
@@ -339,5 +339,6 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 			}, target_doc,set_missing_values)
 			doc.run_method("set_missing_values")
 			doc.run_method("calculate_taxes_and_totals")
-			doc.save()	
+			doc.save()
+			frappe.msgprint(_("Tax Invoice of Storage Charges for {0} is created.").format(cargo_item_field),alert=True)	
 			return doc.name

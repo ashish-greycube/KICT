@@ -1,0 +1,51 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-20 18:14:49.805146",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "from_days",
+  "item",
+  "column_break_wtwc",
+  "to_days"
+ ],
+ "fields": [
+  {
+   "fieldname": "from_days",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "From Days"
+  },
+  {
+   "fieldname": "to_days",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "To Days"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "column_break_wtwc",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-05-20 18:25:09.548713",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Chargeable Storage Charges Slots Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

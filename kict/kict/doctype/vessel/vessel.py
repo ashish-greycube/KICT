@@ -133,7 +133,7 @@ def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=Non
 		},
 		"Vessel Details": {
 			"doctype": "Sales Order Item",
-			"condition":lambda doc:len(frappe.db.get_list("Vessel Details",filters={"parent":source_name}))<0,
+			"condition":lambda doc:len(doc.name)<0,
 			# "postprocess":update_item
 		},		
 	}, target_doc,set_missing_values)
@@ -217,7 +217,7 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 		},
 		"Vessel Details": {
 			"doctype": "Sales Invoice Item",
-			"condition":lambda doc:len(frappe.db.get_list("Vessel Details",filters={"parent":source_name}))<0,
+			"condition":lambda doc:len(doc.name)<0,
 			# "postprocess":update_item
 		},		
 	}, target_doc,set_missing_values)
@@ -275,7 +275,7 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		},
 		"Vessel Details": {
 			"doctype": "Sales Invoice Item",
-			"condition":lambda doc:len(frappe.db.get_list("Vessel Details",filters={"parent":source_name}))<0,
+			"condition":lambda doc:len(doc.name)<0,
 			# "postprocess":update_item
 		},		
 	}, target_doc,set_missing_values)
@@ -336,7 +336,7 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 				},
 				"Vessel Details": {
 					"doctype": "Sales Invoice Item",
-					"condition":lambda doc:len(frappe.db.get_list("Vessel Details",filters={"parent":source_name}))<0,
+					"condition":lambda doc:len(doc.name)<0,
 					# "postprocess":update_item
 				},		
 			}, target_doc,set_missing_values)

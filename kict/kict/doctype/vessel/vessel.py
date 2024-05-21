@@ -68,7 +68,7 @@ def get_unique_customer_and_customer_specific_grt_from_vessel(docname):
 	customer_list = frappe.db.get_all("Vessel Details", 
 							parent_doctype='Vessel',
 							filters={"parent": docname}, 
-							fields=["distinct customer_name","customer_specific_grt"])
+							fields=["distinct customer_name","customer_specific_grt","customer_po_no"])
 	return customer_list
 
 
@@ -158,7 +158,7 @@ def get_berth_stay_hours(vessel):
 
 @frappe.whitelist()
 def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,
-														customer_specific_grt_percentage=None,customer_specific_grt_field=None,bill_hours=None,doctype=None):
+														customer_specific_grt_percentage=None,customer_specific_grt_field=None,customer_po_no_field=None,bill_hours=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	
@@ -193,6 +193,7 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 		target.customer=customer
 		target.due_date = today()		
 		target.vessel=source_name
+		target.po_no = customer_po_no_field
 
 		vessel_type = frappe.db.get_value(doctype,source_name,"costal_foreign_vessle")
 		if vessel_type == "Foreign":
@@ -230,11 +231,11 @@ def get_unique_item_and_customer_from_vessel(docname):
     item_list = frappe.db.get_list("Vessel Details",
                                 parent_doctype="Vessel",
                                 filters={"parent":docname},
-                                fields=["item","customer_name","name","tonnage_mt"])
+                                fields=["item","customer_name","name","tonnage_mt","customer_po_no"])
     return item_list
 
 @frappe.whitelist()
-def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,type_of_invoice=None,vessel_details_hex_code_field=None,customer_name_field=None,total_tonnage_field=None,doctype=None):
+def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,type_of_invoice=None,vessel_details_hex_code_field=None,customer_name_field=None,total_tonnage_field=None,customer_po_no_field=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	def set_missing_values(source, target):
@@ -255,6 +256,7 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		target.customer=customer_name_field
 		target.due_date = today()		
 		target.vessel=source_name
+		target.po_no = customer_po_no_field
 		item_code = frappe.db.get_single_value("Coal Settings","ch_charges")
 
 		# nothing on vessel type
@@ -283,7 +285,7 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 	return doc.name
 
 @frappe.whitelist()
-def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,total_tonnage_field=None,doctype=None):
+def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,total_tonnage_field=None,customer_po_no_field=None,doctype=None):
 	from erpnext.stock.report.stock_balance.stock_balance import execute
 	
 	company_name=frappe.get_value(doctype,source_name,"company")
@@ -315,6 +317,7 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 				target.customer=customer_name_field
 				target.due_date = today()		
 				target.vessel=source_name
+				target.po_no = customer_po_no_field
 				item_code = frappe.db.get_single_value("Coal Settings","storage_charges_fixed")
 
 				# nothing on vessel type

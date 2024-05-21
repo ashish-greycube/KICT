@@ -133,7 +133,14 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                         let bill_to_field
                         let customer_specific_grt_field      
                         let total_qty_field 
+                        let customer_po_no_field
                         
+                        customer_po_no_field={
+                            fieldtype: "Data",
+                            fieldname: "customer_po_no_field",
+                            label: __("Customer PO No"),
+                            // hidden:1,
+                        }
                         // multi customer
                         if (is_bill_to == "Customer" && is_single_customer == false) {
                             bill_to_field = {
@@ -148,6 +155,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                         if (bill_to_name.value == customer.customer_name) {
                                             dialog.set_value("customer_specific_grt_field", (customer.customer_specific_grt*frm.doc.grt))
                                             dialog.set_value("customer_specific_grt_percentage",customer.customer_specific_grt)
+                                            dialog.set_value("customer_po_no_field",customer.customer_po_no)
                                         }
                                     }
                                 }
@@ -234,7 +242,8 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                 label: __("Total Qty"),
                                 read_only: 1,
                                 default:total_qty_default
-                            }                             
+                            }
+                            customer_po_no_field["default"]=customer_with_grt[0].customer_po_no                             
                         }   
                         // create and push dialog fields  
                         dialog_field.push(bill_to_field)
@@ -264,7 +273,8 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                             fieldtype: "Column Break",
                             fieldname: "column_break_2",
                         })
-                        dialog_field.push(total_qty_field)    
+                        dialog_field.push(total_qty_field)
+                        dialog_field.push(customer_po_no_field)    
                         
                         dialog = new frappe.ui.Dialog({
                             title: __("Enter Details for Berth Hire Charges"),
@@ -289,6 +299,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                         "is_single_customer":is_single_customer,
                                         "customer_specific_grt_percentage":values.customer_specific_grt_percentage,
                                         "customer_specific_grt_field":values.customer_specific_grt_field,
+                                        "customer_po_no_field":values.customer_po_no_field,
                                         "bill_hours":values.bill_hours,                                        
                                         "doctype": frm.doc.doctype
                                     },
@@ -368,7 +379,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                             if (bill_to_name.value == customer.customer_name) {
                                 dialog.set_value("customer_specific_grt_field", (customer.customer_specific_grt*frm.doc.grt))
                                 dialog.set_value("customer_specific_grt_percentage",customer.customer_specific_grt)
-                                
+
                                 dialog.set_value("bill_hours",)
                             }
                         }
@@ -441,7 +452,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 fieldname: "customer_specific_grt_percentage",
                 hidden:1,
                 default:0
-            })            
+            })
             dialog_field.push({
                 fieldtype: "Column Break",
                 fieldname: "column_break_1",
@@ -530,6 +541,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
             let vessel_details_hex_code_field
             let customer_name_field
             let total_tonnage_field
+            let customer_po_no_field
 
             vessel_details_hex_code_field={
                 fieldtype: "Data",
@@ -549,6 +561,12 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 label: __("Total Tonnage"),
                 // hidden:1,
             }
+            customer_po_no_field={
+                fieldtype: "Data",
+                fieldname: "customer_po_no_field",
+                label: __("Customer PO No"),
+                // hidden:1,
+            }
             // multi item
             if(vessel_details.length > 1){
                 cargo_item_field = {
@@ -565,6 +583,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                                 dialog.set_value("vessel_details_hex_code_field",record.name)
                                 dialog.set_value("customer_name_field",record.customer_name)
                                 dialog.set_value("total_tonnage_field",record.tonnage_mt)
+                                dialog.set_value("customer_po_no_field",record.customer_po_no)
                             }
                         }
                     }
@@ -586,6 +605,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 vessel_details_hex_code_field["default"]=vessel_details[0].name
                 customer_name_field["default"]=vessel_details[0].customer_name
                 total_tonnage_field["default"]=vessel_details[0].tonnage_mt
+                customer_po_no_field["default"]=vessel_details[0].customer_po_no
             }
 
             dialog_field.push(cargo_item_field)
@@ -604,6 +624,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
             dialog_field.push(vessel_details_hex_code_field)
             dialog_field.push(customer_name_field)
             dialog_field.push(total_tonnage_field)
+            dialog_field.push(customer_po_no_field)
 
             dialog = new frappe.ui.Dialog({
                 title: __("Enter Details for Cargo Handling Charges"),
@@ -620,6 +641,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             "vessel_details_hex_code_field":values.vessel_details_hex_code_field,
                             "customer_name_field": values.customer_name_field,
                             "total_tonnage_field":values.total_tonnage_field,
+                            "customer_po_no_field":values.customer_po_no_field,
                             "doctype": frm.doc.doctype
                         },
                         callback: function (response) {
@@ -668,6 +690,7 @@ function create_sales_invoice_for_storage_charges_from_vessel(frm){
             let cargo_item_field
             let customer_name_field
             let total_tonnage_field
+            let customer_po_no_field
 
             customer_name_field={
                 fieldtype: "Data",
@@ -679,6 +702,12 @@ function create_sales_invoice_for_storage_charges_from_vessel(frm){
                 fieldtype: "Data",
                 fieldname: "total_tonnage_field",
                 label: __("Total Tonnage"),
+                // hidden:1,
+            }
+            customer_po_no_field={
+                fieldtype: "Data",
+                fieldname: "customer_po_no_field",
+                label: __("Customer PO No"),
                 // hidden:1,
             }
             // multi item
@@ -696,6 +725,7 @@ function create_sales_invoice_for_storage_charges_from_vessel(frm){
                             if(record.item == cargo_item_name.value){
                                 dialog.set_value("customer_name_field",record.customer_name)
                                 dialog.set_value("total_tonnage_field",record.tonnage_mt)
+                                dialog.set_value("customer_po_no_field",record.customer_po_no)
                             }
                         }
                     }
@@ -716,6 +746,7 @@ function create_sales_invoice_for_storage_charges_from_vessel(frm){
                 // put defaults
                 customer_name_field["default"]=vessel_details[0].customer_name
                 total_tonnage_field["default"]=vessel_details[0].tonnage_mt
+                customer_po_no_field["default"]=vessel_details[0].customer_po_no
             }
             dialog_field.push(cargo_item_field)
             dialog_field.push({
@@ -724,6 +755,7 @@ function create_sales_invoice_for_storage_charges_from_vessel(frm){
             })
             dialog_field.push(customer_name_field)
             dialog_field.push(total_tonnage_field)
+            dialog_field.push(customer_po_no_field)
 
             dialog = new frappe.ui.Dialog({
                 title: __("Enter Details for Storage Charges"),
@@ -738,6 +770,7 @@ function create_sales_invoice_for_storage_charges_from_vessel(frm){
                             "cargo_item_field":values.cargo_item_field,
                             "customer_name_field": values.customer_name_field,
                             "total_tonnage_field":values.total_tonnage_field,
+                            "customer_po_no_field":values.customer_po_no_field,
                             "doctype": frm.doc.doctype
                         },
                         callback: function (response) {

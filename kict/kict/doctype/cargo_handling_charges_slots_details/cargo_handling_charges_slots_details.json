@@ -22,7 +22,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Billing When",
-   "options": "\nOn Complete Discharge\nOn Completed Dispatch\nWeekly Dispatch\nBefor Berthing"
+   "options": "\nOn Complete Discharge\nOn Complete Dispatch\nPeriodic Dispatch\nBefore Berthing"
   },
   {
    "fieldname": "column_break_bfsx",
@@ -32,7 +32,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-20 18:01:29.700707",
+ "modified": "2024-05-21 15:48:46.816499",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Cargo Handling Charges Slots Details",

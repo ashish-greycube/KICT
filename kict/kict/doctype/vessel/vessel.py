@@ -165,11 +165,9 @@ def get_berth_stay_hours(vessel):
 	berth_stay_hours=0
 	statement_of_fact_list = frappe.db.get_all("Statement of Fact", 
 							filters={"vessel": vessel}, 
-							fields=["all_line_cast_off","first_line_ashore"])
+							fields=["vessel_stay_hours"])
 	if len(statement_of_fact_list)>0:
-		all_line_cast_off=statement_of_fact_list[0].all_line_cast_off
-		first_line_ashore=statement_of_fact_list[0].first_line_ashore
-		berth_stay_hours=frappe.utils.time_diff_in_hours(all_line_cast_off,first_line_ashore)
+		berth_stay_hours=statement_of_fact_list[0].vessel_stay_hours
 
 	return berth_stay_hours
 

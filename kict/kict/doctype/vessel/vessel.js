@@ -139,7 +139,14 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                             fieldtype: "Data",
                             fieldname: "customer_po_no_field",
                             label: __("Customer PO No"),
+                            read_only: 1,
                             // hidden:1,
+                        }
+                        total_qty_field={
+                            fieldtype: "Float",
+                            fieldname: "total_qty",
+                            label: __("Total Qty"),
+                            read_only: 1,
                         }
                         // multi customer
                         if (is_bill_to == "Customer" && is_single_customer == false) {
@@ -173,13 +180,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                     dialog.set_value("total_qty", total_qty)
                                 }                                
                             }
-                            total_qty_field={
-                                fieldtype: "Float",
-                                fieldname: "total_qty",
-                                label: __("Total Qty"),
-                                read_only: 1,
-                            }
-                            
+                          
                         }     
                         // agent
                         if (is_bill_to == "Agent") {
@@ -204,13 +205,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                         dialog.set_value("total_qty", total_qty)
                                     }                                    
                                 }
-                                total_qty_field={
-                                    fieldtype: "Float",
-                                    fieldname: "total_qty",
-                                    label: __("Total Qty"),
-                                    read_only: 1,
-                                    default:total_qty_default
-                                }                                
+                                total_qty_field["default"]=total_qty_default                                
 
                         }    
                         // single customer
@@ -236,13 +231,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                         dialog.set_value("total_qty", total_qty)
                                     }                                    
                             },
-                            total_qty_field={
-                                fieldtype: "Float",
-                                fieldname: "total_qty",
-                                label: __("Total Qty"),
-                                read_only: 1,
-                                default:total_qty_default
-                            }
+                            total_qty_field["default"]=total_qty_default 
                             customer_po_no_field["default"]=customer_with_grt[0].customer_po_no                             
                         }   
                         // create and push dialog fields  
@@ -364,7 +353,21 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
             // dialog fields
             let bill_to_field
             let customer_specific_grt_field
+            let customer_po_no_field
 
+            customer_po_no_field={
+                fieldtype: "Data",
+                fieldname: "customer_po_no_field",
+                label: __("Customer PO No"),
+                read_only: 1,
+                // hidden:1,
+            }
+            customer_specific_grt_field = {
+                fieldtype: "Float",
+                fieldname: "customer_specific_grt_field",
+                label: __("Customer Specific GRT"),
+                read_only: 1,
+            }
             // multi customer
             if (is_bill_to == "Customer" && is_single_customer == false) {
                 bill_to_field = {
@@ -379,17 +382,11 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                             if (bill_to_name.value == customer.customer_name) {
                                 dialog.set_value("customer_specific_grt_field", (customer.customer_specific_grt*frm.doc.grt))
                                 dialog.set_value("customer_specific_grt_percentage",customer.customer_specific_grt)
-
+                                dialog.set_value("customer_po_no_field",customer.customer_po_no)
                                 dialog.set_value("bill_hours",)
                             }
                         }
                     }
-                }
-                customer_specific_grt_field = {
-                    fieldtype: "Float",
-                    fieldname: "customer_specific_grt_field",
-                    label: __("Customer Specific GRT"),
-                    read_only: 1,
                 }
                 
             }
@@ -403,13 +400,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                     default: agent_name,
                     reqd: 1
                 },
-                customer_specific_grt_field = {
-                        fieldtype: "Float",
-                        fieldname: "customer_specific_grt_field",
-                        label: __("Customer Specific GRT"),
-                        read_only: 1,
-                        default: customer_specific_grt_value
-                    }
+                customer_specific_grt_field["default"]=customer_specific_grt_value
 
             }
             // single customer
@@ -422,13 +413,8 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                     default: customer_name,
                     reqd: 1
                 },
-                customer_specific_grt_field = {
-                        fieldtype: "Float",
-                        fieldname: "customer_specific_grt_field",
-                        label: __("Customer Specific GRT"),
-                        read_only: 1,
-                        default: customer_specific_grt_value
-                }
+                customer_specific_grt_field["default"]=customer_specific_grt_value
+                customer_po_no_field["default"]=customer_with_grt[0].customer_po_no
             }
             // create and push dialog fields
             dialog_field.push(bill_to_field)
@@ -468,6 +454,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 label: __("Total Qty"),
                 read_only: 1,
             })
+            dialog_field.push(customer_po_no_field) 
 
             dialog = new frappe.ui.Dialog({
                 title: __("Enter Details for Berth Hire Charges"),
@@ -492,6 +479,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                             "is_single_customer":is_single_customer,
                             "customer_specific_grt_percentage":values.customer_specific_grt_percentage,
                             "customer_specific_grt_field":values.customer_specific_grt_field,
+                            "customer_po_no_field":values.customer_po_no_field,
                             "bill_hours":values.bill_hours,
                             "doctype": frm.doc.doctype
                         },
@@ -565,6 +553,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 fieldtype: "Data",
                 fieldname: "customer_po_no_field",
                 label: __("Customer PO No"),
+                read_only: 1
                 // hidden:1,
             }
             // multi item
@@ -708,6 +697,7 @@ function create_sales_invoice_for_storage_charges_from_vessel(frm){
                 fieldtype: "Data",
                 fieldname: "customer_po_no_field",
                 label: __("Customer PO No"),
+                read_only: 1
                 // hidden:1,
             }
             // multi item

@@ -75,7 +75,7 @@ def get_unique_customer_and_customer_specific_grt_from_vessel(docname):
 
 @frappe.whitelist()
 def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,
-													 customer_specific_grt_percentage=None,customer_specific_grt_field=None,bill_hours=None,doctype=None):
+													 customer_specific_grt_percentage=None,customer_specific_grt_field=None,customer_po_no_field=None,bill_hours=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	
@@ -110,6 +110,7 @@ def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=Non
 		target.customer=customer
 		target.delivery_date = today()		
 		target.vessel=source_name
+		target.po_no = customer_po_no_field
 
 		vessel_type = frappe.db.get_value(doctype,source_name,"costal_foreign_vessle")
 		if vessel_type == "Foreign":
@@ -203,7 +204,7 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 			item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
 			item_code = item
 
-		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_expected_hours_of_stay":bill_hours})
+		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_actual_hours_of_stay":bill_hours})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {
@@ -248,8 +249,8 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 
 		# cargo_name = frappe.db.get_list("Vessel Details",parent_doctype="Vessel",filters=vessel_details_filter_for_cargo,fields=["distinct item"])
 		# all_cargo = ",".join((ele.item if ele.item!=None else '') for ele in cargo_name)
-		# target.custom_cargo_item=all_cargo
-		# target.custom_quantity_in_mt=custom_quantity_in_mt
+		target.custom_cargo_item = cargo_item_field
+		target.custom_quantity_in_mt = total_tonnage_field
 
 		# target.type_of_invoice=type_of_invoice
 		target.custom_type_of_invoice="Cargo Handling Charges"
@@ -261,7 +262,7 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 
 		# nothing on vessel type
 
-		item_row=target.append("items",{"item_code":item_code,"qty":total_tonnage_field,"description":cargo_item_field,"custom_vessel_detail":vessel_details_hex_code_field})
+		item_row=target.append("items",{"item_code":item_code,"qty":total_tonnage_field,"description":cargo_item_field})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {
@@ -315,7 +316,9 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 
 				target.custom_type_of_invoice="Storage Charges"
 				target.customer=customer_name_field
-				target.due_date = today()		
+				target.due_date = today()
+				target.custom_cargo_item = cargo_item_field
+				target.custom_quantity_in_mt = total_tonnage_field		
 				target.vessel=source_name
 				target.po_no = customer_po_no_field
 				item_code = frappe.db.get_single_value("Coal Settings","storage_charges_fixed")

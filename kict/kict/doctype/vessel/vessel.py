@@ -65,11 +65,28 @@ class Vessel(Document):
 
 @frappe.whitelist()
 def get_unique_customer_and_customer_specific_grt_from_vessel(docname):
+	customer_list_with_po=[]
+	
 	customer_list = frappe.db.get_all("Vessel Details", 
 							parent_doctype='Vessel',
 							filters={"parent": docname}, 
-							fields=["distinct customer_name","customer_specific_grt","customer_po_no"])
-	return customer_list
+							fields=["distinct customer_name","customer_specific_grt"])
+	
+	for customer in customer_list:
+		final_po_no=''
+		customer_po_no_list=frappe.db.get_all("Vessel Details", 
+							parent_doctype='Vessel',
+							filters={"parent": docname,"customer_name":customer.customer_name}, 
+							fields=["customer_po_no"],order_by="idx")
+		for po_no in customer_po_no_list:
+			if po_no.get("customer_po_no")!="":
+				final_po_no=po_no.get("customer_po_no")
+				break
+		customer['customer_po_no']=final_po_no
+
+		customer_list_with_po.append(customer)
+	
+	return customer_list_with_po
 
 
 

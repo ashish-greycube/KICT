@@ -24,44 +24,53 @@
   {
    "fieldname": "birth_hire_item_for_coastal_vessel",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "B/H Charges for coastal ",
    "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
-   "options": "Item"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fieldname": "birth_hire_item_for_foreign_vessel",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "B/H Charges for Foreign ",
    "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
-   "options": "Item"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fieldname": "ch_charges",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "C/H Charges",
    "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
-   "options": "Item"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fieldname": "storage_charges_fixed",
    "fieldtype": "Link",
    "label": "Storage Charges Fixed",
    "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
-   "options": "Item"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fieldname": "storage_charges_16_25_days",
    "fieldtype": "Link",
    "label": "Storage Charges 16-25 days",
    "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
-   "options": "Item"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fieldname": "storage_charges_beyond_26_days",
    "fieldtype": "Link",
    "label": "Storage Charges beyond 26 days",
    "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
-   "options": "Item"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_fars",
@@ -70,20 +79,23 @@
   {
    "fieldname": "royalty_price_list",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Royalty Price List",
-   "options": "Price List"
+   "options": "Price List",
+   "reqd": 1
   },
   {
    "fieldname": "customer_group_for_agent",
    "fieldtype": "Link",
    "label": "Customer Group for Agent",
-   "options": "Customer Group"
+   "options": "Customer Group",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-05-16 12:16:14.753087",
+ "modified": "2024-05-22 10:00:41.691090",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

@@ -315,7 +315,7 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 	else:
 		total_bal_val = 0
 		for record in data[1]:
-			total_bal_val = total_bal_val + record.bal_val
+			total_bal_val = total_bal_val + record.bal_qty
 
 		if(total_bal_val>0):
 			frappe.throw(_("{0} stock is remaining {1}.<br>  You can not create tax invoice of storage charges.").format(cargo_item_field,total_bal_val))

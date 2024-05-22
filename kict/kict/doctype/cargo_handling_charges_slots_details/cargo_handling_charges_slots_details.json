@@ -8,14 +8,19 @@
  "field_order": [
   "percent_billing",
   "column_break_bfsx",
-  "billing_when"
+  "billing_when",
+  "section_break_vtnb",
+  "cargo_handling_option_name",
+  "column_break_eg75",
+  "is_periodic"
  ],
  "fields": [
   {
    "fieldname": "percent_billing",
    "fieldtype": "Percent",
    "in_list_view": 1,
-   "label": "Percent Billing"
+   "label": "Rate Percent Billing",
+   "precision": "0"
   },
   {
    "fieldname": "billing_when",
@@ -27,12 +32,34 @@
   {
    "fieldname": "column_break_bfsx",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_vtnb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "cargo_handling_option_name",
+   "fieldtype": "Data",
+   "label": "Cargo Handling Option Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_eg75",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "NO",
+   "fieldname": "is_periodic",
+   "fieldtype": "Select",
+   "label": "Is Periodic ?",
+   "options": "\nNO\nYES",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-21 15:48:46.816499",
+ "modified": "2024-05-22 14:47:05.293787",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Cargo Handling Charges Slots Details",

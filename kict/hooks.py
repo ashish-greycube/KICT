@@ -125,7 +125,8 @@ after_migrate = "kict.migrate.after_migrate"
 
 doc_events = {
 	"Customer": {
-		"validate": "kict.api.set_cargo_handling_option_name_and_is_periodic"
+		"validate": ["kict.api.set_cargo_handling_option_name_and_is_periodic",
+               "kict.api.validate_rate_percent_billing"]
 	}
 }
 

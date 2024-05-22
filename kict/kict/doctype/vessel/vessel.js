@@ -263,6 +263,10 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                             fieldname: "column_break_2",
                         })
                         dialog_field.push(total_qty_field)
+                        dialog_field.push({
+                            fieldtype: "Column Break",
+                            fieldname: "column_break_1",
+                        })
                         dialog_field.push(customer_po_no_field)    
                         
                         dialog = new frappe.ui.Dialog({
@@ -333,6 +337,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
             docname: frm.doc.name
         },
         callback: function (r) {
+            console.log(r.message,"message")
             let customer_with_grt = r.message
             let unique_customer = []
             customer_with_grt.forEach(ele => {
@@ -453,6 +458,10 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 fieldname: "total_qty",
                 label: __("Total Qty"),
                 read_only: 1,
+            })
+            dialog_field.push({
+                fieldtype: "Column Break",
+                fieldname: "column_break_1",
             })
             dialog_field.push(customer_po_no_field) 
 

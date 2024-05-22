@@ -21,6 +21,7 @@
   "agent_name",
   "opa",
   "flag_country",
+  "vessel_stay_hours",
   "section_break_ppjb",
   "radio_pratique_granted",
   "free_pratique_granted",
@@ -347,6 +348,12 @@
    "fieldname": "dlosl",
    "fieldtype": "Datetime",
    "label": "DLOSL"
+  },
+  {
+   "fieldname": "vessel_stay_hours",
+   "fieldtype": "Duration",
+   "label": "Vessel Stay Hours",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -356,7 +363,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-16 12:16:14.193295",
+ "modified": "2024-05-22 14:58:06.402643",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

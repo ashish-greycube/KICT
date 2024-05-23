@@ -115,7 +115,7 @@ def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=Non
 
 			price_list, currency = frappe.db.get_value(
 			"Customer", {"name": customer}, ["default_price_list", "default_currency"]
-		    )
+			)
 			if price_list:
 				target.selling_price_list = price_list
 			if currency:
@@ -197,7 +197,7 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 
 			price_list, currency = frappe.db.get_value(
 			"Customer", {"name": customer}, ["default_price_list", "default_currency"]
-		    )
+			)
 			if price_list:
 				target.selling_price_list = price_list
 			if currency:
@@ -246,14 +246,14 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 
 @frappe.whitelist()
 def get_unique_item_and_customer_from_vessel(docname):
-    item_list = frappe.db.get_list("Vessel Details",
-                                parent_doctype="Vessel",
-                                filters={"parent":docname},
-                                fields=["item","customer_name","name","tonnage_mt","customer_po_no"])
-    return item_list
+	item_list = frappe.db.get_list("Vessel Details",
+								parent_doctype="Vessel",
+								filters={"parent":docname},
+								fields=["item","customer_name","name","tonnage_mt","customer_po_no"])
+	return item_list
 
 @frappe.whitelist()
-def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,type_of_invoice=None,vessel_details_hex_code_field=None,customer_name_field=None,total_tonnage_field=None,customer_po_no_field=None,doctype=None):
+def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,is_periodic_field=None,rate_field=None,periodic_cargo_qty=None,non_periodic_cargo_qty=None,customer_po_no_field=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	def set_missing_values(source, target):
@@ -264,13 +264,15 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		if currency:
 			target.currency = currency
 
-		# cargo_name = frappe.db.get_list("Vessel Details",parent_doctype="Vessel",filters=vessel_details_filter_for_cargo,fields=["distinct item"])
-		# all_cargo = ",".join((ele.item if ele.item!=None else '') for ele in cargo_name)
 		target.custom_cargo_item = cargo_item_field
-		target.custom_quantity_in_mt = total_tonnage_field
+		target.custom_quantity_in_mt = flt(non_periodic_cargo_qty)
 
 		# target.type_of_invoice=type_of_invoice
 		target.custom_type_of_invoice="Cargo Handling Charges"
+		if is_periodic_field=="NO":
+			target.custom_type_of_cargo_handling_invoice="Non-Periodic"
+		else:
+			target.custom_type_of_cargo_handling_invoice="Periodic"
 		target.customer=customer_name_field
 		target.due_date = today()		
 		target.vessel=source_name
@@ -278,8 +280,10 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		item_code = frappe.db.get_single_value("Coal Settings","ch_charges")
 
 		# nothing on vessel type
-
-		item_row=target.append("items",{"item_code":item_code,"qty":total_tonnage_field,"description":cargo_item_field})
+		if is_periodic_field=="NO":
+			item_row=target.append("items",{"item_code":item_code,"qty":flt(non_periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
+		else:
+			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {
@@ -368,11 +372,12 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 		
 
 @frappe.whitelist()
-def get_cargo_handling_rate_for_customer_based_on_billing_type(docname,item_code,customer,billing_type)	:
+def get_cargo_handling_rate_for_customer_based_on_billing_type(docname,customer,billing_type)	:
 	doctype_name='Vessel'
+	item_code_for_si = frappe.db.get_single_value("Coal Settings","ch_charges")
 	customer_selling_price_list=get_customer_selling_price_list(customer)
 	company = frappe.db.get_value(doctype_name, docname, 'company')
-	item_defaults=get_item_defaults(item_code,company)
+	item_defaults=get_item_defaults(item_code_for_si,company)
 	uom=item_defaults.get('stock_uom')
 	if uom==None:
 		pass
@@ -382,9 +387,10 @@ def get_cargo_handling_rate_for_customer_based_on_billing_type(docname,item_code
 		'price_list':customer_selling_price_list,
 		'qty':1,
 		'uom':uom})
-	item_price= get_price_list_rate_for(args,item_code,ignore_party=False)
-	print(item_price)
-	return item_price
+	item_price= get_price_list_rate_for(args,item_code_for_si)
+	percent_billing,is_periodic=get_rate_percent_billing(customer,billing_type)
+	calculated_item_price=(item_price*percent_billing)/100
+	return calculated_item_price
 
 def get_customer_selling_price_list(customer):
 	customer_price_list, customer_group = frappe.get_value(	"Customer", customer, ["default_price_list", "customer_group"])
@@ -395,3 +401,36 @@ def get_customer_selling_price_list(customer):
 		pass
 		# frappe.throw
 	return customer_selling_price_list	
+
+def get_rate_percent_billing(customer,billing_type):
+	percent_billing_detail = frappe.db.get_list("Cargo Handling Charges Slots Details",
+								parent_doctype="Customer",
+								filters={"cargo_handling_option_name":billing_type,"parent":customer},
+								fields=["percent_billing","is_periodic"])
+	if len(percent_billing_detail)>0:
+		percent_billing=percent_billing_detail[0].percent_billing
+		is_periodic=percent_billing_detail[0].is_periodic
+		return percent_billing,is_periodic
+
+@frappe.whitelist()
+def get_unique_item(docname):
+	items_list = frappe.db.get_list("Vessel Details",
+								parent_doctype="Vessel",
+								filters={"parent":docname},
+								fields=["item"])
+	return items_list
+
+@frappe.whitelist()
+def get_customer_and_tonnage_based_on_cargo_item(item_code,docname):
+	customer_name = frappe.db.get_list("Vessel Details",
+								parent_doctype="Vessel",
+								filters={"item":item_code,"parent":docname},
+								fields=["customer_name","tonnage_mt","customer_po_no"])
+	return customer_name
+
+@frappe.whitelist()
+def get_cargo_handling_option_name_and_is_periodic_or_not_based_on_customer(docname,customer_name):
+	cargo_handling_charges_details = frappe.db.get_all("Cargo Handling Charges Slots Details",
+													filters = {"parent":customer_name},
+													fields = ["cargo_handling_option_name","is_periodic"])
+	return cargo_handling_charges_details

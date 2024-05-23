@@ -337,7 +337,6 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
             docname: frm.doc.name
         },
         callback: function (r) {
-            console.log(r.message,"message")
             let customer_with_grt = r.message
             let unique_customer = []
             customer_with_grt.forEach(ele => {
@@ -523,40 +522,171 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
     const dialog_field = []
 
     frappe.call({
-        method: "kict.kict.doctype.vessel.vessel.get_unique_item_and_customer_from_vessel",
+        method: "kict.kict.doctype.vessel.vessel.get_unique_item",
         args: {
             docname: cur_frm.doc.name
         },
         callback: function (r) {
-            let vessel_details = r.message
+            let vessel_items = r.message
             let unique_cargo_item = []
-            vessel_details.forEach(ele => {
+            vessel_items.forEach(ele => {
                 unique_cargo_item.push(ele.item)
             })
             // dialog fields
             let cargo_item_field
-            let vessel_details_hex_code_field
             let customer_name_field
-            let total_tonnage_field
+            let type_of_billing_field
+            let is_periodic_field
+            let rate_field
+            let from_date_field
+            let to_date_field
             let customer_po_no_field
 
-            vessel_details_hex_code_field={
-                fieldtype: "Data",
-                fieldname: "vessel_details_hex_code_field",
-                label: __("Vessel Detail Name"),
-                // hidden:1,
+            cargo_item_field = {
+                fieldtype: "Select",
+                fieldname: "cargo_item_field",
+                label: __("Cargo Item"),
+                options: unique_cargo_item,
+                columns: 2,
+                reqd: 1,
+                onchange : function(){
+                    let cargo_item_name = dialog.get_field("cargo_item_field")
+                    frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.get_customer_and_tonnage_based_on_cargo_item",
+                        args: {
+                            item_code: cargo_item_name.value,
+                            docname: cur_frm.doc.name
+                        },
+                        callback: function (r) {
+                            let customer_name = r.message[0].customer_name
+                            let cargo_item_tonnage = r.message[0].tonnage_mt
+                            let customer_po_no = r.message[0].customer_po_no
+                            dialog.set_value("customer_name_field",customer_name)
+                            dialog.set_value("non_periodic_cargo_qty",cargo_item_tonnage)
+                            dialog.set_value("customer_po_no_field",customer_po_no)
+                        }
+                    })
+                }
             }
             customer_name_field={
                 fieldtype: "Data",
                 fieldname: "customer_name_field",
                 label: __("Customer Name"),
+                read_only:1,
                 // hidden:1,
+                onchange : function(){
+                    let customer_name = dialog.get_field("customer_name_field")
+                    frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.get_cargo_handling_option_name_and_is_periodic_or_not_based_on_customer",
+                        args: {
+                            docname: cur_frm.doc.name,
+                            customer_name: customer_name.value
+                        },
+                        callback: function (r) {
+                            let billing_option_list = r.message
+                            let billing_option = []
+                            billing_option_list.forEach(ele=>{
+                                billing_option.push(ele.cargo_handling_option_name)
+                            })
+                            dialog.set_df_property('type_of_billing_field','options',billing_option)
+                        }
+                    })
+                }
             }
-            total_tonnage_field={
-                fieldtype: "Data",
-                fieldname: "total_tonnage_field",
-                label: __("Total Tonnage"),
+            type_of_billing_field={
+                fieldtype: "Select",
+                fieldname: "type_of_billing_field",
+                label: __("Type Of Billing"),
+                options:[""],
+                onchange: function(){
+                    let billing_option = dialog.get_field("type_of_billing_field")
+                    let customer_name = dialog.get_field("customer_name_field")
+                    frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.get_cargo_handling_option_name_and_is_periodic_or_not_based_on_customer",
+                        args: {
+                            docname: cur_frm.doc.name,
+                            customer_name: customer_name.value
+                        },
+                        callback: function (r) {
+                            let billing_option_list = r.message
+                            for (let row of billing_option_list){
+                                if (billing_option.value == row.cargo_handling_option_name){
+                                    dialog.set_value("is_periodic_field",row.is_periodic)
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+            is_periodic_field={
+                fieldtype: "Select",
+                fieldname: "is_periodic_field",
+                label: __("Is Periodic?"),
+                options:["YES","NO"],
+                onchange: function(){
+                    let periodic_option = dialog.get_field("is_periodic_field")
+                    if(periodic_option.value == "YES"){
+                        dialog.set_df_property('from_date_field','hidden',0)
+                        dialog.set_df_property('to_date_field','hidden',0)
+                        dialog.set_df_property('periodic_cargo_qty','hidden',0)
+                        dialog.set_df_property('non_periodic_cargo_qty','hidden',1)
+                    }
+                    else{
+                        dialog.set_df_property('from_date_field','hidden',1)
+                        dialog.set_df_property('to_date_field','hidden',1)
+                        dialog.set_df_property('periodic_cargo_qty','hidden',1)
+                        dialog.set_df_property('non_periodic_cargo_qty','hidden',0)
+                    }
+                    let cargo_item_name = dialog.get_field("cargo_item_field")
+                    let billing_option = dialog.get_field("type_of_billing_field")
+                    let customer_name = dialog.get_field("customer_name_field")
+                    frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.get_cargo_handling_rate_for_customer_based_on_billing_type",
+                        args: {
+                            docname: cur_frm.doc.name,
+                            item_code:cargo_item_name.value,
+                            customer: customer_name.value,
+                            billing_type:billing_option.value
+                        },
+                        callback: function (r) {
+                            let rate_based_on_billing_type = r.message
+                            dialog.set_value("rate_field",r.message)
+                        }
+                    })
+                    
+                }
+            }
+            rate_field={
+                fieldtype: "Currency",
+                fieldname: "rate_field",
+                label: __("Rate"),
+                read_only:1
+            }
+            from_date_field={
+                fieldtype: "Date",
+                fieldname: "from_date_field",
+                label: __("From Date"),
+                hidden:1
+            }
+            to_date_field={
+                fieldtype: "Date",
+                fieldname: "to_date_field",
+                label: __("To Date"),
+                hidden:1
+            }
+            periodic_cargo_qty={
+                fieldtype: "Float",
+                fieldname: "periodic_cargo_qty",
+                label: __("Periodic Qty"),
+                hidden:1,
+                read_only:1
+            }
+            non_periodic_cargo_qty={
+                fieldtype: "Float",
+                fieldname: "non_periodic_cargo_qty",
+                label: __("Qty"),
                 // hidden:1,
+                read_only:1
             }
             customer_po_no_field={
                 fieldtype: "Data",
@@ -565,63 +695,20 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 read_only: 1
                 // hidden:1,
             }
-            // multi item
-            if(vessel_details.length > 1){
-                cargo_item_field = {
-                    fieldtype: "Select",
-                    fieldname: "cargo_item_field",
-                    label: __("Cargo Item"),
-                    options: unique_cargo_item,
-                    columns: 2,
-                    reqd: 1,
-                    onchange : function(){
-                        let cargo_item_name = dialog.get_field("cargo_item_field")
-                        for(record of vessel_details){
-                            if(record.item == cargo_item_name.value){
-                                dialog.set_value("vessel_details_hex_code_field",record.name)
-                                dialog.set_value("customer_name_field",record.customer_name)
-                                dialog.set_value("total_tonnage_field",record.tonnage_mt)
-                                dialog.set_value("customer_po_no_field",record.customer_po_no)
-                            }
-                        }
-                    }
-                }
-            }
-            //  single item
-            if(vessel_details.length == 1){
-                let cargo_item=vessel_details[0].item
-                cargo_item_field = {
-                    fieldtype: "Data",
-                    fieldname: "cargo_item_field",
-                    label: __("Cargo Item"),
-                    columns: 2,
-                    default: cargo_item,
-                    read_only: 1,
-                    reqd: 1,
-                }
-                // put defaults
-                vessel_details_hex_code_field["default"]=vessel_details[0].name
-                customer_name_field["default"]=vessel_details[0].customer_name
-                total_tonnage_field["default"]=vessel_details[0].tonnage_mt
-                customer_po_no_field["default"]=vessel_details[0].customer_po_no
-            }
 
             dialog_field.push(cargo_item_field)
             dialog_field.push({
                 fieldtype: "Section Break",
                 fieldname: "section_break_1",
             })
-            dialog_field.push({
-                fieldtype: "Select",
-                fieldname: "type_of_invoice",
-                label: __("Type Of Invoice"),
-                options: ["Initial" , "Complete Discharge", "Periodic Dispatch"],
-                columns: 2,
-                reqd: 1,
-            })
-            dialog_field.push(vessel_details_hex_code_field)
             dialog_field.push(customer_name_field)
-            dialog_field.push(total_tonnage_field)
+            dialog_field.push(type_of_billing_field)
+            dialog_field.push(is_periodic_field)
+            dialog_field.push(rate_field)
+            dialog_field.push(from_date_field)
+            dialog_field.push(to_date_field)
+            dialog_field.push(periodic_cargo_qty)
+            dialog_field.push(non_periodic_cargo_qty)
             dialog_field.push(customer_po_no_field)
 
             dialog = new frappe.ui.Dialog({
@@ -635,10 +722,11 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             "source_name": frm.doc.name,
                             "target_doc": undefined,
                             "cargo_item_field":values.cargo_item_field,
-                            "type_of_invoice":values.type_of_invoice,
-                            "vessel_details_hex_code_field":values.vessel_details_hex_code_field,
                             "customer_name_field": values.customer_name_field,
-                            "total_tonnage_field":values.total_tonnage_field,
+                            "is_periodic_field":values.is_periodic_field,
+                            "rate_field":values.rate_field,
+                            "periodic_cargo_qty":values.periodic_cargo_qty,
+                            "non_periodic_cargo_qty":values.non_periodic_cargo_qty,
                             "customer_po_no_field":values.customer_po_no_field,
                             "doctype": frm.doc.doctype
                         },
@@ -678,7 +766,6 @@ function create_sales_invoice_for_storage_charges_from_vessel(frm){
             docname: frm.doc.name
         },
         callback: function (r) {
-            console.log(r.message)
             let vessel_details = r.message
             let unique_cargo_item = []
             vessel_details.forEach(ele => {

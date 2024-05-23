@@ -17,7 +17,7 @@ def validate_rate_percent_billing(self,method):
     for row in self.get("custom_cargo_handling_charges_slots_details"):
         total_percent = total_percent + row.percent_billing
     
-    if total_percent < 100:
+    if total_percent != 100:
         frappe.throw(_("Total of Rate Percent Billing must be 100%"))
     else:
         pass

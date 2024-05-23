@@ -7,6 +7,8 @@ from frappe.model.mapper import get_mapped_doc
 from frappe import _
 from frappe.utils import flt
 from frappe.utils import today
+from erpnext.stock.doctype.item.item import get_item_defaults
+from erpnext.stock.get_item_details import get_price_list_rate_for
 
 
 class Vessel(Document):
@@ -363,3 +365,33 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 			doc.save()
 			frappe.msgprint(_("Tax Invoice of Storage Charges for {0} is created.").format(cargo_item_field),alert=True)	
 			return doc.name
+		
+
+@frappe.whitelist()
+def get_cargo_handling_rate_for_customer_based_on_billing_type(docname,item_code,customer,billing_type)	:
+	doctype_name='Vessel'
+	customer_selling_price_list=get_customer_selling_price_list(customer)
+	company = frappe.db.get_value(doctype_name, docname, 'company')
+	item_defaults=get_item_defaults(item_code,company)
+	uom=item_defaults.get('stock_uom')
+	if uom==None:
+		pass
+		# frappe thr
+	args=frappe._dict({
+		'customer':customer,
+		'price_list':customer_selling_price_list,
+		'qty':1,
+		'uom':uom})
+	item_price= get_price_list_rate_for(args,item_code,ignore_party=False)
+	print(item_price)
+	return item_price
+
+def get_customer_selling_price_list(customer):
+	customer_price_list, customer_group = frappe.get_value(	"Customer", customer, ["default_price_list", "customer_group"])
+	customer_group_price_list = frappe.get_value("Customer Group", customer_group, "default_price_list")
+	selling_price_list=frappe.db.get_value("Selling Settings", None, "selling_price_list")
+	customer_selling_price_list = (	customer_price_list or customer_group_price_list or selling_price_list)
+	if customer_selling_price_list==None:
+		pass
+		# frappe.throw
+	return customer_selling_price_list	

@@ -253,7 +253,7 @@ def get_unique_item_and_customer_from_vessel(docname):
 	return item_list
 
 @frappe.whitelist()
-def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,is_periodic_field=None,rate_field=None,periodic_cargo_qty=None,non_periodic_cargo_qty=None,customer_po_no_field=None,doctype=None):
+def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,is_periodic_or_dispatch_field=None,rate_field=None,periodic_cargo_qty=None,non_periodic_cargo_qty=None,customer_po_no_field=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	def set_missing_values(source, target):
@@ -269,7 +269,7 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 
 		# target.type_of_invoice=type_of_invoice
 		target.custom_type_of_invoice="Cargo Handling Charges"
-		if is_periodic_field=="NO":
+		if is_periodic_or_dispatch_field=="Non-Periodic":
 			target.custom_type_of_cargo_handling_invoice="Non-Periodic"
 		else:
 			target.custom_type_of_cargo_handling_invoice="Periodic"
@@ -280,7 +280,7 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		item_code = frappe.db.get_single_value("Coal Settings","ch_charges")
 
 		# nothing on vessel type
-		if is_periodic_field=="NO":
+		if is_periodic_or_dispatch_field=="Non-Periodic":
 			item_row=target.append("items",{"item_code":item_code,"qty":flt(non_periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
 		else:
 			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
@@ -432,5 +432,13 @@ def get_customer_and_tonnage_based_on_cargo_item(item_code,docname):
 def get_cargo_handling_option_name_and_is_periodic_or_not_based_on_customer(docname,customer_name):
 	cargo_handling_charges_details = frappe.db.get_all("Cargo Handling Charges Slots Details",
 													filters = {"parent":customer_name},
-													fields = ["cargo_handling_option_name","is_periodic"])
+													fields = ["cargo_handling_option_name","billing_type"])
 	return cargo_handling_charges_details
+
+@frappe.whitelist()
+def get_dispatch_date_range(vessel=None,commodity=None):
+    pass
+
+@frappe.whitelist()
+def get_qty_based_on_date_range_from_rake_dispatch():
+	pass

@@ -1,6 +1,7 @@
 frappe.ui.form.on('Item', {
     is_customer_provided_item: function(frm) {
 		frm.trigger('set_item_name_for_customer_provided_item')
+        frm.trigger('set_stock_uom_for_customer_provided_item')
 	},
 	custom_customer_abbreviation: function(frm) {
 		frm.trigger('set_item_name_for_customer_provided_item')
@@ -29,5 +30,17 @@ frappe.ui.form.on('Item', {
             frm.set_value('item_name',proposed_name)
         }
 
+    },
+    set_stock_uom_for_customer_provided_item(frm){
+        if (frm.is_new()==1 && frm.doc.is_customer_provided_item==1) {
+            let default_uom_for_cargo = frappe.db.get_single_value("Coal Settings","default_uom_for_cargo")
+            .then(response => {
+                frm.set_value("stock_uom",response)
+                frappe.show_alert({
+                    message:__('Default Uom of item is set to {0}',[response]),
+                    indicator:'green'
+                }, 5);
+            })
+        }
     }
 });

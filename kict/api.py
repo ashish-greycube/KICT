@@ -6,11 +6,15 @@ def set_cargo_handling_option_name_and_is_periodic(self,method):
         option = str(row.percent_billing)+ "%" + " - " +row.billing_when
         row.cargo_handling_option_name = option
         billing_type = row.billing_when
-        posotion_of_string = billing_type.find("Periodic")
-        if posotion_of_string >= 0:
-            row.is_periodic = "YES"
+        posotion_of_string_for_periodic = billing_type.find("Periodic")
+        posotion_of_string_for_dispatch = billing_type.find("Dispatch")
+
+        if posotion_of_string_for_periodic >= 0:
+            row.billing_type = "Periodic"
+        elif posotion_of_string_for_dispatch >= 0:
+            row.billing_type = "Dispatch"
         else:
-            row.is_periodic = "NO"
+            row.billing_type = "Non-Periodic"
 
 def validate_rate_percent_billing(self,method):
     total_percent = 0

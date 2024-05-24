@@ -536,10 +536,13 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
             let cargo_item_field
             let customer_name_field
             let type_of_billing_field
-            let is_periodic_field
+            let is_periodic_or_dispatch_field
             let rate_field
             let from_date_field
             let to_date_field
+            let periodic_cargo_qty
+            let non_periodic_cargo_qty
+            let get_qty_button_field
             let customer_po_no_field
 
             cargo_item_field = {
@@ -609,33 +612,36 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                         },
                         callback: function (r) {
                             let billing_option_list = r.message
+                            billing_option_list
                             for (let row of billing_option_list){
                                 if (billing_option.value == row.cargo_handling_option_name){
-                                    dialog.set_value("is_periodic_field",row.is_periodic)
+                                    dialog.set_value("is_periodic_or_dispatch_field",row.billing_type)
                                 }
                             }
                         }
                     })
                 }
             }
-            is_periodic_field={
+            is_periodic_or_dispatch_field={
                 fieldtype: "Select",
-                fieldname: "is_periodic_field",
-                label: __("Is Periodic?"),
-                options:["YES","NO"],
+                fieldname: "is_periodic_or_dispatch_field",
+                label: __("Is Periodic or Dispatch?"),
+                options:["Non-Periodic", "Periodic", "Dispatch"],
                 onchange: function(){
-                    let periodic_option = dialog.get_field("is_periodic_field")
-                    if(periodic_option.value == "YES"){
+                    let periodic_option = dialog.get_field("is_periodic_or_dispatch_field")
+                    if(periodic_option.value == "Dispatch" || periodic_option.value == "Periodic"){
                         dialog.set_df_property('from_date_field','hidden',0)
                         dialog.set_df_property('to_date_field','hidden',0)
                         dialog.set_df_property('periodic_cargo_qty','hidden',0)
                         dialog.set_df_property('non_periodic_cargo_qty','hidden',1)
+                        dialog.set_df_property('get_qty_button_field','hidden',0)
                     }
                     else{
                         dialog.set_df_property('from_date_field','hidden',1)
                         dialog.set_df_property('to_date_field','hidden',1)
                         dialog.set_df_property('periodic_cargo_qty','hidden',1)
                         dialog.set_df_property('non_periodic_cargo_qty','hidden',0)
+                        dialog.set_df_property('get_qty_button_field','hidden',1)
                     }
                     let cargo_item_name = dialog.get_field("cargo_item_field")
                     let billing_option = dialog.get_field("type_of_billing_field")
@@ -647,6 +653,19 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             item_code:cargo_item_name.value,
                             customer: customer_name.value,
                             billing_type:billing_option.value
+                        },
+                        callback: function (r) {
+                            dialog.set_value("rate_field",r.message)
+                        }
+                    })
+                    // date range
+                    frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.get_dispatch_date_range",
+                        args: {
+                            docname: cur_frm.doc.name,
+                            item_code:cargo_item_name.value,
+                            customer: customer_name.value,
+                            billing_type:billing_option.value,
                         },
                         callback: function (r) {
                             let rate_based_on_billing_type = r.message
@@ -695,6 +714,29 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 read_only: 1
                 // hidden:1,
             }
+            get_qty_button_field={
+                fieldtype: "Button",
+                fieldname: "get_qty_button_field",
+                label: __("Get Quantity"),
+                hidden:1,
+                click : () => {
+                    console.log("button clicked")
+                    frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.get_qty_based_on_date_range_from_rake_dispatch",
+                        args: {
+                            docname: cur_frm.doc.name,
+                            item_code:cargo_item_name.value,
+                            customer: customer_name.value,
+                            billing_type:billing_option.value,
+
+                        },
+                        callback: function (r) {
+                            let rate_based_on_billing_type = r.message
+                            dialog.set_value("rate_field",r.message)
+                        }
+                    })
+                }
+            }
 
             dialog_field.push(cargo_item_field)
             dialog_field.push({
@@ -703,10 +745,11 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
             })
             dialog_field.push(customer_name_field)
             dialog_field.push(type_of_billing_field)
-            dialog_field.push(is_periodic_field)
+            dialog_field.push(is_periodic_or_dispatch_field)
             dialog_field.push(rate_field)
             dialog_field.push(from_date_field)
             dialog_field.push(to_date_field)
+            dialog_field.push(get_qty_button_field)
             dialog_field.push(periodic_cargo_qty)
             dialog_field.push(non_periodic_cargo_qty)
             dialog_field.push(customer_po_no_field)
@@ -723,7 +766,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             "target_doc": undefined,
                             "cargo_item_field":values.cargo_item_field,
                             "customer_name_field": values.customer_name_field,
-                            "is_periodic_field":values.is_periodic_field,
+                            "is_periodic_or_dispatch_field":values.is_periodic_or_dispatch_field,
                             "rate_field":values.rate_field,
                             "periodic_cargo_qty":values.periodic_cargo_qty,
                             "non_periodic_cargo_qty":values.non_periodic_cargo_qty,

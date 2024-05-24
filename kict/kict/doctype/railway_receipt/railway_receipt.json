@@ -28,7 +28,6 @@
   "pcla",
   "gst",
   "total_freight",
-  "total_dispatched_qty",
   "permisible_carrying_capacity",
   "owing_railway_if_gpwis_no",
   "misc_charges",
@@ -37,7 +36,8 @@
   "rr_invoice",
   "micr_no",
   "tax_invoice",
-  "railway_receipt_remark"
+  "railway_receipt_remark",
+  "hold_for_invoice"
  ],
  "fields": [
   {
@@ -153,11 +153,6 @@
    "label": "Total Freight"
   },
   {
-   "fieldname": "total_dispatched_qty",
-   "fieldtype": "Float",
-   "label": "Total Dispatched Qty"
-  },
-  {
    "fieldname": "permisible_carrying_capacity",
    "fieldtype": "Float",
    "label": "Permisible Carrying Capacity"
@@ -201,6 +196,12 @@
    "fieldname": "railway_receipt_remark",
    "fieldtype": "Small Text",
    "label": "Railway Receipt Remark"
+  },
+  {
+   "default": "0",
+   "fieldname": "hold_for_invoice",
+   "fieldtype": "Check",
+   "label": "Hold For Invoice"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -210,7 +211,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-16 12:11:36.691951",
+ "modified": "2024-05-23 18:00:13.667726",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

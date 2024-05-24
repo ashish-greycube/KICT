@@ -40,7 +40,8 @@
   "railway_receipt_remark",
   "hold_for_invoice",
   "section_break_jpwo",
-  "railway_receipt_item_details"
+  "railway_receipt_item_details",
+  "amended_from"
  ],
  "fields": [
   {
@@ -216,6 +217,7 @@
    "label": "Hold For Invoice"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "is_billed",
    "fieldtype": "Select",
    "label": "Is Billed",
@@ -230,16 +232,27 @@
    "fieldtype": "Table",
    "label": "Railway Receipt Item Details",
    "options": "Railway Receipt Item Details"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Railway Receipt",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [
   {
    "link_doctype": "Rake Dispatch",
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-24 15:24:01.603526",
+ "modified": "2024-05-24 16:55:34.685996",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

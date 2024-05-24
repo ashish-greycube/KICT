@@ -66,6 +66,7 @@
    "options": "Customer"
   },
   {
+   "allow_on_submit": 1,
    "default": "No",
    "description": "Will get updated on Submit & Cancel of Delivery Note",
    "fieldname": "is_dn_created",
@@ -77,7 +78,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-24 16:53:07.004359",
+ "modified": "2024-05-24 16:55:45.141366",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt Item Details",

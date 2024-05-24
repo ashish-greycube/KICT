@@ -12,7 +12,8 @@
   "grade",
   "column_break_tuaa",
   "vessel",
-  "rr_item_weight_mt"
+  "rr_item_weight_mt",
+  "is_dn_created"
  ],
  "fields": [
   {
@@ -60,14 +61,23 @@
   {
    "fieldname": "customer_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Customer Name",
    "options": "Customer"
+  },
+  {
+   "default": "No",
+   "description": "Will get updated on Submit & Cancel of Delivery Note",
+   "fieldname": "is_dn_created",
+   "fieldtype": "Select",
+   "label": "Is DN Created?",
+   "options": "Yes\nNo"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-24 16:47:11.487019",
+ "modified": "2024-05-24 16:53:07.004359",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt Item Details",

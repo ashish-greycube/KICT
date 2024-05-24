@@ -22,6 +22,7 @@
   "pol2",
   "total_punitive_amount",
   "fauc",
+  "is_billed",
   "column_break_vwca",
   "enhc",
   "pba",
@@ -51,21 +52,30 @@
    "fetch_from": "rcn_unique_no.fnr_no",
    "fieldname": "fnr_no",
    "fieldtype": "Data",
-   "label": "FNR NO"
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "FNR NO",
+   "unique": 1
   },
   {
    "fieldname": "rr_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "RR No"
   },
   {
    "fieldname": "rr_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "RR Date"
   },
   {
    "fieldname": "rr_weight",
    "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "RR Weight"
   },
   {
@@ -202,6 +212,12 @@
    "fieldname": "hold_for_invoice",
    "fieldtype": "Check",
    "label": "Hold For Invoice"
+  },
+  {
+   "fieldname": "is_billed",
+   "fieldtype": "Select",
+   "label": "Is Billed",
+   "options": "\nYes\nNo"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -211,7 +227,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-23 18:00:13.667726",
+ "modified": "2024-05-24 10:32:32.671880",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

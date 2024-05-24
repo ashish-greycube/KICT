@@ -43,11 +43,15 @@
   {
    "fieldname": "wagon_mismatch_qty",
    "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Wagon Mismatch Qty"
   },
   {
    "fieldname": "wagon_mismatch_amount",
    "fieldtype": "Currency",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Wagon Mismatch Amount"
   },
   {
@@ -149,7 +153,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-16 12:11:01.302467",
+ "modified": "2024-05-24 10:13:41.945302",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Performance Calculation",

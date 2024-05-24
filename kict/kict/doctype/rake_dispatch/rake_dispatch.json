@@ -24,6 +24,8 @@
    "fetch_from": "railway_indent.fnr_no",
    "fieldname": "fnr_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "FNR NO",
    "unique": 1
   },
@@ -43,6 +45,8 @@
    "fetch_from": "railway_indent.demand_datetime",
    "fieldname": "demand_datetime",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Demand Date/Time"
   },
   {
@@ -65,6 +69,8 @@
    "fetch_from": "railway_indent.commodity",
    "fieldname": "commodity",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Commodity",
    "options": "Item"
   },
@@ -72,6 +78,8 @@
    "fetch_from": "railway_indent.scheme_code",
    "fieldname": "scheme_code",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Scheme code",
    "options": "\nGPWIS\nIR\nPREMIUM"
   },
@@ -110,7 +118,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-16 12:07:42.391924",
+ "modified": "2024-05-24 10:07:34.509771",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

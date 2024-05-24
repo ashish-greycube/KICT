@@ -22,32 +22,44 @@
   {
    "fieldname": "railyway_indent_no",
    "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Railyway Indent No"
   },
   {
    "fieldname": "demand_datetime",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Demand Date/Time"
   },
   {
    "fieldname": "customer_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Customer Name",
    "options": "Customer"
   },
   {
    "fieldname": "destination",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Destination"
   },
   {
    "fieldname": "e_demand_reference_id",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "E Demand Reference ID"
   },
   {
    "fieldname": "fnr_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "FNR NO",
    "unique": 1
   },
@@ -63,12 +75,16 @@
   {
    "fieldname": "commodity",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Commodity",
    "options": "Item"
   },
   {
    "fieldname": "scheme_code",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Scheme code",
    "options": "\nGPWIS\nIR\nPREMIUM"
   },
@@ -85,7 +101,7 @@
    "link_fieldname": "fnr_no"
   }
  ],
- "modified": "2024-05-16 12:08:28.082984",
+ "modified": "2024-05-24 10:11:15.816773",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Indent",

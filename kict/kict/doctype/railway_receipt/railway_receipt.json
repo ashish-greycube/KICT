@@ -38,7 +38,9 @@
   "micr_no",
   "tax_invoice",
   "railway_receipt_remark",
-  "hold_for_invoice"
+  "hold_for_invoice",
+  "section_break_jpwo",
+  "railway_receipt_item_details"
  ],
  "fields": [
   {
@@ -218,6 +220,16 @@
    "fieldtype": "Select",
    "label": "Is Billed",
    "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "section_break_jpwo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "railway_receipt_item_details",
+   "fieldtype": "Table",
+   "label": "Railway Receipt Item Details",
+   "options": "Railway Receipt Item Details"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -227,7 +239,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-24 10:32:32.671880",
+ "modified": "2024-05-24 15:24:01.603526",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

@@ -10,6 +10,7 @@
   "birth_hire_item_for_foreign_vessel",
   "ch_charges",
   "royalty_price_list",
+  "default_uom_for_cargo",
   "column_break_fars",
   "storage_charges_fixed",
   "storage_charges_16_25_days",
@@ -90,12 +91,19 @@
    "label": "Customer Group for Agent",
    "options": "Customer Group",
    "reqd": 1
+  },
+  {
+   "fieldname": "default_uom_for_cargo",
+   "fieldtype": "Link",
+   "label": "Default UOM For Cargo",
+   "options": "UOM",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-05-22 10:00:41.691090",
+ "modified": "2024-05-24 13:41:49.970323",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

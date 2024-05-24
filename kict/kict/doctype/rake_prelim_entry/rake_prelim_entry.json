@@ -11,7 +11,9 @@
   "customer_name",
   "vcn_no",
   "vessel_name",
+  "item",
   "grade",
+  "coal_commodity",
   "railway_indent",
   "indent_no",
   "demand_datetime",
@@ -80,11 +82,12 @@
    "label": "Vessel Name"
   },
   {
+   "fetch_from": "item.custom_commodity_grade",
    "fieldname": "grade",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Grade",
-   "options": "Item Group"
+   "label": "Commodity Grade",
+   "options": "Commodity Grade"
   },
   {
    "fetch_from": "railway_indent.railyway_indent_no",
@@ -275,12 +278,26 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Rake Prelim Entry Remark"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Customer's Item",
+   "options": "Item"
+  },
+  {
+   "fetch_from": "item.custom_coal_commodity",
+   "fieldname": "coal_commodity",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Commodity",
+   "options": "Coal Commodity"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-03 12:58:22.747963",
+ "modified": "2024-05-24 17:10:57.945536",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Prelim Entry",

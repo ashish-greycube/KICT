@@ -14,5 +14,17 @@ frappe.ui.form.on("Rake Dispatch", {
                 };
             }
         });
+
+        frm.set_query("item", "rake_prelim_entry", function (doc, cdt, cdn) {
+            let row = locals[cdt][cdn];
+            if (row.vcn_no) {
+                return {
+                    query: "kict.kict.doctype.rake_dispatch.rake_dispatch.get_unique_customer_item_list",
+                    filters: {
+                        vessel_name: row.vcn_no
+                    },
+                };
+            }
+        });
     },
 });

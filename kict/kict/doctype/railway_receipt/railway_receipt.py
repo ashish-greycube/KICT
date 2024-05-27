@@ -4,47 +4,81 @@
 import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
+from frappe import _
+from frappe.utils import get_link_to_form
   
 
 class RailwayReceipt(Document):
 	def before_insert(self):
 		rcn_no = self.rcn_unique_no
-		print(rcn_no)
-		pass
+		rake_dispatch_doc = frappe.get_doc("Rake Dispatch",rcn_no)
+		for row in rake_dispatch_doc.get("rake_prelim_entry"):
+			railway_receipt_item_row = self.append("railway_receipt_item_details",{})
+			if row.customer_name:
+				railway_receipt_item_row.customer_name = row.customer_name
+			if row.vcn_no:
+				railway_receipt_item_row.vessel = row.vcn_no
+			if row.item:
+				railway_receipt_item_row.item = row.item
+			if row.grade:
+				railway_receipt_item_row.grade = row.grade
+			if row.coal_commodity:
+				railway_receipt_item_row.coal_commodity = row.coal_commodity
 
-@frappe.whitelist()
-def create_delivery_note_from_railway_receipt(source_name,target_doc=None,doctype=None):
+	def validate(self):
+		self.set_rr_weight()
+		if not self.is_new():
+			self.validate_rr_item_weight()
 	
-	def set_missing_values(source, target):
-		# pendind
-		rr_weight = frappe.db.get_value(doctype,source_name,"rr_weight")
-		rr_date = frappe.db.get_value(doctype,source_name,"rr_date")
-		customer = 'TATA STEEL LIMITED-TSL'
-		# mandatory to check set_posting_time checkbox to edit posting date
-		target.set_posting_time = 1
-		target.customer=customer
-		target.posting_date = rr_date
+	def validate_rr_item_weight(self):
+		railway_item_detail = self.get("railway_receipt_item_details")
+		if len(railway_item_detail) > 0:
+			for row in self.get("railway_receipt_item_details"):
+				if row.get("rr_item_weight_mt") == 0:
+					frappe.throw(_("Row #{0} : RR Item Weight cannot be 0").format(row.idx))
+	
+	def set_rr_weight(self):
+		railway_item_detail = self.get("railway_receipt_item_details")
+		total_weight = 0
+		if len(railway_item_detail) > 0:
+			for row in self.get("railway_receipt_item_details"):
+				if row.get("rr_item_weight_mt"):
+					total_weight = total_weight + row.rr_item_weight_mt
 
-		price_list, currency = frappe.db.get_value("Customer", {"name": customer}, ["default_price_list", "default_currency"])
-		if price_list:
-			target.selling_price_list = price_list
-		if currency:
-			target.currency = currency
-		target.custom_transports_mode='By Rake'
-		target.append("items",{"item_code":"Coking Coal-TSL","qty":rr_weight,"vessel":"new16052024"})
+		self.rr_weight = total_weight
 
-	doc = get_mapped_doc('Railway Receipt', source_name, {
-		'Railway Receipt': {
-			'doctype': 'Delivery Note',
-			'field_map': {
-				'name':'custom_rcn'
-			},			
-			'validation': {
-				'docstatus': ['!=', 2]
-			}
-		}		
-	}, target_doc,set_missing_values)
-	doc.run_method("set_missing_values")
-	doc.run_method("calculate_taxes_and_totals")
-	doc.save()	
-	return doc.name
+	def on_submit(self):
+		create_delivery_note_from_railway_receipt(self.name)
+			
+@frappe.whitelist()
+def create_delivery_note_from_railway_receipt(docname):
+	doc = frappe.get_doc("Railway Receipt",docname)
+	railway_receipt_item = doc.get("railway_receipt_item_details")
+	for row in railway_receipt_item:
+		if row.is_dn_created != 'Yes':
+			dn = frappe.new_doc("Delivery Note")
+			dn.customer = row.customer_name
+			dn.set_posting_time = 1
+			dn.posting_date = doc.rr_date
+			dn.custom_transports_mode = 'By Rake'
+			dn.custom_rcn = doc.name
+			dn.custom_railway_receipt_detail = row.name
+
+			price_list, currency = frappe.db.get_value("Customer", {"name": row.customer_name}, ["default_price_list", "default_currency"])
+			if price_list:
+				dn.selling_price_list = price_list
+			if currency:
+				dn.currency = currency
+			dn_item_row = dn.append("items",{})
+			dn_item_row.item_code = row.item
+			dn_item_row.qty = row.rr_item_weight_mt
+			dn_item_row.vessel = row.vessel
+
+			dn.run_method("set_missing_values")
+			dn.run_method("calculate_taxes_and_totals")
+			dn.save(ignore_permissions=True)
+			dn.submit()
+
+			row.is_dn_created = 'Yes'
+			doc.save(ignore_permissions=True)
+			frappe.msgprint(_('Delivery Note {0} is created').format(get_link_to_form("Delivery Note",dn.name)),alert=True)

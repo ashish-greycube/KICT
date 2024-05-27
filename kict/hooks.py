@@ -127,6 +127,9 @@ doc_events = {
 	"Customer": {
 		"validate": ["kict.api.set_cargo_handling_option_name_and_is_periodic",
                "kict.api.validate_rate_percent_billing"]
+	},
+    "Delivery Note": {
+        "on_cancel": "kict.api.change_status_for_dn_creation_in_railway_receipt_on_cancle_of_dn"
 	}
 }
 

@@ -380,8 +380,7 @@ def get_cargo_handling_rate_for_customer_based_on_billing_type(docname,customer,
 	item_defaults=get_item_defaults(item_code_for_si,company)
 	uom=item_defaults.get('stock_uom')
 	if uom==None:
-		pass
-		# frappe thr
+		frappe.throw(_("Please set uom of item"))
 	args=frappe._dict({
 		'customer':customer,
 		'price_list':customer_selling_price_list,
@@ -398,8 +397,7 @@ def get_customer_selling_price_list(customer):
 	selling_price_list=frappe.db.get_value("Selling Settings", None, "selling_price_list")
 	customer_selling_price_list = (	customer_price_list or customer_group_price_list or selling_price_list)
 	if customer_selling_price_list==None:
-		pass
-		# frappe.throw
+		frappe.throw(_("Please set customer selling price list"))
 	return customer_selling_price_list	
 
 def get_rate_percent_billing(customer,billing_type):

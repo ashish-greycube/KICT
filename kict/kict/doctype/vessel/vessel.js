@@ -605,6 +605,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 label: __("Type Of Billing"),
                 options:[""],
                 onchange: function(){
+                    console.log('inside type of billing')
                     let billing_option = dialog.get_field("type_of_billing_field")
                     let customer_name = dialog.get_field("customer_name_field")
                     for (let row of billing_option_list){
@@ -612,17 +613,25 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             dialog.set_value("is_periodic_or_dispatch_field",row.billing_type)
                         }
                     }
+                    // console.log(dialog.get_field("is_periodic_or_dispatch_field").value)
+                    console.log('before call')
                     frappe.call({
                         method: "kict.kict.doctype.vessel.vessel.get_dispatch_date_range",
                         args: {
-                            vessel: cur_frm.doc.name,
-                            cargo_item_field: dialog.get_field("cargo_item_field").value,
-                            is_periodic_or_dispatch_field:dialog.get_field("is_periodic_or_dispatch_field").value,
-                            from_date_field: dialog.get_field("from_date_field").value,
-                            to_date_field: dialog.get_field("to_date_field").value,
+                            'vessel': frm.doc.name,
+                            'cargo_item_field': dialog.get_field("cargo_item_field").value,
+                            'is_periodic_or_dispatch_field':dialog.get_field("is_periodic_or_dispatch_field").value || undefined,
+                            'from_date_field': dialog.get_field("from_date_field").value  || undefined,
+                            'to_date_field': dialog.get_field("to_date_field").value   || undefined,
                         },
                         callback: function (r) {
                             console.log(r)
+                            let get_dispatch_date_range=r.message
+                            get_dispatch_date_range.forEach(date_range_row => {
+                                dialog.set_value("from_date_field",date_range_row.rr_date)
+                                dialog.set_value("to_date_field",frappe.datetime.add_days(frappe.datetime.nowdate(),-1))
+                                
+                            });
                         }
                     })                    
 
@@ -666,19 +675,19 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                         }
                     })
                     // date range
-                    frappe.call({
-                        method: "kict.kict.doctype.vessel.vessel.get_dispatch_date_range",
-                        args: {
-                            docname: cur_frm.doc.name,
-                            item_code:cargo_item_name.value,
-                            customer: customer_name.value,
-                            billing_type:billing_option.value,
-                        },
-                        callback: function (r) {
-                            let rate_based_on_billing_type = r.message
-                            dialog.set_value("rate_field",r.message)
-                        }
-                    })
+                    // frappe.call({
+                    //     method: "kict.kict.doctype.vessel.vessel.get_dispatch_date_range",
+                    //     args: {
+                    //         docname: cur_frm.doc.name,
+                    //         item_code:cargo_item_name.value,
+                    //         customer: customer_name.value,
+                    //         billing_type:billing_option.value,
+                    //     },
+                    //     callback: function (r) {
+                    //         let rate_based_on_billing_type = r.message
+                    //         dialog.set_value("rate_field",r.message)
+                    //     }
+                    // })
                     
                 }
             }
@@ -728,20 +737,38 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 hidden:1,
                 click : () => {
                     console.log("button clicked")
-                    frappe.call({
-                        method: "kict.kict.doctype.vessel.vessel.get_qty_based_on_date_range_from_rake_dispatch",
-                        args: {
-                            docname: cur_frm.doc.name,
-                            item_code:cargo_item_name.value,
-                            customer: customer_name.value,
-                            billing_type:billing_option.value,
+                    // frappe.call({
+                    //     method: "kict.kict.doctype.vessel.vessel.get_qty_based_on_date_range_from_rake_dispatch",
+                    //     args: {
+                    //         docname: cur_frm.doc.name,
+                    //         item_code:cargo_item_name.value,
+                    //         customer: customer_name.value,
+                    //         billing_type:billing_option.value,
 
+                    //     },
+                    //     callback: function (r) {
+                    //         let rate_based_on_billing_type = r.message
+                    //         dialog.set_value("rate_field",r.message)
+                    //     }
+                    // })
+                    frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.get_dispatch_date_range",
+                        args: {
+                            'vessel': frm.doc.name,
+                            'cargo_item_field': dialog.get_field("cargo_item_field").value,
+                            'is_periodic_or_dispatch_field':dialog.get_field("is_periodic_or_dispatch_field").value || undefined,
+                            'from_date_field': dialog.get_field("from_date_field").value  || undefined,
+                            'to_date_field': dialog.get_field("to_date_field").value   || undefined,
                         },
                         callback: function (r) {
-                            let rate_based_on_billing_type = r.message
-                            dialog.set_value("rate_field",r.message)
+                            console.log(r)
+                            let get_dispatch_date_range=r.message
+                            get_dispatch_date_range.forEach(date_range_row => {
+                                dialog.set_value("periodic_cargo_qty",date_range_row.rr_item_weight_mt)
+                                
+                            });
                         }
-                    })
+                    })                     
                 }
             }
 
@@ -778,6 +805,8 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             "periodic_cargo_qty":values.periodic_cargo_qty,
                             "non_periodic_cargo_qty":values.non_periodic_cargo_qty,
                             "customer_po_no_field":values.customer_po_no_field,
+                            "from_date_field":values.from_date_field,
+                            "to_date_field": values.to_date_field,
                             "doctype": frm.doc.doctype
                         },
                         callback: function (response) {

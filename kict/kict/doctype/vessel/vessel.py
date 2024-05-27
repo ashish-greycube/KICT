@@ -253,7 +253,7 @@ def get_unique_item_and_customer_from_vessel(docname):
 	return item_list
 
 @frappe.whitelist()
-def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,is_periodic_or_dispatch_field=None,rate_field=None,periodic_cargo_qty=None,non_periodic_cargo_qty=None,customer_po_no_field=None,doctype=None):
+def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,is_periodic_or_dispatch_field=None,rate_field=None,periodic_cargo_qty=None,non_periodic_cargo_qty=None,customer_po_no_field=None,from_date_field=None,to_date_field=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	def set_missing_values(source, target):
@@ -273,6 +273,8 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 			target.custom_type_of_cargo_handling_invoice="Non-Periodic"
 		else:
 			target.custom_type_of_cargo_handling_invoice="Periodic"
+			target.custom_cargo_from_date = from_date_field
+			target.custom_cargo_to_date = to_date_field
 		target.customer=customer_name_field
 		target.due_date = today()		
 		target.vessel=source_name
@@ -435,18 +437,23 @@ def get_cargo_handling_option_name_and_is_periodic_or_not_based_on_customer(docn
 
 @frappe.whitelist()
 def get_dispatch_date_range(vessel=None,cargo_item_field=None,is_periodic_or_dispatch_field=None,from_date_field=None,to_date_field=None):
+	print(vessel,cargo_item_field,is_periodic_or_dispatch_field,from_date_field,to_date_field)
 	def get_conditions(filters):
+		order_by_condition=""
 		conditions =""
 
-		conditions += " rr_item.vessel = %(vessel)s"
-		conditions += " rr_item.item = %(cargo_item_field)s"
-
+		conditions += " and rr_item.vessel = %(vessel)s"
+		conditions += " and rr_item.item = %(cargo_item_field)s"
+		
 		if filters.get("from_date_field") and filters.get("to_date_field")  :
 				conditions += " and rr.rr_date between {0} and {1}".format(
 					filters.get("from_date_field"),
 					filters.get("to_date_field")
 		)
-		return conditions	
+				order_by_condition='order by rr_date ASC'
+		else:
+			order_by_condition='order by rr_date ASC LIMIT 1'
+		return conditions,order_by_condition
 	filters=frappe._dict(
 			{
 				"vessel": vessel,
@@ -456,16 +463,16 @@ def get_dispatch_date_range(vessel=None,cargo_item_field=None,is_periodic_or_dis
 			} 
         ) 
 
-	conditions = get_conditions(filters)
+	conditions,order_by_condition = get_conditions(filters)
 	entries = frappe.db.sql(
 		"""
-		SELECT rr.rr_date,rr_item.rr_item_weight_mt FROM `tabRailway Receipt` as rr 
+		SELECT rr.name,rr.rr_date,rr_item.rr_item_weight_mt FROM `tabRailway Receipt` as rr 
 		inner join `tabRailway Receipt Item Details` as rr_item 
 		on rr.name =rr_item.parent 
 		where rr.hold_for_invoice=0 and rr.is_billed='No' and rr.docstatus=1
 		and rr_item.is_dn_created ='Yes' 
-		{0} order by rr_date ASC
-		""".format(conditions),filters,as_dict=1,debug=1
+		{0} {1} 
+		""".format(conditions,order_by_condition),filters,as_dict=1,debug=1
 	)	
 	print('entries',entries)
 	return entries

@@ -434,8 +434,42 @@ def get_cargo_handling_option_name_and_is_periodic_or_not_based_on_customer(docn
 	return cargo_handling_charges_details
 
 @frappe.whitelist()
-def get_dispatch_date_range(vessel=None,commodity=None):
-    pass
+def get_dispatch_date_range(vessel=None,cargo_item_field=None,is_periodic_or_dispatch_field=None,from_date_field=None,to_date_field=None):
+	def get_conditions(filters):
+		conditions =""
+
+		conditions += " rr_item.vessel = %(vessel)s"
+		conditions += " rr_item.item = %(cargo_item_field)s"
+
+		if filters.get("from_date_field") and filters.get("to_date_field")  :
+				conditions += " and rr.rr_date between {0} and {1}".format(
+					filters.get("from_date_field"),
+					filters.get("to_date_field")
+		)
+		return conditions	
+	filters=frappe._dict(
+			{
+				"vessel": vessel,
+				"cargo_item_field": cargo_item_field,
+				"from_date": from_date_field,
+				"to_date": to_date_field,
+			} 
+        ) 
+
+	conditions = get_conditions(filters)
+	entries = frappe.db.sql(
+		"""
+		SELECT rr.rr_date,rr_item.rr_item_weight_mt FROM `tabRailway Receipt` as rr 
+		inner join `tabRailway Receipt Item Details` as rr_item 
+		on rr.name =rr_item.parent 
+		where rr.hold_for_invoice=0 and rr.is_billed='No' and rr.docstatus=1
+		and rr_item.is_dn_created ='Yes' 
+		{0} order by rr_date ASC
+		""".format(conditions),filters,as_dict=1,debug=1
+	)	
+	print('entries',entries)
+	return entries
+
 
 @frappe.whitelist()
 def get_qty_based_on_date_range_from_rake_dispatch():

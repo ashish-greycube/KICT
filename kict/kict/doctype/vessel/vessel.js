@@ -614,26 +614,26 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                         }
                     }
                     // console.log(dialog.get_field("is_periodic_or_dispatch_field").value)
-                    console.log('before call')
-                    frappe.call({
-                        method: "kict.kict.doctype.vessel.vessel.get_dispatch_date_range",
-                        args: {
-                            'vessel': frm.doc.name,
-                            'cargo_item_field': dialog.get_field("cargo_item_field").value,
-                            'is_periodic_or_dispatch_field':dialog.get_field("is_periodic_or_dispatch_field").value || undefined,
-                            'from_date_field': dialog.get_field("from_date_field").value  || undefined,
-                            'to_date_field': dialog.get_field("to_date_field").value   || undefined,
-                        },
-                        callback: function (r) {
-                            console.log(r)
-                            let get_dispatch_date_range=r.message
-                            get_dispatch_date_range.forEach(date_range_row => {
-                                dialog.set_value("from_date_field",date_range_row.rr_date)
+                    let is_periodic_or_dispatch_field=dialog.get_field("is_periodic_or_dispatch_field").value
+                    if (is_periodic_or_dispatch_field!='Non-Periodic') {
+                        console.log('before call')
+                        frappe.call({
+                            method: "kict.kict.doctype.vessel.vessel.get_from_date_for_dispatch_periodic_type",
+                            args: {
+                                'vessel': frm.doc.name,
+                                'cargo_item_field': dialog.get_field("cargo_item_field").value,
+                                'type_of_billing_field':dialog.get_field("type_of_billing_field").value || undefined,
+                            },
+                            callback: function (r) {
+                                console.log(r)
+                                let get_from_date_for_dispatch_periodic_type=r.message
+                                dialog.set_value("from_date_field",get_from_date_for_dispatch_periodic_type.from_date)
                                 dialog.set_value("to_date_field",frappe.datetime.add_days(frappe.datetime.nowdate(),-1))
-                                
-                            });
-                        }
-                    })                    
+                                    
+                            }
+                        })                         
+                    }
+                   
 
                 }
             }
@@ -674,21 +674,6 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             dialog.set_value("rate_field",r.message)
                         }
                     })
-                    // date range
-                    // frappe.call({
-                    //     method: "kict.kict.doctype.vessel.vessel.get_dispatch_date_range",
-                    //     args: {
-                    //         docname: cur_frm.doc.name,
-                    //         item_code:cargo_item_name.value,
-                    //         customer: customer_name.value,
-                    //         billing_type:billing_option.value,
-                    //     },
-                    //     callback: function (r) {
-                    //         let rate_based_on_billing_type = r.message
-                    //         dialog.set_value("rate_field",r.message)
-                    //     }
-                    // })
-                    
                 }
             }
             rate_field={
@@ -707,7 +692,16 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 fieldtype: "Date",
                 fieldname: "to_date_field",
                 label: __("To Date"),
-                hidden:1
+                hidden:1,
+                onchange: function(){
+                    let to_date =  dialog.get_field("to_date_field")
+                    if (to_date > frappe.datetime.nowdate()){
+                        frappe.throw({
+                            message: __("To Date could not greater than today."),
+                            indicator: "red",
+                        });
+                    }
+                }                
             }
             periodic_cargo_qty={
                 fieldtype: "Float",
@@ -737,35 +731,19 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 hidden:1,
                 click : () => {
                     console.log("button clicked")
-                    // frappe.call({
-                    //     method: "kict.kict.doctype.vessel.vessel.get_qty_based_on_date_range_from_rake_dispatch",
-                    //     args: {
-                    //         docname: cur_frm.doc.name,
-                    //         item_code:cargo_item_name.value,
-                    //         customer: customer_name.value,
-                    //         billing_type:billing_option.value,
-
-                    //     },
-                    //     callback: function (r) {
-                    //         let rate_based_on_billing_type = r.message
-                    //         dialog.set_value("rate_field",r.message)
-                    //     }
-                    // })
                     frappe.call({
-                        method: "kict.kict.doctype.vessel.vessel.get_dispatch_date_range",
+                        method: "kict.kict.doctype.vessel.vessel.get_qty_for_dispatch_periodic_type",
                         args: {
                             'vessel': frm.doc.name,
                             'cargo_item_field': dialog.get_field("cargo_item_field").value,
-                            'is_periodic_or_dispatch_field':dialog.get_field("is_periodic_or_dispatch_field").value || undefined,
                             'from_date_field': dialog.get_field("from_date_field").value  || undefined,
                             'to_date_field': dialog.get_field("to_date_field").value   || undefined,
                         },
                         callback: function (r) {
                             console.log(r)
-                            let get_dispatch_date_range=r.message
-                            get_dispatch_date_range.forEach(date_range_row => {
+                            let get_qty_for_dispatch_periodic_type=r.message
+                            get_qty_for_dispatch_periodic_type.forEach(date_range_row => {
                                 dialog.set_value("periodic_cargo_qty",date_range_row.rr_item_weight_mt)
-                                
                             });
                         }
                     })                     

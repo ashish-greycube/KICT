@@ -533,6 +533,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 unique_cargo_item.push(ele.item)
             })
             let billing_option_list
+            let participating_rr_details
 
             // dialog fields
             let cargo_item_field
@@ -546,6 +547,9 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
             let non_periodic_cargo_qty
             let get_qty_button_field
             let customer_po_no_field
+            let participant_detail_field
+
+            console.log(participating_rr_details,"----participating_rr_details")
 
             cargo_item_field = {
                 fieldtype: "Select",
@@ -629,6 +633,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                                 let get_from_date_for_dispatch_periodic_type=r.message
                                 dialog.set_value("from_date_field",get_from_date_for_dispatch_periodic_type.from_date)
                                 dialog.set_value("to_date_field",frappe.datetime.add_days(frappe.datetime.nowdate(),-1))
+                                dialog.set_df_property('cargo_item_field','read_only',1)
                                     
                             }
                         })                         
@@ -693,7 +698,6 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 fieldname: "to_date_field",
                 label: __("To Date"),
                 hidden:1,
-                default:frappe.datetime.add_days(frappe.datetime.nowdate(),-1),
                 onchange: function(){
                     let user_to_date =  dialog.get_field("to_date_field")
                     if (user_to_date.value > frappe.datetime.nowdate()){
@@ -746,13 +750,28 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             get_qty_for_dispatch_periodic_type.forEach(date_range_row => {
                                 dialog.set_value("periodic_cargo_qty",date_range_row.rr_item_weight_mt)
                             });
-                            let participating_rr_details=r.message[1]
-                            console.log(participating_rr_details)
+                            participating_rr_details=r.message[1]
+                            console.log(participating_rr_details,"participating_rr_details")
                         }
                     })                     
                 }
             }
-
+            participant_detail_field={
+                fieldtype: "HTML",
+                fieldname: "participant_detail_field",
+                read_only:1,
+                options:`<div>
+                <table border="1">
+                <tr>
+                <td>idx</td>
+                <td>name</td>
+                <td>from_date</td></tr>
+                <tr>
+                <td></td>
+                <td></td>
+                <td></td></tr></table></div>`
+            }
+            console.log(participating_rr_details,"---->>>>>>>>>>participating_rr_details")
             dialog_field.push(cargo_item_field)
             dialog_field.push({
                 fieldtype: "Section Break",
@@ -767,6 +786,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
             dialog_field.push(get_qty_button_field)
             dialog_field.push(periodic_cargo_qty)
             dialog_field.push(non_periodic_cargo_qty)
+            dialog_field.push(participant_detail_field)
             dialog_field.push(customer_po_no_field)
 
             dialog = new frappe.ui.Dialog({
@@ -774,6 +794,10 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 fields: dialog_field,
                 primary_action_label: 'Create Sales Invoice',
                 primary_action: function (values) {
+                    console.log(values,"values")
+                    if (values.non_periodic_cargo_qty == 0 || values.periodic_cargo_qty == 0){
+                        frappe.throw(__("Qty cannot be zero"))
+                    }
                     frappe.call({
                         method: "kict.kict.doctype.vessel.vessel.create_sales_invoice_for_cargo_handling_charges_from_vessel",
                         args: {
@@ -781,6 +805,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             "target_doc": undefined,
                             "cargo_item_field":values.cargo_item_field,
                             "customer_name_field": values.customer_name_field,
+                            "type_of_billing_field":values.type_of_billing_field,
                             "is_periodic_or_dispatch_field":values.is_periodic_or_dispatch_field,
                             "rate_field":values.rate_field,
                             "periodic_cargo_qty":values.periodic_cargo_qty,

@@ -253,7 +253,7 @@ def get_unique_item_and_customer_from_vessel(docname):
 	return item_list
 
 @frappe.whitelist()
-def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,is_periodic_or_dispatch_field=None,rate_field=None,periodic_cargo_qty=None,non_periodic_cargo_qty=None,customer_po_no_field=None,from_date_field=None,to_date_field=None,doctype=None):
+def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,type_of_billing_field=None,is_periodic_or_dispatch_field=None,rate_field=None,periodic_cargo_qty=None,non_periodic_cargo_qty=None,customer_po_no_field=None,from_date_field=None,to_date_field=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	def set_missing_values(source, target):
@@ -275,6 +275,8 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 			target.custom_type_of_cargo_handling_invoice="Periodic"
 			target.custom_cargo_from_date = from_date_field
 			target.custom_cargo_to_date = to_date_field
+			target.custom_cargo_sub_type_of_invoice = type_of_billing_field
+			print(type_of_billing_field,"-----------type_of_billing_field")
 		target.customer=customer_name_field
 		target.due_date = today()		
 		target.vessel=source_name
@@ -514,5 +516,8 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 		and rr_item.is_dn_created ='Yes' {0} order by rr_date ASC
 		""".format(conditions),filters,as_dict=1,debug=1
 	)
-	participating_rr_details='<br>'.join(participating_rr_details)	
+	# for rr_detail in participating_rr_details:
+	# 	print(rr_detail)
+	# participating_rr_details='<br>'.join(str(participating_rr_details))
+	# print(qty_entries,participating_rr_details,"------qty_entries,participating_rr_details")	
 	return qty_entries,participating_rr_details

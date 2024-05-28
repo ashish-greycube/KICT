@@ -8,12 +8,12 @@
  "field_order": [
   "loading_date",
   "silo",
+  "item",
+  "coal_commodity",
+  "grade",
   "customer_name",
   "vcn_no",
   "vessel_name",
-  "item",
-  "grade",
-  "coal_commodity",
   "railway_indent",
   "indent_no",
   "demand_datetime",
@@ -61,6 +61,7 @@
    "options": "\nRLS-1\nRLS-2"
   },
   {
+   "fetch_from": "item.customer",
    "fieldname": "customer_name",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -297,7 +298,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-24 17:10:57.945536",
+ "modified": "2024-05-28 14:45:54.985903",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Prelim Entry",

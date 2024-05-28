@@ -245,9 +245,13 @@
   {
    "link_doctype": "Rake Dispatch",
    "link_fieldname": "name"
+  },
+  {
+   "link_doctype": "Vessel",
+   "link_fieldname": "vessel_name"
   }
  ],
- "modified": "2024-05-27 17:43:03.954314",
+ "modified": "2024-05-28 15:10:54.601421",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

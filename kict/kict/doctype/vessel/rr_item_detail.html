@@ -1,0 +1,16 @@
+<table border="1">
+    <tr>
+        <td><b>RR Name</b></td>
+        <td><b>RR Item</b></td>
+        <td><b>Item No</b></td>
+        <td><b>Item Weight</b></td>
+    </tr>
+    {% for item in items %}
+    <tr>
+        <td>{{item.parent}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.idx}}</td>
+        <td>{{item.rr_item_weight_mt}}</td>
+    </tr>
+    {% endfor %}
+</table>

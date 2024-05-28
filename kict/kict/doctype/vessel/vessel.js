@@ -750,7 +750,8 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             get_qty_for_dispatch_periodic_type.forEach(date_range_row => {
                                 dialog.set_value("periodic_cargo_qty",date_range_row.rr_item_weight_mt)
                             });
-                            participating_rr_details=r.message[1]
+                            rr_item_detail_html=r.message[1]
+                            dialog.set_df_property('participant_detail_field','options',rr_item_detail_html)
                             console.log(participating_rr_details,"participating_rr_details")
                         }
                     })                     
@@ -760,16 +761,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 fieldtype: "HTML",
                 fieldname: "participant_detail_field",
                 read_only:1,
-                options:`<div>
-                <table border="1">
-                <tr>
-                <td>idx</td>
-                <td>name</td>
-                <td>from_date</td></tr>
-                <tr>
-                <td></td>
-                <td></td>
-                <td></td></tr></table></div>`
+                options:""
             }
             console.log(participating_rr_details,"---->>>>>>>>>>participating_rr_details")
             dialog_field.push(cargo_item_field)

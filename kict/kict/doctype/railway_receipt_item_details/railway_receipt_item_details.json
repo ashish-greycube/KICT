@@ -37,8 +37,7 @@
    "fieldname": "rr_item_weight_mt",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "RR Item Weight (MT)",
-   "reqd": 1
+   "label": "RR Item Weight (MT)"
   },
   {
    "fetch_from": "item.custom_coal_commodity",
@@ -90,7 +89,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-27 17:42:44.147971",
+ "modified": "2024-05-28 13:05:09.980695",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt Item Details",

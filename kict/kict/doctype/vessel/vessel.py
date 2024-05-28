@@ -517,8 +517,15 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 		and rr_item.is_dn_created ='Yes' {0} order by rr_date ASC
 		""".format(conditions),filters,as_dict=1,debug=1
 	)
-
-	rr_item_detail_html = frappe.render_template("rr_item_detail.html", items=participating_rr_details)
+	if len(participating_rr_details)>0:
+		doc=frappe._dict({'items':participating_rr_details})
+		# items=participating_rr_details
+		# print(qty_entries,items)
+		rr_item_detail_html = frappe.render_template("kict/kict/doctype/vessel/rr_item_detail.html",doc)
+	else:
+		rr_item_detail_html="<b>No participating railway receipt found.</b>"
+	rr_item_detail_html="<b>No participating railway receipt found.</b>"	
+	print(rr_item_detail_html)
 	# for rr_detail in participating_rr_details:
 	# 	print(rr_detail)
 	# participating_rr_details='<br>'.join(str(participating_rr_details))

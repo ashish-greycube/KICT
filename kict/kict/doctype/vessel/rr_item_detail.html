@@ -5,8 +5,7 @@
         <td><b>Item No</b></td>
         <td><b>Item Weight</b></td>
     </tr>
-    {{doc}}
-    {% for item in doc['items'] %}
+    {% for item in items %}
     <tr>
         <td>{{item.parent}}</td>
         <td>{{item.name}}</td>

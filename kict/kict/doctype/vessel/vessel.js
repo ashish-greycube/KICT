@@ -742,10 +742,12 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                         },
                         callback: function (r) {
                             console.log(r)
-                            let get_qty_for_dispatch_periodic_type=r.message
+                            let get_qty_for_dispatch_periodic_type=r.message[0]
                             get_qty_for_dispatch_periodic_type.forEach(date_range_row => {
                                 dialog.set_value("periodic_cargo_qty",date_range_row.rr_item_weight_mt)
                             });
+                            let participating_rr_details=r.message[1]
+                            console.log(participating_rr_details)
                         }
                     })                     
                 }

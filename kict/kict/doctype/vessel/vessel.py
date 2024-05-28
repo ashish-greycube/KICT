@@ -502,8 +502,7 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 		on rr.name =rr_item.parent 
 		where rr.hold_for_invoice=0 and rr_item.is_billed='No' and rr.docstatus=1
 		and rr_item.is_dn_created ='Yes' 
-		{0} order by rr_date ASC
-		group by rr_item.item
+		{0} group by rr_item.item order by rr_date ASC
 		""".format(conditions),filters,as_dict=1,debug=1
 	)	
 	print('entries',entries)

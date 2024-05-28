@@ -510,7 +510,7 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 	)	
 	participating_rr_details=frappe.db.sql(
 		"""
-		SELECT rr_item.parent,rr_item.name,rr_item.idx,rr_item.rr_item_weight_mt  FROM `tabRailway Receipt` as rr 
+		SELECT rr_item.parent,rr_item.name,rr_item.idx,rr_item.rr_item_weight_mt,rr.rr_date  FROM `tabRailway Receipt` as rr 
 		inner join `tabRailway Receipt Item Details` as rr_item 
 		on rr.name =rr_item.parent 
 		where rr.hold_for_invoice=0 and rr_item.is_billed='No' and rr.docstatus=1
@@ -519,10 +519,10 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 	)
 
 	if len(participating_rr_details)>0:
-		table_body="<table border='1'><tr><td><b>RR Name</b></td><td><b>RR Item</b></td><td><b>Item No</b></td><td><b>Item Weight</b></td></tr>"
+		table_body="<table border='1'><tr><td><b>RR Name</b></td><td><b>RR Date</b></td><td><b>RR Item</b></td><td><b>Item No</b></td><td><b>Item Weight</b></td></tr>"
 		table_row=""
 		for item in participating_rr_details:
-			table_row=table_row+"<tr><td>"+item.parent+"</td><td>"+item.name+"</td><td>"+cstr(item.idx)+"</td><td>"+cstr(item.rr_item_weight_mt)+"</td></tr>"
+			table_row=table_row+"<tr><td>"+item.parent+"</td><td>"+cstr(item.rr_date)+"</td><td>"+item.name+"</td><td>"+cstr(item.idx)+"</td><td>"+cstr(item.rr_item_weight_mt)+"</td></tr>"
 		table_html=table_body+table_row+"</table>"
 	else:
 		table_html="<b>No participating railway receipt found.</b>"

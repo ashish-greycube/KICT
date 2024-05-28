@@ -549,8 +549,6 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
             let customer_po_no_field
             let participant_detail_field
 
-            console.log(participating_rr_details,"----participating_rr_details")
-
             cargo_item_field = {
                 fieldtype: "Select",
                 fieldname: "cargo_item_field",
@@ -763,7 +761,6 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 read_only:1,
                 options:""
             }
-            console.log(participating_rr_details,"---->>>>>>>>>>participating_rr_details")
             dialog_field.push(cargo_item_field)
             dialog_field.push({
                 fieldtype: "Section Break",

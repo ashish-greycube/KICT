@@ -22,7 +22,6 @@
   "pol2",
   "total_punitive_amount",
   "fauc",
-  "is_billed",
   "column_break_vwca",
   "enhc",
   "pba",
@@ -220,13 +219,6 @@
    "label": "Hold For Invoice"
   },
   {
-   "allow_on_submit": 1,
-   "fieldname": "is_billed",
-   "fieldtype": "Select",
-   "label": "Is Billed",
-   "options": "\nYes\nNo"
-  },
-  {
    "fieldname": "section_break_jpwo",
    "fieldtype": "Section Break"
   },
@@ -255,7 +247,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-27 16:43:16.337923",
+ "modified": "2024-05-27 17:43:03.954314",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

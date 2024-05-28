@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{RC}-{DD}{MM}{YYYY}",
+ "autoname": "format:{RC}-{DD}{MM}{YY}.-.#",
  "creation": "2024-05-02 17:53:21.671175",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -112,13 +112,9 @@
   {
    "link_doctype": "Rake Delay",
    "link_fieldname": "name"
-  },
-  {
-   "link_doctype": "Railway Indent",
-   "link_fieldname": "railyway_indent_no"
   }
  ],
- "modified": "2024-05-28 13:07:31.238370",
+ "modified": "2024-05-28 13:36:05.572213",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

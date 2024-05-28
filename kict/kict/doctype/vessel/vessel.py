@@ -443,10 +443,10 @@ def get_from_date_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,t
 			select custom_cargo_from_date as from_date,name from `tabSales Invoice`
 			where custom_type_of_cargo_handling_invoice='Periodic'
 			and custom_type_of_invoice='Cargo Handling Charges'
-			and vessel='%s'
-			and custom_cargo_item='%s'
-			and custom_cargo_sub_type_of_invoice='%s' 		
-		""".format(vessel,cargo_item_field,type_of_billing_field),as_dict=1,debug=1
+			and vessel=%s
+			and custom_cargo_item=%s
+			and custom_cargo_sub_type_of_invoice=%s 		
+		""",(vessel,cargo_item_field,type_of_billing_field),as_dict=1,debug=1
 	)	
 	print(si_detail,'si_detail')
 	if len(si_detail)>0:
@@ -462,7 +462,7 @@ def get_from_date_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,t
 		and rr_item.vessel = %s
 		and rr_item.item = %s
 		order by rr_date DESC limit 1
-		""".format(vessel,cargo_item_field),as_dict=1,debug=1
+		""",(vessel,cargo_item_field),as_dict=1,debug=1
 	)
 
 	print(rr_detail,'rr_detail')

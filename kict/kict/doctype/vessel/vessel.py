@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe import _
-from frappe.utils import flt
+from frappe.utils import flt,cstr
 from frappe.utils import today
 from erpnext.stock.doctype.item.item import get_item_defaults
 from erpnext.stock.get_item_details import get_price_list_rate_for
@@ -522,7 +522,7 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 		table_body="<table border='1'><tr><td><b>RR Name</b></td><td><b>RR Item</b></td><td><b>Item No</b></td><td><b>Item Weight</b></td></tr>"
 		table_row=""
 		for item in participating_rr_details:
-			table_row=table_row+"<tr><td>"+item.parent+"</td><td>"+item.name+"</td><td>"+item.idx+"</td><td>"+item.rr_item_weight_mt+"</td></tr>"
+			table_row=table_row+"<tr><td>"+item.parent+"</td><td>"+item.name+"</td><td>"+cstr(item.idx)+"</td><td>"+cstr(item.rr_item_weight_mt)+"</td></tr>"
 		table_html=table_body+table_row+"</table>"
 	else:
 		table_html="<b>No participating railway receipt found.</b>"

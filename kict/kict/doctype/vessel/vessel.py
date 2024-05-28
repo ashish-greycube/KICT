@@ -497,12 +497,13 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 	conditions = get_conditions(filters)
 	entries = frappe.db.sql(
 		"""
-		SELECT rr.name,rr.rr_date,rr_item.rr_item_weight_mt FROM `tabRailway Receipt` as rr 
+		SELECT sum(rr_item.rr_item_weight_mt) as rr_item_weight_mt  FROM `tabRailway Receipt` as rr 
 		inner join `tabRailway Receipt Item Details` as rr_item 
 		on rr.name =rr_item.parent 
 		where rr.hold_for_invoice=0 and rr_item.is_billed='No' and rr.docstatus=1
 		and rr_item.is_dn_created ='Yes' 
 		{0} order by rr_date ASC
+		group by rr_item.item
 		""".format(conditions),filters,as_dict=1,debug=1
 	)	
 	print('entries',entries)

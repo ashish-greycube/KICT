@@ -457,7 +457,7 @@ def get_from_date_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,t
 		SELECT rr.rr_date as from_date,rr.name,rr_item.name,rr_item.idx FROM `tabRailway Receipt` as rr 
 		inner join `tabRailway Receipt Item Details` as rr_item 
 		on rr.name =rr_item.parent 
-		where rr.hold_for_invoice=0 and rr_item.is_billed='Yes' and rr.docstatus=1
+		where rr.hold_for_invoice=0 and rr_item.is_billed='No' and rr.docstatus=1
 		and rr_item.is_dn_created ='Yes'
 		and rr_item.vessel = %s
 		and rr_item.item = %s
@@ -479,7 +479,7 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 		conditions += " and rr_item.vessel = %(vessel)s"
 		conditions += " and rr_item.item = %(cargo_item_field)s"
 		
-		conditions += " and rr.rr_date between {0} and {1}".format(
+		conditions += " and rr.rr_date between '{0}' and '{1}'".format(
 					filters.get("from_date_field"),
 					filters.get("to_date_field")
 		)
@@ -489,20 +489,20 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 			{
 				"vessel": vessel,
 				"cargo_item_field": cargo_item_field,
-				"from_date": from_date_field,
-				"to_date": to_date_field,
+				"from_date_field": from_date_field,
+				"to_date_field": to_date_field,
 			} 
         ) 
 
 	conditions = get_conditions(filters)
+	print(conditions,"conditions")
 	entries = frappe.db.sql(
 		"""
 		SELECT sum(rr_item.rr_item_weight_mt) as rr_item_weight_mt  FROM `tabRailway Receipt` as rr 
 		inner join `tabRailway Receipt Item Details` as rr_item 
 		on rr.name =rr_item.parent 
 		where rr.hold_for_invoice=0 and rr_item.is_billed='No' and rr.docstatus=1
-		and rr_item.is_dn_created ='Yes' 
-		{0} group by rr_item.item order by rr_date ASC
+		and rr_item.is_dn_created ='Yes' {0} group by rr_item.item order by rr_date ASC
 		""".format(conditions),filters,as_dict=1,debug=1
 	)	
 	print('entries',entries)

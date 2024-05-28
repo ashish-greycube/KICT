@@ -693,9 +693,10 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 fieldname: "to_date_field",
                 label: __("To Date"),
                 hidden:1,
+                default:frappe.datetime.add_days(frappe.datetime.nowdate(),-1),
                 onchange: function(){
-                    let to_date =  dialog.get_field("to_date_field")
-                    if (to_date > frappe.datetime.nowdate()){
+                    let user_to_date =  dialog.get_field("to_date_field")
+                    if (user_to_date.value > frappe.datetime.nowdate()){
                         frappe.throw({
                             message: __("To Date could not greater than today."),
                             indicator: "red",

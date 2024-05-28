@@ -80,6 +80,7 @@
   },
   {
    "allow_on_submit": 1,
+   "default": "No",
    "fieldname": "is_billed",
    "fieldtype": "Select",
    "label": "Is Billed?",
@@ -89,7 +90,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-28 13:05:09.980695",
+ "modified": "2024-05-28 13:11:04.844291",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt Item Details",

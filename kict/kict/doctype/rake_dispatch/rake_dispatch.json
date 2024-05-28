@@ -115,10 +115,10 @@
   },
   {
    "link_doctype": "Railway Indent",
-   "link_fieldname": "name"
+   "link_fieldname": "railyway_indent_no"
   }
  ],
- "modified": "2024-05-24 10:07:34.509771",
+ "modified": "2024-05-28 13:07:31.238370",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

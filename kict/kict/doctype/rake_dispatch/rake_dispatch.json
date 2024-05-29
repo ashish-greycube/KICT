@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "format:{RC}-{DD}{MM}{YY}.{#}",
  "creation": "2024-05-02 17:53:21.671175",
@@ -114,7 +115,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-28 14:49:25.489494",
+ "modified": "2024-05-28 15:39:51.916282",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

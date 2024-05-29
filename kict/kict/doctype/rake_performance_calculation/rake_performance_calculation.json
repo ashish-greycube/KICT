@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:rcn",
  "creation": "2024-05-06 13:06:33.903988",
@@ -153,7 +154,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-24 10:13:41.945302",
+ "modified": "2024-05-28 15:39:55.941575",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Performance Calculation",

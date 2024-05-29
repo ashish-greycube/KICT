@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:coal_commodity",
  "creation": "2024-05-14 18:01:03.332233",
@@ -18,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-16 12:14:18.671941",
+ "modified": "2024-05-28 15:40:02.116047",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Commodity",

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:rcn_no",
  "creation": "2024-05-06 13:48:51.184548",
@@ -52,7 +53,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-24 10:31:51.114276",
+ "modified": "2024-05-28 15:39:54.834462",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Delay",

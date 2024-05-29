@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:vessel",
  "creation": "2024-05-02 10:18:57.414464",
@@ -81,7 +82,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-16 12:15:36.797477",
+ "modified": "2024-05-28 15:40:02.498508",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "BOE OOC",

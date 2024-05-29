@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:equipment_type",
  "creation": "2024-04-30 16:20:48.471102",
@@ -18,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-16 12:14:02.200569",
+ "modified": "2024-05-28 15:39:57.550205",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Type of Equipments",

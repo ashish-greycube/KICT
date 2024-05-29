@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:type_of_vessel",
  "creation": "2024-04-26 14:37:38.868760",
@@ -18,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-16 12:06:16.597017",
+ "modified": "2024-05-28 15:40:02.945506",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Type",

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:rake_stoppage_reason",
  "creation": "2024-05-06 14:02:46.713491",
@@ -18,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-16 12:13:08.585578",
+ "modified": "2024-05-28 15:39:58.543970",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Stoppage Reason",

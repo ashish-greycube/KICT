@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:rcn_unique_no",
  "creation": "2024-05-03 17:49:03.456068",
@@ -251,7 +252,7 @@
    "link_fieldname": "vessel_name"
   }
  ],
- "modified": "2024-05-28 15:10:54.601421",
+ "modified": "2024-05-28 15:39:52.756539",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:indent_rake_type",
  "creation": "2024-05-03 12:37:13.207753",
@@ -18,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-16 12:08:39.250328",
+ "modified": "2024-05-28 15:39:59.540826",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Indent Rake Type",

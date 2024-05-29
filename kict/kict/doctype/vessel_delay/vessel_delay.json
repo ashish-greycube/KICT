@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:vessel",
  "creation": "2024-04-30 16:28:16.632842",
@@ -57,7 +58,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-24 10:14:39.145019",
+ "modified": "2024-05-28 15:39:55.568645",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Delay",

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:vessle_delay_account",
  "creation": "2024-04-30 16:33:43.192147",
@@ -18,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-16 12:07:37.816466",
+ "modified": "2024-05-28 15:40:00.819543",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Delay Account",

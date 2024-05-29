@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:wagon_type",
  "creation": "2024-05-03 12:32:55.326513",
@@ -18,7 +19,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-16 12:08:16.263947",
+ "modified": "2024-05-28 15:40:00.207022",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Wagon Type",

@@ -271,6 +271,7 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		target.custom_type_of_invoice="Cargo Handling Charges"
 		if is_periodic_or_dispatch_field=="Non-Periodic":
 			target.custom_type_of_cargo_handling_invoice="Non-Periodic"
+			target.custom_cargo_sub_type_of_invoice = type_of_billing_field
 		else:
 			target.custom_type_of_cargo_handling_invoice="Periodic"
 			target.custom_cargo_from_date = from_date_field
@@ -464,7 +465,7 @@ def get_from_date_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,t
 		and rr_item.is_dn_created ='Yes'
 		and rr_item.vessel = %s
 		and rr_item.item = %s
-		order by rr_date DESC limit 1
+		order by rr_date ASC limit 1
 		""",(vessel,cargo_item_field),as_dict=1,debug=1
 	)
 
@@ -527,5 +528,5 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 	else:
 		table_html="<b>No participating railway receipt found.</b>"
 	print(table_html,'table_html')
-	return qty_entries,table_html
+	return qty_entries,table_html,participating_rr_details
 	

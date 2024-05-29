@@ -784,7 +784,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 primary_action_label: 'Create Sales Invoice',
                 primary_action: function (values) {
                     console.log(values,"values")
-                    if (values.non_periodic_cargo_qty == 0 || values.periodic_cargo_qty == 0){
+                    if ((values.is_periodic_or_dispatch_field != "Non-Periodic") && (values.periodic_cargo_qty == undefined || 0)){
                         frappe.throw(__("Qty cannot be zero"))
                     }
                     frappe.call({

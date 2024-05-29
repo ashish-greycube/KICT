@@ -29,3 +29,6 @@ def validate_rate_percent_billing(self,method):
 def change_status_for_dn_creation_in_railway_receipt_on_cancle_of_dn(self,method):
     frappe.db.set_value("Railway Receipt Item Details",self.custom_railway_receipt_detail,"is_dn_created","No")
 
+# def change_status_for_is_billed_in_on_submit_of_si(self,method):
+#     frappe.db.set_value("Railway Receipt Item Details",self.custom_railway_receipt_detail,"is_billed","Yes")
+

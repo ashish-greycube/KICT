@@ -14,7 +14,8 @@
   "vessel",
   "rr_item_weight_mt",
   "is_dn_created",
-  "is_billed"
+  "is_billed",
+  "sales_invoice_reference"
  ],
  "fields": [
   {
@@ -85,12 +86,19 @@
    "fieldtype": "Select",
    "label": "Is Billed?",
    "options": "\nYes\nNo"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "sales_invoice_reference",
+   "fieldtype": "Data",
+   "label": "Sales Invoice Reference",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-28 15:39:53.987818",
+ "modified": "2024-05-29 11:26:57.171375",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt Item Details",

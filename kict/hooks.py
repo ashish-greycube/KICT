@@ -133,7 +133,10 @@ doc_events = {
 	},
     "Sales Invoice": {
         "on_cancel": "kict.api.change_status_for_is_billed_in_on_cancel_of_si"
-	}
+	},
+    "Stock Entry": {
+        "before_save": "kict.api.generate_and_set_batch_no"
+	}       
 }
 
 # Scheduled Tasks

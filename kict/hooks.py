@@ -129,11 +129,11 @@ doc_events = {
                "kict.api.validate_rate_percent_billing"]
 	},
     "Delivery Note": {
-        "on_cancel": "kict.api.change_status_for_dn_creation_in_railway_receipt_on_cancle_of_dn"
+        "on_cancel": "kict.api.change_status_for_dn_creation_in_railway_receipt_on_cancel_of_dn"
 	},
-    # "Sales Invoice": {
-    #     "on_submit": "kict.api.change_status_for_is_billed_in_on_submit_of_si"
-	# }
+    "Sales Invoice": {
+        "on_cancel": "kict.api.change_status_for_is_billed_in_on_cancel_of_si"
+	}
 }
 
 # Scheduled Tasks

@@ -308,7 +308,13 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 	}, target_doc,set_missing_values)
 	doc.run_method("set_missing_values")
 	doc.run_method("calculate_taxes_and_totals")
-	doc.save()	
+	doc.save()
+
+	rr_details = get_qty_for_dispatch_periodic_type(source_name,cargo_item_field,from_date_field,to_date_field)
+	participating_rr_details = rr_details[2]
+	for ele in participating_rr_details:
+		frappe.db.set_value("Railway Receipt Item Details",ele.name,"is_billed","Yes")
+		frappe.db.set_value("Railway Receipt Item Details",ele.name,"sales_invoice_reference",doc.name)
 	return doc.name
 
 @frappe.whitelist()

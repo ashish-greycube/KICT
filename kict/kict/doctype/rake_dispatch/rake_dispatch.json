@@ -18,7 +18,9 @@
   "scheme_code",
   "rake_no",
   "section_break_xqur",
-  "rake_prelim_entry"
+  "rake_prelim_entry",
+  "section_break_ibfb",
+  "plotwise_silo_qty_detail"
  ],
  "fields": [
   {
@@ -98,6 +100,16 @@
    "fieldtype": "Table",
    "label": "Rake Prelim Entry",
    "options": "Rake Prelim Entry"
+  },
+  {
+   "fieldname": "section_break_ibfb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "plotwise_silo_qty_detail",
+   "fieldtype": "Table",
+   "label": "Plotwise SILO Qty Detail",
+   "options": "Plotwise SILO Qty Detail"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -115,7 +127,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-28 15:39:51.916282",
+ "modified": "2024-05-30 14:32:03.874870",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

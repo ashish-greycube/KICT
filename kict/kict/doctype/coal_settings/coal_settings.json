@@ -90,7 +90,7 @@
   {
    "fieldname": "customer_group_for_agent",
    "fieldtype": "Link",
-   "label": "Customer Group for Agent",
+   "label": "Customer Group for Agent/OPA",
    "options": "Customer Group",
    "reqd": 1
   },
@@ -119,7 +119,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-05-29 17:34:43.284457",
+ "modified": "2024-05-30 12:53:58.740919",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

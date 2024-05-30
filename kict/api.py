@@ -20,13 +20,14 @@ def set_cargo_handling_option_name_and_is_periodic(self,method):
 
 def validate_rate_percent_billing(self,method):
     total_percent = 0
-    for row in self.get("custom_cargo_handling_charges_slots_details"):
-        total_percent = total_percent + row.percent_billing
+    if len(self.get("custom_cargo_handling_charges_slots_details")) > 0:
+        for row in self.get("custom_cargo_handling_charges_slots_details"):
+            total_percent = total_percent + row.percent_billing
     
-    if total_percent != 100:
-        frappe.throw(_("Total of Rate Percent Billing must be 100%"))
-    else:
-        pass
+        if total_percent != 100:
+            frappe.throw(_("Total of Rate Percent Billing must be 100%"))
+        else:
+            pass
 
 def change_status_for_dn_creation_in_railway_receipt_on_cancel_of_dn(self,method):
     frappe.db.set_value("Railway Receipt Item Details",self.custom_railway_receipt_detail,"is_dn_created","No")

@@ -24,6 +24,16 @@ frappe.ui.form.on("Vessel", {
             })
         })
 
+        frappe.db.get_single_value('Coal Settings', 'customer_group_for_agent').then(group => {
+            frm.set_query("opa", function () {
+                return {
+                    filters: {
+                        customer_group: group
+                    }
+                }
+            })
+        })
+
         frm.trigger('vessel_on_refresh_load')
     },
     refresh(frm) {
@@ -120,6 +130,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                         let total_qty_default=0
                         let is_bill_to = frm.doc.bh_bill_to
                         let agent_name = frm.doc.agent_name
+                        let opa_name = frm.doc.opa
                         let is_single_customer = false
                         let customer_specific_grt_value = frm.doc.grt
                         let customer_name
@@ -183,15 +194,19 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                           
                         }     
                         // agent
-                        if (is_bill_to == "Agent") {
+                        if (is_bill_to == "Agent" || "OPA") {
                             bill_to_field = {
                                 fieldtype: "Data",
                                 fieldname: "bill_to_field",
                                 label: __("Bill To"),
                                 read_only: 1,
-                                default: agent_name,
                                 reqd: 1
-                            },
+                            }
+                            if (is_bill_to == "OPA"){
+                                bill_to_field["default"]=opa_name
+                            }else if(is_bill_to == "Agent"){
+                                bill_to_field["default"]=agent_name
+                            }
                             customer_specific_grt_field = {
                                     fieldtype: "Float",
                                     fieldname: "customer_specific_grt_field",
@@ -345,6 +360,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
 
             let is_bill_to = frm.doc.bh_bill_to
             let agent_name = frm.doc.agent_name
+            let opa_name = frm.doc.opa
             let is_single_customer = false
             let customer_specific_grt_value = frm.doc.grt
             let customer_name
@@ -395,15 +411,19 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 
             }
             // agent
-            if (is_bill_to == "Agent") {
+            if (is_bill_to == "Agent" || "OPA") {
                 bill_to_field = {
                     fieldtype: "Data",
                     fieldname: "bill_to_field",
                     label: __("Bill To"),
                     read_only: 1,
-                    default: agent_name,
                     reqd: 1
-                },
+                }
+                if (is_bill_to == "OPA"){
+                    bill_to_field["default"]=opa_name
+                }else if(is_bill_to == "Agent"){
+                    bill_to_field["default"]=agent_name
+                }
                 customer_specific_grt_field["default"]=customer_specific_grt_value
 
             }

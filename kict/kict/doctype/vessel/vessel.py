@@ -103,7 +103,7 @@ def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=Non
 		vessel_details_filter_for_cargo={"parent":source_name}
 		total_tonnage_mt=frappe.db.get_value(doctype,source_name,"total_tonnage_mt")
 
-		if bh_bill_to=='Agent':
+		if (bh_bill_to=='Agent' or  bh_bill_to=='OPA'):
 			custom_quantity_in_mt=total_tonnage_mt
 			
 		elif bh_bill_to=='Customer':
@@ -185,7 +185,7 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 		vessel_details_filter_for_cargo={"parent":source_name}
 		total_tonnage_mt=frappe.db.get_value(doctype,source_name,"total_tonnage_mt")
 
-		if bh_bill_to=='Agent':
+		if (bh_bill_to=='Agent' or bh_bill_to=='OPA'):
 			custom_quantity_in_mt=total_tonnage_mt
 			
 		elif bh_bill_to=='Customer':

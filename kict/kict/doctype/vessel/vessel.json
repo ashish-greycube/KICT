@@ -10,6 +10,7 @@
   "vessel_name",
   "nrt",
   "grt",
+  "international_tonnage_certificate_itc",
   "dwt",
   "imo_no",
   "loa",
@@ -75,9 +76,11 @@
   },
   {
    "fieldname": "opa",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "OPA"
+   "label": "OPA",
+   "mandatory_depends_on": "eval: doc.bh_bill_to == 'OPA'",
+   "options": "Customer"
   },
   {
    "fieldname": "last_port",
@@ -184,7 +187,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Berth Hire Bill To ?",
-   "options": "\nAgent\nCustomer",
+   "options": "\nAgent\nCustomer\nOPA",
    "reqd": 1
   },
   {
@@ -220,6 +223,11 @@
    "in_standard_filter": 1,
    "label": "Flag",
    "options": "Country"
+  },
+  {
+   "fieldname": "international_tonnage_certificate_itc",
+   "fieldtype": "Attach",
+   "label": "International Tonnage Certificate (ITC)"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -253,7 +261,7 @@
    "link_fieldname": "vessel"
   }
  ],
- "modified": "2024-05-28 15:39:54.355182",
+ "modified": "2024-05-29 17:09:50.167149",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

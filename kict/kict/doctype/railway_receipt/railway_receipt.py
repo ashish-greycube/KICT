@@ -12,22 +12,20 @@ class RailwayReceipt(Document):
 	def before_insert(self):
 		rcn_no = self.rcn_unique_no
 		rake_dispatch_doc = frappe.get_doc("Rake Dispatch",rcn_no)
-		for row in rake_dispatch_doc.get("plotwise_silo_qty_detail"):
+		for row in rake_dispatch_doc.get("rake_prelim_entry"):
 			railway_receipt_item_row = self.append("railway_receipt_item_details",{})
 			if row.customer_name:
 				railway_receipt_item_row.customer_name = row.customer_name
-			if row.vessel:
-				railway_receipt_item_row.vessel = row.vessel
+			if row.vcn_no:
+				railway_receipt_item_row.vessel = row.vcn_no
 			if row.item:
 				railway_receipt_item_row.item = row.item
-			if row.commodity_grade:
-				railway_receipt_item_row.grade = row.commodity_grade
+			if row.grade:
+				railway_receipt_item_row.grade = row.grade
 			if row.coal_commodity:
 				railway_receipt_item_row.coal_commodity = row.coal_commodity
-			if row.plot:
-				railway_receipt_item_row.plot = row.plot
-			if row.silo_qty:
-				railway_receipt_item_row.rr_item_weight_mt = row.silo_qty
+			if row.silo_loading_weight:
+				railway_receipt_item_row.rr_item_weight_mt = row.silo_loading_weight
 			
 			railway_receipt_item_row.is_billed = "No"
 			railway_receipt_item_row.is_dn_created = "No"
@@ -67,6 +65,8 @@ def create_delivery_note_from_railway_receipt(docname):
 				dn.selling_price_list = price_list
 			if currency:
 				dn.currency = currency
+				
+			# add row in dn child table
 			dn_item_row = dn.append("items",{})
 			dn_item_row.item_code = row.item
 			dn_item_row.qty = row.rr_item_weight_mt

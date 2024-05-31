@@ -8,12 +8,10 @@
   "hatch",
   "cargo_grade",
   "coal_commodity",
+  "column_break_rniy",
   "arrival_qty",
   "discharged_qty",
-  "balance_qty",
-  "column_break_rniy",
-  "commenced_discharge_hatch_wise_time_date",
-  "completed_discharge_hatch_wise_time_date"
+  "balance_qty"
  ],
  "fields": [
   {
@@ -50,20 +48,8 @@
    "label": "Balance Qty"
   },
   {
-   "fieldname": "commenced_discharge_hatch_wise_time_date",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Commenced  Discharge Hatch Wise Time & Date"
-  },
-  {
    "fieldname": "column_break_rniy",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "completed_discharge_hatch_wise_time_date",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "Completed  Discharge Hatch Wise Time & Date"
   },
   {
    "fieldname": "coal_commodity",
@@ -75,7 +61,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-28 15:40:01.118384",
+ "modified": "2024-05-31 16:05:48.150384",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hatch wise Details",

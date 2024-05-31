@@ -127,9 +127,11 @@
   },
   {
    "fieldname": "section_break_ibfb",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Plot wise"
   },
   {
+   "description": "For information only not to be used in Phase One",
    "fieldname": "plotwise_silo_qty_detail",
    "fieldtype": "Table",
    "label": "Plotwise SILO Qty Detail",
@@ -258,7 +260,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-30 16:14:02.153117",
+ "modified": "2024-05-31 16:41:54.811044",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

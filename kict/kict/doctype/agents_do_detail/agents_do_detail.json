@@ -5,10 +5,10 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "customer_name",
   "item",
   "commodity_grade",
   "coal_commodity",
+  "customer_name",
   "column_break_jwzq",
   "do_received_qty",
   "do_balance_qty",
@@ -16,6 +16,7 @@
  ],
  "fields": [
   {
+   "fetch_from": "item.customer",
    "fieldname": "customer_name",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -70,7 +71,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-28 15:40:03.630129",
+ "modified": "2024-05-31 14:11:04.226386",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Agents DO Detail",

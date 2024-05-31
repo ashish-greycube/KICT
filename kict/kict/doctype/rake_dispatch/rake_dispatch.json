@@ -39,7 +39,7 @@
   "incoming_rake_no",
   "section_break_xqur",
   "rake_prelim_entry",
-  "section_break_ibfb",
+  "section_break_ffsv",
   "plotwise_silo_qty_detail"
  ],
  "fields": [
@@ -124,18 +124,6 @@
    "fieldtype": "Table",
    "label": "Rake Prelim Entry",
    "options": "Rake Prelim Entry"
-  },
-  {
-   "fieldname": "section_break_ibfb",
-   "fieldtype": "Section Break",
-   "label": "Plot wise"
-  },
-  {
-   "description": "For information only not to be used in Phase One",
-   "fieldname": "plotwise_silo_qty_detail",
-   "fieldtype": "Table",
-   "label": "Plotwise SILO Qty Detail",
-   "options": "Plotwise SILO Qty Detail"
   },
   {
    "fieldname": "loading_date",
@@ -243,6 +231,16 @@
   {
    "fieldname": "column_break_phbk",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ffsv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "plotwise_silo_qty_detail",
+   "fieldtype": "Table",
+   "label": "Plotwise SILO Qty Detail",
+   "options": "Plotwise SILO Qty Detail"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -260,7 +258,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-31 16:41:54.811044",
+ "modified": "2024-05-31 16:58:40.676378",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

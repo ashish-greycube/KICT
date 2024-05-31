@@ -12,11 +12,31 @@
   "e_demand_reference_id",
   "demand_datetime",
   "railyway_indent_no",
+  "loading_date",
+  "loading_start",
+  "loading_complete",
+  "release_time",
   "column_break_vjav",
   "priority",
   "commodity",
   "scheme_code",
+  "select_flor",
+  "covering_start",
+  "covering_complete",
+  "cleaning_start",
+  "placement_time",
+  "cleaning_complete",
+  "column_break_phbk",
   "rake_no",
+  "wagon_type",
+  "silo",
+  "indent_rake_type",
+  "carriage_arrival",
+  "carriage_complete",
+  "nos_of_box_repair",
+  "loading_type",
+  "drawn_out_time",
+  "incoming_rake_no",
   "section_break_xqur",
   "rake_prelim_entry",
   "section_break_ibfb",
@@ -56,6 +76,8 @@
    "fetch_from": "railway_indent.railyway_indent_no",
    "fieldname": "railyway_indent_no",
    "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Railyway Indent No"
   },
   {
@@ -66,6 +88,8 @@
    "fetch_from": "railway_indent.priority",
    "fieldname": "priority",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Priority"
   },
   {
@@ -110,6 +134,113 @@
    "fieldtype": "Table",
    "label": "Plotwise SILO Qty Detail",
    "options": "Plotwise SILO Qty Detail"
+  },
+  {
+   "fieldname": "loading_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Loading date"
+  },
+  {
+   "fieldname": "silo",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Silo",
+   "options": "\nRLS-1\nRLS-2"
+  },
+  {
+   "fieldname": "loading_start",
+   "fieldtype": "Datetime",
+   "label": "Loading Start"
+  },
+  {
+   "fieldname": "loading_complete",
+   "fieldtype": "Datetime",
+   "label": "Loading Complete"
+  },
+  {
+   "fieldname": "release_time",
+   "fieldtype": "Datetime",
+   "label": "Release Time"
+  },
+  {
+   "fieldname": "select_flor",
+   "fieldtype": "Select",
+   "label": "Covering Required",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "covering_start",
+   "fieldtype": "Datetime",
+   "label": "Covering Start"
+  },
+  {
+   "fieldname": "covering_complete",
+   "fieldtype": "Datetime",
+   "label": "Covering Complete"
+  },
+  {
+   "fieldname": "wagon_type",
+   "fieldtype": "Link",
+   "label": "Wagon Type",
+   "options": "Wagon Type"
+  },
+  {
+   "fieldname": "indent_rake_type",
+   "fieldtype": "Link",
+   "label": "Indent Rake Type",
+   "options": "Indent Rake Type"
+  },
+  {
+   "fieldname": "carriage_arrival",
+   "fieldtype": "Datetime",
+   "label": "Carriage Arrival"
+  },
+  {
+   "fieldname": "carriage_complete",
+   "fieldtype": "Datetime",
+   "label": "Carriage Complete"
+  },
+  {
+   "fieldname": "nos_of_box_repair",
+   "fieldtype": "Int",
+   "label": "Nos of Box Repair"
+  },
+  {
+   "fieldname": "loading_type",
+   "fieldtype": "Select",
+   "label": "Loading Type",
+   "options": "\nOnline\noffline\nOffline\n5%"
+  },
+  {
+   "fieldname": "drawn_out_time",
+   "fieldtype": "Datetime",
+   "label": "Drawn out Time"
+  },
+  {
+   "fieldname": "incoming_rake_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Incoming Rake No"
+  },
+  {
+   "fieldname": "placement_time",
+   "fieldtype": "Datetime",
+   "label": "Placement Time"
+  },
+  {
+   "fieldname": "cleaning_start",
+   "fieldtype": "Datetime",
+   "label": "Cleaning Start"
+  },
+  {
+   "fieldname": "cleaning_complete",
+   "fieldtype": "Datetime",
+   "label": "Cleaning Complete"
+  },
+  {
+   "fieldname": "column_break_phbk",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -127,7 +258,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-30 14:32:03.874870",
+ "modified": "2024-05-30 16:14:02.153117",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

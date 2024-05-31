@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import add_to_date
 
 
 class StatementofFact(Document):
@@ -11,7 +12,13 @@ class StatementofFact(Document):
 
 	def set_berth_stay_hours(self):
 		if self.first_line_ashore and self.all_line_cast_off:
-			diff=frappe.utils.time_diff_in_hours(self.all_line_cast_off,self.first_line_ashore)
-			print(diff)
-			self.vessel_stay_hours = diff
+			all_line_cast_off = self.all_line_cast_off
+			if self.vessel_given_readiness__for_sailing:
+				diff_of_all_line_and_readiness = frappe.utils.time_diff_in_hours(self.vessel_given_readiness__for_sailing,all_line_cast_off)
+				if diff_of_all_line_and_readiness > 4 :
+					all_line_cast_off = add_to_date(self.vessel_given_readiness__for_sailing, hours=4)
+			
+			berth_stay_hours=frappe.utils.time_diff_in_hours(all_line_cast_off,self.first_line_ashore)
+
+			self.vessel_stay_hours = berth_stay_hours
 				

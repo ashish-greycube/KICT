@@ -12,30 +12,28 @@ class RailwayReceipt(Document):
 	def before_insert(self):
 		rcn_no = self.rcn_unique_no
 		rake_dispatch_doc = frappe.get_doc("Rake Dispatch",rcn_no)
-		for row in rake_dispatch_doc.get("rake_prelim_entry"):
+		for row in rake_dispatch_doc.get("plotwise_silo_qty_detail"):
 			railway_receipt_item_row = self.append("railway_receipt_item_details",{})
 			if row.customer_name:
 				railway_receipt_item_row.customer_name = row.customer_name
-			if row.vcn_no:
-				railway_receipt_item_row.vessel = row.vcn_no
+			if row.vessel:
+				railway_receipt_item_row.vessel = row.vessel
 			if row.item:
 				railway_receipt_item_row.item = row.item
-			if row.grade:
-				railway_receipt_item_row.grade = row.grade
+			if row.commodity_grade:
+				railway_receipt_item_row.grade = row.commodity_grade
 			if row.coal_commodity:
 				railway_receipt_item_row.coal_commodity = row.coal_commodity
+			if row.plot:
+				railway_receipt_item_row.plot = row.plot
+			if row.silo_qty:
+				railway_receipt_item_row.rr_item_weight_mt = row.silo_qty
+			
+			railway_receipt_item_row.is_billed = "No"
+			railway_receipt_item_row.is_dn_created = "No"
 
 	def validate(self):
 		self.set_rr_weight()
-		if not self.is_new():
-			self.validate_rr_item_weight()
-	
-	def validate_rr_item_weight(self):
-		railway_item_detail = self.get("railway_receipt_item_details")
-		if len(railway_item_detail) > 0:
-			for row in self.get("railway_receipt_item_details"):
-				if row.get("rr_item_weight_mt") == 0:
-					frappe.throw(_("Row #{0} : RR Item Weight cannot be 0").format(row.idx))
 	
 	def set_rr_weight(self):
 		railway_item_detail = self.get("railway_receipt_item_details")

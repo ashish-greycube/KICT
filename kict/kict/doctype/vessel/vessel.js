@@ -194,7 +194,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                           
                         }     
                         // agent
-                        if (is_bill_to == "Agent" || "OPA") {
+                        if (is_bill_to == "Agent" || is_bill_to =="OPA") {
                             bill_to_field = {
                                 fieldtype: "Data",
                                 fieldname: "bill_to_field",
@@ -411,7 +411,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 
             }
             // agent
-            if (is_bill_to == "Agent" || "OPA") {
+            if (is_bill_to == "Agent" || is_bill_to =="OPA") {
                 bill_to_field = {
                     fieldtype: "Data",
                     fieldname: "bill_to_field",

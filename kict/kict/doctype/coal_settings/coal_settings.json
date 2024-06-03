@@ -25,6 +25,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "description": "for PI / SI based on vessel_type = Coastal",
    "fieldname": "birth_hire_item_for_coastal_vessel",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -34,6 +35,7 @@
    "reqd": 1
   },
   {
+   "description": "for PI / SI based on vessel_type = Foreign",
    "fieldname": "birth_hire_item_for_foreign_vessel",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -43,6 +45,7 @@
    "reqd": 1
   },
   {
+   "description": "for cargo handling",
    "fieldname": "ch_charges",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -80,6 +83,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "description": "For purchase invoice",
    "fieldname": "royalty_price_list",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -88,6 +92,7 @@
    "reqd": 1
   },
   {
+   "description": "to filter Customer in Vessel for Agent / OPA field",
    "fieldname": "customer_group_for_agent",
    "fieldtype": "Link",
    "label": "Customer Group for Agent/OPA",
@@ -95,6 +100,7 @@
    "reqd": 1
   },
   {
+   "description": "to set default UOM while creating customer provided item.",
    "fieldname": "default_uom_for_cargo",
    "fieldtype": "Link",
    "label": "Default UOM For Cargo",
@@ -102,6 +108,7 @@
    "reqd": 1
   },
   {
+   "description": "to consider for actual hours of berth hire",
    "fieldname": "vessel_delay_account_for_terminal",
    "fieldtype": "Link",
    "label": "Vessel Delay Account for Terminal",
@@ -109,6 +116,7 @@
    "reqd": 1
   },
   {
+   "description": "to consider for free storage period",
    "fieldname": "terminal_holiday_list",
    "fieldtype": "Link",
    "label": "Terminal Holiday List",
@@ -119,7 +127,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-05-30 12:53:58.740919",
+ "modified": "2024-06-03 10:46:58.845003",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

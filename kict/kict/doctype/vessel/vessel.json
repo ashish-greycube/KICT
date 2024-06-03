@@ -259,9 +259,27 @@
   {
    "link_doctype": "Agents DO",
    "link_fieldname": "vessel"
+  },
+  {
+   "link_doctype": "Rake Dispatch",
+   "link_fieldname": "vcn_no"
+  },
+  {
+   "link_doctype": "Railway Receipt",
+   "link_fieldname": "vessel"
+  },
+  {
+   "group": "Inward",
+   "link_doctype": "Stock Entry",
+   "link_fieldname": "custom_vessel"
+  },
+  {
+   "group": "Outward",
+   "link_doctype": "Delivery Note",
+   "link_fieldname": "vessel"
   }
  ],
- "modified": "2024-05-29 17:09:50.167149",
+ "modified": "2024-06-03 12:07:56.547523",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

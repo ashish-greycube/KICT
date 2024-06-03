@@ -83,6 +83,7 @@ def generate_batch_no(vessel,item_code,posting_date):
                 "custom_vessel":vessel,
                 "manufacturing_date":posting_date,
                 "stock_uom":frappe.db.get_value('Item', item_code, 'stock_uom'),
+                "use_batchwise_valuation":0
             }
         )
     )    

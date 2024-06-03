@@ -171,7 +171,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                     let bill_to_name = dialog.get_field("bill_to_field")
                                     for (customer of customer_with_grt) {
                                         if (bill_to_name.value == customer.customer_name) {
-                                            dialog.set_value("customer_specific_grt_field", (customer.customer_specific_grt*frm.doc.grt))
+                                            dialog.set_value("customer_specific_grt_field", ((customer.customer_specific_grt*frm.doc.grt))/100)
                                             dialog.set_value("customer_specific_grt_percentage",customer.customer_specific_grt)
                                             dialog.set_value("customer_po_no_field",customer.customer_po_no)
                                         }
@@ -400,7 +400,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                         let bill_to_name = dialog.get_field("bill_to_field")
                         for (customer of customer_with_grt) {
                             if (bill_to_name.value == customer.customer_name) {
-                                dialog.set_value("customer_specific_grt_field", (customer.customer_specific_grt*frm.doc.grt))
+                                dialog.set_value("customer_specific_grt_field", ((customer.customer_specific_grt*frm.doc.grt))/100)
                                 dialog.set_value("customer_specific_grt_percentage",customer.customer_specific_grt)
                                 dialog.set_value("customer_po_no_field",customer.customer_po_no)
                                 dialog.set_value("bill_hours",)

@@ -76,7 +76,7 @@ def generate_batch_no(vessel,item_code,posting_date):
                     kwargs.doctype = "Batch"
                     return frappe.get_doc(kwargs).insert().name
         
-    batch_id=get_name_from_hash(posting_date)
+    batch_id=get_name_from_hash(posting_date,item_code)
     batch_name= make_batch(frappe._dict({
                 "batch_id":batch_id,
                 "item": item_code,
@@ -89,15 +89,18 @@ def generate_batch_no(vessel,item_code,posting_date):
     )    
     return batch_name
 
-def get_name_from_hash(posting_date):
+def get_name_from_hash(posting_date,item_code):
     current_date=getdate(posting_date).strftime("%d.%m.%y")
+    coal_commodity = frappe.db.get_value("Item",item_code,"custom_coal_commodity")
+    commodity_grade = frappe.db.get_value("Item",item_code,"custom_commodity_grade")
+    customer_abbreviation = frappe.db.get_value("Item",item_code,"custom_customer_abbreviation")
     """
 	Get a name for a Batch by generating a unique hash.
 	:return: The hash that was generated.
 	"""
     temp = None
     while not temp:
-        temp = frappe.generate_hash()[:5].upper()+"-"+current_date
+        temp = coal_commodity[:1].upper()+commodity_grade[:1].upper()+customer_abbreviation+"-"+current_date+"-"+frappe.generate_hash()[:2].upper()
         if frappe.db.exists("Batch", temp):
             temp = None
     return temp

@@ -132,10 +132,11 @@ doc_events = {
         "on_cancel": "kict.api.change_status_for_dn_creation_in_railway_receipt_on_cancel_of_dn"
 	},
     "Sales Invoice": {
-        "on_cancel": "kict.api.change_status_for_is_billed_in_on_cancel_of_si"
+        "on_cancel": "kict.api.change_status_for_is_billed_in_on_cancel_of_si",
+         "on_trash": "kict.api.change_status_for_is_billed_in_on_cancel_of_si"
 	},
     "Stock Entry": {
-        "before_save": "kict.api.generate_and_set_batch_no"
+        "before_save": "kict.api.generate_and_set_batch_no"       
 	}       
 }
 

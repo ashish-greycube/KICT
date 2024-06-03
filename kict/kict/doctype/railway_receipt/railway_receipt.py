@@ -82,13 +82,17 @@ def create_delivery_note_from_railway_receipt(docname):
 			qty_from_batches=0
 			for batch in available_batches:
 				qty_from_batches=qty_from_batches+batch.qty
+			if len(available_batches) < 1:
+				table_html = frappe.bold("No batches found.")
+				msg="The qty available from batches is {0}, whereas required qty is {1}. Hence cannot proceed.".format(frappe.bold(qty_from_batches),frappe.bold(row.rr_item_weight_mt))	
+				frappe.throw(_(table_html+"<br>"+msg))				
 			if row.rr_item_weight_mt>qty_from_batches:
 				table_body="<table border='1'><tr><td><b>Batch</b></td><td><b>Warehouse</b></td><td><b>Qty</b></td></tr>"
 				table_row=""
 				for item in available_batches:
 					table_row=table_row+"<tr><td>"+item.batch_no+"</td><td>"+item.warehouse+"</td><td>"+cstr(item.qty)+"</td></tr>"
 				table_html=table_body+table_row+"</table>"			
-				msg="The qty available from batches is {0}, whereas required qty is {1}. Hence cannot proceed.".format(qty_from_batches,row.rr_item_weight_mt)	
+				msg="The qty available from batches is {0}, whereas required qty is {1}. Hence cannot proceed.".format(frappe.bold(qty_from_batches),frappe.bold(row.rr_item_weight_mt))	
 				frappe.throw(_(table_html+"<br>"+msg))
 			
 			# for each batch, warehouse add seperate line item

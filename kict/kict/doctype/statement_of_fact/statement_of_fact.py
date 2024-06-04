@@ -22,7 +22,7 @@ class StatementofFact(Document):
 					frappe.throw(_("Vessel Given Readiness for Sailing can not be greater than All Line Cast Off"))
 			all_line_cast_off = self.all_line_cast_off
 			if self.vessel_given_readiness__for_sailing:
-				diff_of_all_line_and_readiness = frappe.utils.time_diff_in_hours(self.vessel_given_readiness__for_sailing,all_line_cast_off)
+				diff_of_all_line_and_readiness = frappe.utils.time_diff_in_hours(all_line_cast_off,self.vessel_given_readiness__for_sailing)
 				if diff_of_all_line_and_readiness > 4 :
 					all_line_cast_off = add_to_date(self.vessel_given_readiness__for_sailing, hours=4)
 			

@@ -184,6 +184,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                 fieldname: "customer_specific_grt_field",
                                 label: __("Customer Specific GRT"),
                                 read_only: 1,
+                                description: "GRT x child.Customer Specific GRT",
                                 onchange: function () {
                                     let hrs = dialog.get_field("bill_hours")
                                     let grt = dialog.get_field("customer_specific_grt_field")
@@ -239,6 +240,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                     label: __("Customer Specific GRT"),
                                     read_only: 1,
                                     default: customer_specific_grt_value,
+                                    description: "GRT x child.Customer Specific GRT",
                                     onchange: function () {
                                         let hrs = dialog.get_field("bill_hours")
                                         let grt = dialog.get_field("customer_specific_grt_field")
@@ -408,7 +410,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                         }
                     }
                 }
-                
+                customer_specific_grt_field["description"]="GRT x child.Customer Specific GRT"
             }
             // agent
             if (is_bill_to == "Agent" || is_bill_to =="OPA") {
@@ -425,6 +427,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                     bill_to_field["default"]=agent_name
                 }
                 customer_specific_grt_field["default"]=customer_specific_grt_value
+                customer_specific_grt_field["description"]=""
 
             }
             // single customer
@@ -439,6 +442,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 },
                 customer_specific_grt_field["default"]=customer_specific_grt_value
                 customer_po_no_field["default"]=customer_with_grt[0].customer_po_no
+                customer_specific_grt_field["description"]="GRT x child.Customer Specific GRT"
             }
             // create and push dialog fields
             dialog_field.push(bill_to_field)

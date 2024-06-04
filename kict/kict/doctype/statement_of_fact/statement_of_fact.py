@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_to_date
 
@@ -12,6 +13,13 @@ class StatementofFact(Document):
 
 	def set_berth_stay_hours(self):
 		if self.first_line_ashore and self.all_line_cast_off:
+			if self.all_line_cast_off < self.first_line_ashore:
+				frappe.throw(_("All Line Cast Off cannot be less than First Line Ashore"))
+			if self.vessel_given_readiness__for_sailing:
+				if self.first_line_ashore > self.vessel_given_readiness__for_sailing:
+					frappe.throw(_("First Line Ashore can not be greater than Vessel Given Readiness for Sailing"))
+				if self.vessel_given_readiness__for_sailing > self.all_line_cast_off:
+					frappe.throw(_("Vessel Given Readiness for Sailing can not be greater than All Line Cast Off"))
 			all_line_cast_off = self.all_line_cast_off
 			if self.vessel_given_readiness__for_sailing:
 				diff_of_all_line_and_readiness = frappe.utils.time_diff_in_hours(self.vessel_given_readiness__for_sailing,all_line_cast_off)

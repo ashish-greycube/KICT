@@ -18,9 +18,10 @@
   "opa",
   "last_port",
   "next_port",
-  "vessel_closure",
-  "vessel_closed_on",
-  "company",
+  "percent_berth_hire_pi",
+  "percent_berth_hire_si",
+  "percent_cargo_handling_si",
+  "percent_storage_charges_si",
   "column_break_cipf",
   "igmjob_number",
   "igmjob_date",
@@ -34,6 +35,9 @@
   "costal_foreign_vessle",
   "flag",
   "bh_bill_to",
+  "company",
+  "vessel_closure",
+  "vessel_closed_on",
   "section_break_lmdg",
   "vessel_details"
  ],
@@ -228,6 +232,26 @@
    "fieldname": "international_tonnage_certificate_itc",
    "fieldtype": "Attach",
    "label": "International Tonnage Certificate (ITC)"
+  },
+  {
+   "fieldname": "percent_berth_hire_pi",
+   "fieldtype": "Percent",
+   "label": "% Berth Hire PI "
+  },
+  {
+   "fieldname": "percent_berth_hire_si",
+   "fieldtype": "Percent",
+   "label": "% Berth Hire SI "
+  },
+  {
+   "fieldname": "percent_cargo_handling_si",
+   "fieldtype": "Percent",
+   "label": "% Cargo Handling SI"
+  },
+  {
+   "fieldname": "percent_storage_charges_si",
+   "fieldtype": "Percent",
+   "label": "% Storage Charges SI"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -277,9 +301,19 @@
    "group": "Outward",
    "link_doctype": "Delivery Note",
    "link_fieldname": "vessel"
+  },
+  {
+   "group": "Proforma",
+   "link_doctype": "Sales Order",
+   "link_fieldname": "vessel"
+  },
+  {
+   "group": "Invoices",
+   "link_doctype": "Sales Invoice",
+   "link_fieldname": "vessel"
   }
  ],
- "modified": "2024-06-03 12:07:56.547523",
+ "modified": "2024-06-04 15:03:49.914416",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

@@ -10,6 +10,16 @@ frappe.query_reports["Storage Charges"] = {
 			"label":__("Vessel"),
 			"fieldtype": "Link",
 			"options": "Vessel",
+			"reqd":1,
+		 	 on_change: function () {
+				let vessel = frappe.query_report.get_filter_value("vessel");
+				frappe.db.get_value('Statement of Fact', vessel, 'first_line_ashore')
+				.then(r => {
+					let values = r.message;
+					frappe.query_report.set_filter_value("from_date", values.first_line_ashore);
+				})
+
+}
 		},
 		{
 			"fieldname": "from_date",

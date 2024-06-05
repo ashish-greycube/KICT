@@ -69,6 +69,9 @@ def check_batch_no_exist(vessel,item_code,posting_date):
     
 
 def generate_batch_no(vessel,item_code,posting_date):
+    is_customer_provided_item = frappe.db.get_value('Item', item_code, 'is_customer_provided_item')
+    if is_customer_provided_item==0:
+        return
     def make_batch(kwargs):
         if frappe.db.get_value("Item", kwargs.item, "has_batch_no"):
             if frappe.db.get_value("Item", kwargs.item, "is_customer_provided_item"):

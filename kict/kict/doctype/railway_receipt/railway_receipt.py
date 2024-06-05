@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe import _
-from frappe.utils import get_link_to_form,today,nowtime,flt,cstr
+from frappe.utils import get_link_to_form,today,nowtime,flt,cstr,get_timestamp,getdate,get_time
 from frappe.query_builder.functions import CombineDatetime, Sum  
 from erpnext.stock.doctype.serial_and_batch_bundle.serial_and_batch_bundle	import get_qty_based_available_batches
 
@@ -50,6 +50,11 @@ class RailwayReceipt(Document):
 @frappe.whitelist()
 def create_delivery_note_from_railway_receipt(docname):
 	doc = frappe.get_doc("Railway Receipt",docname)
+	loading_complete=frappe.db.get_value('Rake Dispatch', docname, 'loading_complete')
+	if loading_complete:
+		loading_complete_date=getdate(loading_complete)
+		loading_complete_time=get_time(loading_complete)
+	
 	railway_receipt_item = doc.get("railway_receipt_item_details")
 	for row in railway_receipt_item:
 		if row.is_dn_created != 'Yes':
@@ -74,6 +79,8 @@ def create_delivery_note_from_railway_receipt(docname):
 			'qty':row.rr_item_weight_mt, 
 			'based_on': 'FIFO', 
 			'vessel':row.vessel,
+			'posting_date': loading_complete_date or None,
+			'posting_time': loading_complete_time or None,
 			'cmd': "kict.kict.doctype.railway_receipt.railway_receipt.get_auto_data"
 			})
 			available_batches=get_available_batches(args)
@@ -101,6 +108,11 @@ def create_delivery_note_from_railway_receipt(docname):
 			
 			dn.run_method("set_missing_values")
 			dn.run_method("calculate_taxes_and_totals")
+			# print('dn',(dn.as_dict()).get("items"))
+			# x=(dn.as_dict()).get("items")
+			# for i in x:
+			# 	print(i.qty,i.warehouse)
+			# frappe.throw(_("no"))
 			dn.save(ignore_permissions=True)
 			dn.submit()
 			row.is_dn_created = 'Yes'
@@ -156,7 +168,7 @@ def get_available_batches(kwargs):
 		timestamp_condition = CombineDatetime(
 			stock_ledger_entry.posting_date, stock_ledger_entry.posting_time
 		) <= CombineDatetime(kwargs.posting_date, kwargs.posting_time)
-
+		print('timestamp_condition',timestamp_condition)
 		query = query.where(timestamp_condition)
 
 	for field in ["warehouse", "item_code"]:
@@ -185,7 +197,8 @@ def get_available_batches(kwargs):
 		query = query.where(stock_ledger_entry.voucher_no.notin(kwargs.get("ignore_voucher_nos")))
 
 	data = query.run(as_dict=True)
-
+	print('data',data)
 	# change in original function
+	print(get_qty_based_available_batches(data, qty),"get_qty_based_available_batches(data, qty)")
 	return get_qty_based_available_batches(data, qty)
 	

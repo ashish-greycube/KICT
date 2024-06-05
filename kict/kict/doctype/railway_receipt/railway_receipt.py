@@ -61,7 +61,8 @@ def create_delivery_note_from_railway_receipt(docname):
 			dn = frappe.new_doc("Delivery Note")
 			dn.customer = row.customer_name
 			dn.set_posting_time = 1
-			dn.posting_date = doc.rr_date
+			dn.posting_date = loading_complete_date
+			dn.posting_time=loading_complete_time 
 			dn.custom_transports_mode = 'By Rake'
 			dn.custom_rcn = doc.name
 			dn.custom_railway_receipt_detail = row.name

@@ -4,6 +4,7 @@
 import frappe
 from frappe import msgprint, _
 from frappe.utils import flt,getdate
+from frappe.utils.dateutils import datetime_in_user_format
 from frappe.utils import add_days, cstr, date_diff, getdate,add_to_date,cint
 from pypika import functions as fn
 
@@ -88,37 +89,41 @@ def get_columns(filters):
 	]
 
 def execute(filters=None):
+
 	if not filters:
 		filters = {}
 	if filters.from_date > filters.to_date:
 		frappe.throw(_("From Date must be before To Date"))
 	columns = get_columns(filters)
 	float_precision = cint(frappe.db.get_default("float_precision")) or 3
-	item_map = get_item_details(filters)
-	print(get_dates(filters))
-	iwb_map = get_item_warehouse_batch_map(filters, float_precision)
-	print('iwb_map---------------')
-	print(iwb_map)
-	print('iwb_map---------------')
-	data = []
-	for item in sorted(iwb_map):
-		if not filters.get("item") or filters.get("item") == item:
-			for batch in sorted(iwb_map[item]):
-				qty_dict = iwb_map[item][batch]
-				if qty_dict.opening_qty or qty_dict.in_qty or qty_dict.out_qty or qty_dict.bal_qty:
-					data.append(
-						[
-							item,
-							item_map[item]["item_name"],
-							item_map[item]["description"],
-							batch,
-							flt(qty_dict.opening_qty, float_precision),
-							flt(qty_dict.in_qty, float_precision),
-							flt(qty_dict.out_qty, float_precision),
-							flt(qty_dict.bal_qty, float_precision),
-							item_map[item]["stock_uom"],
-						]
-					)
+	data=get_dates(filters)
+	# data=get_stock_ledger_entries_for_batch_bundle(filters)
+	
+	# item_map = get_item_details(filters)
+	# print(get_dates(filters))
+	# iwb_map = get_item_warehouse_batch_map(filters, float_precision)
+	# print('iwb_map---------------')
+	# print(iwb_map)
+	# print('iwb_map---------------')
+	# data = []
+	# for item in sorted(iwb_map):
+	# 	if not filters.get("item") or filters.get("item") == item:
+	# 		for batch in sorted(iwb_map[item]):
+	# 			qty_dict = iwb_map[item][batch]
+	# 			if qty_dict.opening_qty or qty_dict.in_qty or qty_dict.out_qty or qty_dict.bal_qty:
+	# 				data.append(
+	# 					[
+	# 						item,
+	# 						item_map[item]["item_name"],
+	# 						item_map[item]["description"],
+	# 						batch,
+	# 						flt(qty_dict.opening_qty, float_precision),
+	# 						flt(qty_dict.in_qty, float_precision),
+	# 						flt(qty_dict.out_qty, float_precision),
+	# 						flt(qty_dict.bal_qty, float_precision),
+	# 						item_map[item]["stock_uom"],
+	# 					]
+	# 				)
 
 	return columns, data
 
@@ -134,8 +139,46 @@ def get_dates(filters):
 	return dates
 
 def get_stock_ledger_entries_for_batch_bundle(filters):
-
-
+	conditions = get_conditions(filters)
+	query = frappe.db.sql(
+		"""
+		select
+			vessel,
+			item_code,
+			batch_no,
+			six_date,
+			actual_qty
+		from
+			(
+			select 
+				sle.vessel,
+				sle.item_code,
+				batch_package.batch_no,
+				sum(batch_package.qty) as actual_qty,
+				case 
+					when (sle.posting_time >= '06:00:00'
+					and sle.posting_time <= '24:00:00')
+						then sle.posting_date
+					else date_add(sle.posting_date, INTERVAL -1 DAY)
+				end as six_date
+			from
+				`tabStock Ledger Entry` sle
+			inner join `tabSerial and Batch Entry` batch_package
+			on
+				sle.serial_and_batch_bundle = batch_package.parent
+			where
+				sle.docstatus < 2
+				and sle.is_cancelled = 0
+				and sle.has_batch_no = 1
+			{0}
+			group by
+				sle.vessel,
+				sle.item_code,
+				batch_package.batch_no,
+				six_date	
+		) t
+""".format(conditions),filters,as_dict=1,debug=1)	
+	return query
 	sle = frappe.qb.DocType("Stock Ledger Entry")
 	batch_package = frappe.qb.DocType("Serial and Batch Entry")
 
@@ -218,24 +261,21 @@ def get_conditions(filters):
 
 
 	first_line_ashore=frappe.db.get_value('Statement of Fact', filters.vessel, 'first_line_ashore')
-
+	first_line_ashore=datetime_in_user_format(first_line_ashore)
 	if not first_line_ashore:
 		frappe.throw(_("First line ashore is required in SOF for the vessel"))
 
 
 
 	if filters.get("from_date") and filters.get("to_date"):
+		print(type(first_line_ashore),type(filters.get("to_date")))
 		if filters.get("to_date") < first_line_ashore:
 			frappe.throw(_("To Date should be greater then First line ashore {0}".format(first_line_ashore)))
 		if filters.get("to_date") < filters.get("from_date"):	
 			frappe.throw(_("To Date should be greater then From Date"))
 
 		if filters.get("to_date") >= filters.get("from_date"):
-			conditions += " and sle.posting_date between {0} and {1}".format(filters.get("from_date"),filters.get("to_date"))
-
-	
-
-
+			conditions += " and sle.posting_date between '{0}' and '{1}'".format(filters.get("from_date"),filters.get("to_date"))
 
 
 	if filters.customer_item:

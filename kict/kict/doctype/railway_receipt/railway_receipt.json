@@ -248,11 +248,11 @@
    "link_fieldname": "name"
   },
   {
-   "link_doctype": "Vessel",
-   "link_fieldname": "vessel_name"
+   "link_doctype": "Delivery Note",
+   "link_fieldname": "custom_rcn"
   }
  ],
- "modified": "2024-05-30 14:28:30.656234",
+ "modified": "2024-06-05 15:08:21.427024",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

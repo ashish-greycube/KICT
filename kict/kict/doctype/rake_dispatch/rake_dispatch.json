@@ -146,13 +146,13 @@
   {
    "fieldname": "loading_complete",
    "fieldtype": "Datetime",
-   "label": "Loading Complete",
-   "reqd": 1
+   "label": "Loading Complete"
   },
   {
    "fieldname": "release_time",
    "fieldtype": "Datetime",
-   "label": "Release Time"
+   "label": "Release Time",
+   "reqd": 1
   },
   {
    "fieldname": "select_flor",
@@ -259,7 +259,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-06-05 16:46:49.363259",
+ "modified": "2024-06-06 15:27:47.082415",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

@@ -49,6 +49,18 @@ class RailwayReceipt(Document):
 			
 @frappe.whitelist()
 def create_delivery_note_from_railway_receipt(docname):
+	
+	def dn_append_child_item_based_on_batchs(dn,item_code,qty,vessel,batch_no,warehouse):
+		# add row in dn child table
+		dn_item_row = dn.append("items",{})
+		dn_item_row.item_code =item_code
+		dn_item_row.qty = qty
+		dn_item_row.vessel = vessel
+		dn_item_row.batch_no = batch_no
+		dn_item_row.warehouse = warehouse
+		dn_item_row.use_serial_batch_fields=1
+		return dn
+	
 	doc = frappe.get_doc("Railway Receipt",docname)
 	loading_complete=frappe.db.get_value('Rake Dispatch', docname, 'loading_complete')
 	if loading_complete:
@@ -112,7 +124,7 @@ def create_delivery_note_from_railway_receipt(docname):
 			# print('dn',(dn.as_dict()).get("items"))
 			# x=(dn.as_dict()).get("items")
 			# for i in x:
-			# 	print(i.qty,i.warehouse)
+			# 	print(i.item_code,i.qty,i.warehouse,i.batch_no)
 			# frappe.throw(_("no"))
 			dn.save(ignore_permissions=True)
 			dn.submit()
@@ -121,16 +133,7 @@ def create_delivery_note_from_railway_receipt(docname):
 			frappe.msgprint(_('Delivery Note {0} is created').format(get_link_to_form("Delivery Note",dn.name)),alert=True)
 
 
-def dn_append_child_item_based_on_batchs(dn,item_code,qty,vessel,batch_no,warehouse):
-		# add row in dn child table
-		dn_item_row = dn.append("items",{})
-		dn_item_row.item_code =item_code
-		dn_item_row.qty = qty
-		dn_item_row.vessel = vessel
-		dn_item_row.batch_no = batch_no
-		dn_item_row.warehouse = warehouse
-		dn_item_row.use_serial_batch_fields=1
-		return dn
+
 
 # copied from erpnext/erpnext/stock/doctype/serial_and_batch_bundle/serial_and_batch_bundle.get_available_batches
 # filter based on vessel
@@ -198,8 +201,16 @@ def get_available_batches(kwargs):
 		query = query.where(stock_ledger_entry.voucher_no.notin(kwargs.get("ignore_voucher_nos")))
 
 	data = query.run(as_dict=True)
-	print('data',data)
+	print('data1',data)
+
 	# change in original function
-	print(get_qty_based_available_batches(data, qty),"get_qty_based_available_batches(data, qty)")
+	if not kwargs.consider_negative_batches:
+		data = list(filter(lambda x: x.qty > 0, data))
+
+	if not qty:
+		return data
+	print('data2',data)
+	
+	print(get_qty_based_available_batches(data, qty),"get_qty_based_available_batches(data, qty)")	
 	return get_qty_based_available_batches(data, qty)
 	

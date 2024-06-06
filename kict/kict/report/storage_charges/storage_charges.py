@@ -96,8 +96,8 @@ def execute(filters=None):
 		frappe.throw(_("From Date must be before To Date"))
 	columns = get_columns(filters)
 	float_precision = cint(frappe.db.get_default("float_precision")) or 3
-	data=get_dates(filters)
-	# data=get_stock_ledger_entries_for_batch_bundle(filters)
+	# data=get_dates(filters)
+	data=get_stock_ledger_entries_for_batch_bundle(filters)
 	
 	# item_map = get_item_details(filters)
 	# print(get_dates(filters))
@@ -175,7 +175,12 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 				sle.vessel,
 				sle.item_code,
 				batch_package.batch_no,
-				six_date	
+				six_date
+			order by
+				sle.vessel,
+				sle.item_code,
+				batch_package.batch_no,
+				six_date					
 		) t
 """.format(conditions),filters,as_dict=1,debug=1)	
 	return query

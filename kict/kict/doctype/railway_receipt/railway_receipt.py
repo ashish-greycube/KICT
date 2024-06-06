@@ -62,10 +62,12 @@ def create_delivery_note_from_railway_receipt(docname):
 		return dn
 	
 	doc = frappe.get_doc("Railway Receipt",docname)
-	loading_complete=frappe.db.get_value('Rake Dispatch', docname, 'loading_complete')
-	if loading_complete:
-		loading_complete_date=getdate(loading_complete)
-		loading_complete_time=get_time(loading_complete)
+	release_detail=frappe.db.get_value('Rake Dispatch', docname, 'release_time')
+	if release_detail:
+		release_date=getdate(release_detail)
+		release_time=get_time(release_detail)
+	else:
+		frappe.throw(_("Please set release time in rake dispatch {0}".format(docname)))		
 	
 	railway_receipt_item = doc.get("railway_receipt_item_details")
 	for row in railway_receipt_item:
@@ -73,8 +75,8 @@ def create_delivery_note_from_railway_receipt(docname):
 			dn = frappe.new_doc("Delivery Note")
 			dn.customer = row.customer_name
 			dn.set_posting_time = 1
-			dn.posting_date = loading_complete_date
-			dn.posting_time=loading_complete_time 
+			dn.posting_date = release_date
+			dn.posting_time=release_time 
 			dn.custom_transports_mode = 'By Rake'
 			dn.custom_rcn = doc.name
 			dn.custom_railway_receipt_detail = row.name
@@ -92,8 +94,8 @@ def create_delivery_note_from_railway_receipt(docname):
 			'qty':row.rr_item_weight_mt, 
 			'based_on': 'FIFO', 
 			'vessel':row.vessel,
-			'posting_date': loading_complete_date or None,
-			'posting_time': loading_complete_time or None,
+			# 'posting_date': loading_complete_date or None,
+			# 'posting_time': loading_complete_time or None,
 			'cmd': "kict.kict.doctype.railway_receipt.railway_receipt.get_auto_data"
 			})
 			available_batches=get_available_batches(args)
@@ -102,6 +104,7 @@ def create_delivery_note_from_railway_receipt(docname):
 			qty_from_batches=0
 			for batch in available_batches:
 				qty_from_batches=qty_from_batches+batch.qty
+			print('qty_from_batches',qty_from_batches,row.rr_item_weight_mt)
 			if len(available_batches) < 1:
 				table_html = frappe.bold("No batches found.")
 				msg="The qty available from batches is {0}, whereas required qty is {1}. Hence cannot proceed.".format(frappe.bold(qty_from_batches),frappe.bold(row.rr_item_weight_mt))	
@@ -200,7 +203,7 @@ def get_available_batches(kwargs):
 	if kwargs.get("ignore_voucher_nos"):
 		query = query.where(stock_ledger_entry.voucher_no.notin(kwargs.get("ignore_voucher_nos")))
 
-	data = query.run(as_dict=True)
+	data = query.run(as_dict=True,debug=1)
 	print('data1',data)
 
 	# change in original function

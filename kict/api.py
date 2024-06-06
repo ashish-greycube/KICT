@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import getdate
+from frappe.utils import getdate,flt
 
 
 def set_cargo_handling_option_name_and_is_periodic(self,method):
@@ -107,3 +107,31 @@ def get_name_from_hash(posting_date,item_code):
         if frappe.db.exists("Batch", temp):
             temp = None
     return temp
+
+def set_grt_billed_for_bh_in_vessel_detail_on_submit_of_si(self,method):
+    vessel_doc = frappe.get_doc("Vessel",self.vessel)
+    customer_specific_total_tonnage = calculate_customer_specific_total_tonnage(self,method)
+    for row in vessel_doc.get("vessel_details"):
+        if row.customer_name==self.customer:
+            billed_qty = (flt((customer_specific_total_tonnage),3) / flt((self.custom_quantity_in_mt),3) ) * flt((row.tonnage_mt),3)
+            row.grt_billed_for_bh_for_si = billed_qty
+
+    vessel_doc.save(ignore_permissions = True)
+
+def set_grt_billed_for_bh_in_vessel_detail_on_submit_of_pi(self,method):
+    vessel_doc = frappe.get_doc("Vessel",self.vessel)
+    customer_specific_total_tonnage = calculate_customer_specific_total_tonnage(self,method)
+    for row in vessel_doc.get("vessel_details"):
+        if row.customer_name==self.customer:
+            billed_qty = (flt((customer_specific_total_tonnage),3) / flt((self.custom_quantity_in_mt),3) ) * flt((row.tonnage_mt),3)
+            row.grt_billed_for_bh_for_pi = billed_qty
+
+    vessel_doc.save(ignore_permissions = True)
+
+def calculate_customer_specific_total_tonnage(self,method):
+    vessel_doc = frappe.get_doc("Vessel",self.vessel)
+    customer_specific_total_tonnage = 0
+    for item in vessel_doc.get("vessel_details"):
+        if item.customer_name==self.customer:
+            customer_specific_total_tonnage = customer_specific_total_tonnage + item.tonnage_mt
+    return customer_specific_total_tonnage

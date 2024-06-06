@@ -17,6 +17,8 @@ class Vessel(Document):
 		self.set_total_tonnage()
 		self.set_unique_bl_no()
 		self.set_customer_specific_grt()
+		self.set_percent_berth_hire_si_in_vessel()
+		self.set_percent_berth_hire_pi_in_vessel()
 
 	def set_customer_specific_grt(self):
 		get_unique_customer=[]
@@ -64,6 +66,21 @@ class Vessel(Document):
 			else :
 				frappe.throw(_("Row #{0}: You cannot add {1} again.").format(row.idx,row.item))
 
+	def set_percent_berth_hire_si_in_vessel(self):
+		total_billed_grt_for_si = 0
+		for item in self.vessel_details:
+			if item.grt_billed_for_bh_for_si:
+				total_billed_grt_for_si = total_billed_grt_for_si + item.grt_billed_for_bh_for_si
+		
+		self.percent_berth_hire_si = (total_billed_grt_for_si * 100) / self.total_tonnage_mt
+
+	def set_percent_berth_hire_pi_in_vessel(self):
+		total_billed_grt_for_pi = 0
+		for item in self.vessel_details:
+			if item.grt_billed_for_bh_for_pi:
+				total_billed_grt_for_pi = total_billed_grt_for_pi + item.grt_billed_for_bh_for_pi
+		
+		self.percent_berth_hire_pi = (total_billed_grt_for_pi * 100) / self.total_tonnage_mt
 
 @frappe.whitelist()
 def get_unique_customer_and_customer_specific_grt_from_vessel(docname):

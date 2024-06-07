@@ -14,6 +14,7 @@ frappe.ui.form.on('Item', {
 	},    
 
     set_item_name_for_customer_provided_item(frm){
+        debugger
         if (frm.is_new()==1 && frm.doc.is_customer_provided_item==1) {
             let auto_item_name=[]
             if (frm.doc.custom_coal_commodity) {

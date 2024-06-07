@@ -353,7 +353,7 @@
   },
   {
    "fieldname": "vessel_stay_hours",
-   "fieldtype": "Float",
+   "fieldtype": "Int",
    "label": "Vessel Stay Hours",
    "precision": "3",
    "read_only": 1
@@ -366,7 +366,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-29 17:18:13.699681",
+ "modified": "2024-06-07 12:16:51.804238",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

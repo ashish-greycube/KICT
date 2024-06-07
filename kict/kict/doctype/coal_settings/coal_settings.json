@@ -10,6 +10,7 @@
   "birth_hire_item_for_foreign_vessel",
   "ch_charges",
   "royalty_price_list",
+  "royalty_percentage",
   "default_uom_for_cargo",
   "column_break_fars",
   "storage_charges_fixed",
@@ -122,12 +123,17 @@
    "label": "Terminal Holiday List",
    "options": "Holiday List",
    "reqd": 1
+  },
+  {
+   "fieldname": "royalty_percentage",
+   "fieldtype": "Percent",
+   "label": "Royalty Percentage"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-06-03 10:46:58.845003",
+ "modified": "2024-06-07 12:13:16.339050",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

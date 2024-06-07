@@ -1,6 +1,7 @@
 import frappe
 from frappe import _
-from frappe.utils import getdate,flt
+from frappe.utils import getdate,flt,cstr
+from kict.kict.doctype.railway_receipt.railway_receipt import get_available_batches
 
 
 def set_cargo_handling_option_name_and_is_periodic(self,method):
@@ -45,7 +46,74 @@ def copy_vessel_to_stock_entry_item(self,method):
     for item in self.get("items"):
         item.to_vessel=vessel
 
+def copy_source_vessel_to_stock_entry_item(self,method):
+    vessel=self.custom_vessel
+    for item in self.get("items"):
+        item.vessel=vessel
+
+def set_batch_no_and_warehouse_for_handling_loss_audit_sortage(self,method):
+    if self.stock_entry_type=="Audit Shortage" or self.stock_entry_type=="Handling Loss":
+        copy_source_vessel_to_stock_entry_item(self,method)
+        item_table_with_batches=[]
+        item_rows_to_be_removed=[]
+        for item in self.get("items"):
+            if item.batch_no!=None:
+                pass
+            elif item.batch_no==None:    
+                args=frappe._dict({'item_code': item.item_code, 
+                'has_serial_no': '0', 
+                'has_batch_no': '1', 
+                'qty':item.qty, 
+                'based_on': 'FIFO', 
+                'vessel':self.custom_vessel,
+                # 'posting_date': self.posting_date,
+                # 'posting_time': self.posting_time,
+                'cmd': "kict.kict.doctype.railway_receipt.railway_receipt.get_auto_data"
+                }) 
+                available_batches=get_available_batches(args)               
+                # check if batch total qty is less than required qty
+                qty_from_batches=0
+                for batch in available_batches:
+                    qty_from_batches=qty_from_batches+batch.qty
+                if len(available_batches) < 1:
+                    table_html = frappe.bold("No batches found.")
+                    msg="The qty available from batches is {0}, whereas required qty is {1}. Hence cannot proceed.".format(frappe.bold(qty_from_batches),frappe.bold(item.qty))	
+                    frappe.throw(_(table_html+"<br>"+msg))				
+                if item.qty>qty_from_batches:
+                    table_body="<table border='1'><tr><td><b>Batch</b></td><td><b>Warehouse</b></td><td><b>Qty</b></td></tr>"
+                    table_row=""
+                    for item in available_batches:
+                        table_row=table_row+"<tr><td>"+item.batch_no+"</td><td>"+item.warehouse+"</td><td>"+cstr(item.qty)+"</td></tr>"
+                    table_html=table_body+table_row+"</table>"			
+                    msg="The qty available from batches is {0}, whereas required qty is {1}. Hence cannot proceed.".format(frappe.bold(qty_from_batches),frappe.bold(item.qty))	
+                    frappe.throw(_(table_html+"<br>"+msg))
+                # for each batch, warehouse add seperate line item
+                for batch in available_batches:
+                    item_with_batch={'item_code':item.item_code,
+                                     'item_name':item.item_name,
+                                     'custom_customer':item.custom_customer,
+                                     'description':item.description,
+                                     'item_group':item.item_group,
+                                     'uom':item.uom,
+                                     'stock_uom':item.stock_uom,
+                                     'transfer_qty':batch.qty,
+                                     'conversion_factor':item.conversion_factor,
+                                     'qty':batch.qty,
+                                     'batch_no':batch.batch_no,
+                                     's_warehouse':batch.warehouse,
+                                     'vessel':self.custom_vessel,}
+                    item_table_with_batches.append(item_with_batch)
+                
+                item_rows_to_be_removed.append(item)
+               
+        if len(item_table_with_batches)>0:
+            [self.items.remove(d) for d in item_rows_to_be_removed]
+            for row in item_table_with_batches:
+                frappe.msgprint(_('Item {0} has now batch {1} and source warehouse {2}').format(row.get('item_code'),row.get('batch_no'),row.get('s_warehouse')),alert=True)
+                self.append("items",row)
+
 def generate_and_set_batch_no(self,method):
+    print("="*10,method)
     if self.stock_entry_type=="Cargo Received":
         copy_vessel_to_stock_entry_item(self,method)
         for item in self.get("items"):
@@ -53,9 +121,11 @@ def generate_and_set_batch_no(self,method):
                 batch_name=check_batch_no_exist(item.to_vessel,item.item_code,self.posting_date)
                 if batch_name!=None:
                     item.batch_no=batch_name
+                    frappe.msgprint(_('Item {0} existing  batch {1} is added').format(item.item_code,item.batch_no),alert=True)
                 else:
                     batch_name=generate_batch_no(item.to_vessel,item.item_code,self.posting_date)
                     item.batch_no=batch_name
+                    frappe.msgprint(_('Item {0} new batch {1} is added').format(item.item_code,item.batch_no),alert=True)
 
 def check_batch_no_exist(vessel,item_code,posting_date):
     batch_name=None

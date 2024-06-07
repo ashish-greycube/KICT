@@ -137,7 +137,8 @@ doc_events = {
         "validate":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_si"
 	},
     "Stock Entry": {
-        "before_save": "kict.api.generate_and_set_batch_no"       
+        "before_save": "kict.api.generate_and_set_batch_no",
+        "before_validate":"kict.api.set_batch_no_and_warehouse_for_handling_loss_audit_sortage"       
 	},
     "Sales Order": {
         "before_validate":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_pi"

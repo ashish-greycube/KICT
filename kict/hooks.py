@@ -140,8 +140,10 @@ doc_events = {
 	},
     "Stock Entry": {
         # "before_save": "kict.api.generate_and_set_batch_no",
-        "before_validate":["kict.api.generate_and_set_batch_no","kict.api.set_batch_no_and_warehouse_for_handling_loss_audit_sortage",
-                           "kict.api.validate_vessel_is_not_closed_in_stock_entry"]       
+        "before_validate":["kict.api.validate_vessel_is_not_closed_in_stock_entry",
+                            "kict.api.generate_and_set_batch_no",
+                            "kict.api.set_batch_no_and_warehouse_for_handling_loss_audit_sortage"
+                           ]       
 	},
     "Sales Order": {
         "before_validate":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_pi"

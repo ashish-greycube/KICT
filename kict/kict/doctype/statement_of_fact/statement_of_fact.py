@@ -4,7 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_to_date
+from frappe.utils import add_to_date,get_last_day
 
 
 class StatementofFact(Document):
@@ -34,4 +34,11 @@ class StatementofFact(Document):
 			
 			berth_stay_hours=int_hours
 			self.vessel_stay_hours = berth_stay_hours
+
+			month_end_date = get_last_day(self.first_line_ashore)
+			if self.first_line_ashore > month_end_date:
+				pass
+			else:
+				pass
+
 				

@@ -179,24 +179,26 @@ def get_name_from_hash(posting_date,item_code):
     return temp
 
 def set_grt_billed_for_bh_in_vessel_detail_on_submit_of_si(self,method):
-    vessel_doc = frappe.get_doc("Vessel",self.vessel)
-    customer_specific_total_tonnage = calculate_customer_specific_total_tonnage(self,method)
-    for row in vessel_doc.get("vessel_details"):
-        if row.customer_name==self.customer:
-            billed_qty = (flt((customer_specific_total_tonnage),3) / flt((self.custom_quantity_in_mt),3) ) * flt((row.tonnage_mt),3)
-            row.grt_billed_for_bh_for_si = billed_qty
+    if self.custom_type_of_invoice == "Berth Hire Charges":
+        vessel_doc = frappe.get_doc("Vessel",self.vessel)
+        customer_specific_total_tonnage = calculate_customer_specific_total_tonnage(self,method)
+        for row in vessel_doc.get("vessel_details"):
+            if row.customer_name==self.customer:
+                billed_qty = (flt((customer_specific_total_tonnage),3) / flt((self.custom_quantity_in_mt),3) ) * flt((row.tonnage_mt),3)
+                row.grt_billed_for_bh_for_si = billed_qty
 
-    vessel_doc.save(ignore_permissions = True)
+        vessel_doc.save(ignore_permissions = True)
 
 def set_grt_billed_for_bh_in_vessel_detail_on_submit_of_pi(self,method):
-    vessel_doc = frappe.get_doc("Vessel",self.vessel)
-    customer_specific_total_tonnage = calculate_customer_specific_total_tonnage(self,method)
-    for row in vessel_doc.get("vessel_details"):
-        if row.customer_name==self.customer:
-            billed_qty = (flt((customer_specific_total_tonnage),3) / flt((self.custom_quantity_in_mt),3) ) * flt((row.tonnage_mt),3)
-            row.grt_billed_for_bh_for_pi = billed_qty
+    if self.custom_type_of_invoice == "Berth Hire Charges":
+        vessel_doc = frappe.get_doc("Vessel",self.vessel)
+        customer_specific_total_tonnage = calculate_customer_specific_total_tonnage(self,method)
+        for row in vessel_doc.get("vessel_details"):
+            if row.customer_name==self.customer:
+                billed_qty = (flt((customer_specific_total_tonnage),3) / flt((self.custom_quantity_in_mt),3) ) * flt((row.tonnage_mt),3)
+                row.grt_billed_for_bh_for_pi = billed_qty
 
-    vessel_doc.save(ignore_permissions = True)
+        vessel_doc.save(ignore_permissions = True)
 
 def calculate_customer_specific_total_tonnage(self,method):
     vessel_doc = frappe.get_doc("Vessel",self.vessel)

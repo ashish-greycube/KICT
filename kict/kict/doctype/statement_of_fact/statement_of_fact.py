@@ -26,7 +26,12 @@ class StatementofFact(Document):
 				if diff_of_all_line_and_readiness > 4 :
 					all_line_cast_off = add_to_date(self.vessel_given_readiness__for_sailing, hours=4)
 			
-			berth_stay_hours=frappe.utils.time_diff_in_hours(all_line_cast_off,self.first_line_ashore)
-
+			berth_stay_seconds=frappe.utils.time_diff_in_seconds(all_line_cast_off,self.first_line_ashore)
+			berth_stay_hours_in_decimal=(berth_stay_seconds/3600)
+			int_hours, dec_sec = divmod(berth_stay_hours_in_decimal, 1)
+			if dec_sec>0:
+				int_hours=int_hours+1
+			
+			berth_stay_hours=int_hours
 			self.vessel_stay_hours = berth_stay_hours
 				

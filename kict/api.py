@@ -205,3 +205,30 @@ def calculate_customer_specific_total_tonnage(self,method):
         if item.customer_name==self.customer:
             customer_specific_total_tonnage = customer_specific_total_tonnage + item.tonnage_mt
     return customer_specific_total_tonnage
+
+def validate_vessel_is_not_closed_in_stock_entry(self,method):
+    vessel = self.custom_vessel
+    vessel_closer_value = frappe.db.get_value("Vessel",vessel,"vessel_closure")
+    if vessel_closer_value == 1:
+        frappe.throw(_("Vessel {0} is Closed. You can not create Stock Entry.").format(frappe.bold(vessel)))
+
+    for item in self.items:
+        item_detail = frappe.db.get_all("Vessel Details",
+                                        parent_doctype = "Vessel",
+                                        filters={"parent":vessel,"item":item.item_code},
+                                        fields=["cargo_closure"])
+        if len(item_detail)>0:
+            if item_detail[0].cargo_closure == 1:
+                frappe.throw(_("Row# {0} : Vessel {1} and cargo item {2} is closed. You can not create stock entry.").format(item.idx,frappe.bold(item.to_vessel),frappe.bold(item.item_code)))
+
+def validate_vessel_is_not_closed_in_delivery_note(self,method):
+    for item in self.items:
+        vessel_name = item.vessel
+        vessel_closer = frappe.db.get_value("Vessel",vessel_name,"vessel_closure")
+        vessel_item = frappe.db.get_all("Vessel Details",
+                                        parent_doctype = "Vessel",
+                                        filters={"parent":vessel_name,"item":item.item_code},
+                                        fields=["cargo_closure"])
+        if len(vessel_item)>0:
+            if vessel_closer == 1 and vessel_item[0].cargo_closure == 1:
+                frappe.throw(_("Row #{0}: Vessel {1} and item {2} is closed. You can not create Delivery Note.").format(item.idx,frappe.bold(vessel_name),frappe.bold(item.item_code)))

@@ -130,7 +130,8 @@ doc_events = {
                "kict.api.validate_rate_percent_billing"]
 	},
     "Delivery Note": {
-        "on_cancel": "kict.api.change_status_for_dn_creation_in_railway_receipt_on_cancel_of_dn"
+        "on_cancel": "kict.api.change_status_for_dn_creation_in_railway_receipt_on_cancel_of_dn",
+        "before_validate": "kict.api.validate_vessel_is_not_closed_in_delivery_note"
 	},
     "Sales Invoice": {
         "on_cancel": "kict.api.change_status_for_is_billed_in_on_cancel_of_si",
@@ -138,8 +139,9 @@ doc_events = {
         "validate":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_si"
 	},
     "Stock Entry": {
-        "before_save": "kict.api.generate_and_set_batch_no",
-        "before_validate":"kict.api.set_batch_no_and_warehouse_for_handling_loss_audit_sortage"       
+        # "before_save": "kict.api.generate_and_set_batch_no",
+        "before_validate":["kict.api.generate_and_set_batch_no","kict.api.set_batch_no_and_warehouse_for_handling_loss_audit_sortage",
+                           "kict.api.validate_vessel_is_not_closed_in_stock_entry"]       
 	},
     "Sales Order": {
         "before_validate":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_pi"

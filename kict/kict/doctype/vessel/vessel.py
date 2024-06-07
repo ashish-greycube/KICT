@@ -19,6 +19,7 @@ class Vessel(Document):
 		self.set_customer_specific_grt()
 		self.set_percent_berth_hire_si_in_vessel()
 		self.set_percent_berth_hire_pi_in_vessel()
+		self.check_vessel_closer_and_cargo_closer()
 
 	def set_customer_specific_grt(self):
 		get_unique_customer=[]
@@ -81,6 +82,18 @@ class Vessel(Document):
 				total_billed_grt_for_pi = total_billed_grt_for_pi + item.grt_billed_for_bh_for_pi
 		
 		self.percent_berth_hire_pi = (total_billed_grt_for_pi * 100) / self.total_tonnage_mt
+
+	def check_vessel_closer_and_cargo_closer(self):
+		vessel_closer = False
+		for row in self.vessel_details:
+			if self.vessel_closure == 1:
+				row.cargo_closure = 1
+				vessel_closer = True
+				frappe
+			else :
+				row.cargo_closure = 0
+		if vessel_closer == True:
+			frappe.msgprint(_("Cargo is closed for all vessel items."),alert=True)
 
 @frappe.whitelist()
 def get_unique_customer_and_customer_specific_grt_from_vessel(docname):

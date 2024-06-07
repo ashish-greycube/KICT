@@ -34,12 +34,13 @@ def change_status_for_dn_creation_in_railway_receipt_on_cancel_of_dn(self,method
     frappe.db.set_value("Railway Receipt Item Details",self.custom_railway_receipt_detail,"is_dn_created","No")
 
 def change_status_for_is_billed_in_on_cancel_of_si(self,method):
-    participating_rr = frappe.db.get_all("Railway Receipt Item Details",
-                                         filters = {"sales_invoice_reference":self.name},
-                                         fields = ["name","is_billed","sales_invoice_reference"])
-    for ele in participating_rr:
-        frappe.db.set_value("Railway Receipt Item Details",ele.name,"is_billed","No")
-        frappe.db.set_value("Railway Receipt Item Details",ele.name,"sales_invoice_reference","")
+    if self.custom_type_of_cargo_handling_invoice and self.custom_type_of_cargo_handling_invoice=="Periodic":    
+        participating_rr = frappe.db.get_all("Railway Receipt Item Details",
+                                            filters = {"sales_invoice_reference":self.name},
+                                            fields = ["name","is_billed","sales_invoice_reference"])
+        for ele in participating_rr:
+            frappe.db.set_value("Railway Receipt Item Details",ele.name,"is_billed","No")
+            frappe.db.set_value("Railway Receipt Item Details",ele.name,"sales_invoice_reference","")
 
 def copy_vessel_to_stock_entry_item(self,method):
     vessel=self.custom_vessel
@@ -238,3 +239,37 @@ def validate_vessel_is_not_closed_in_delivery_note(self,method):
             if vessel_item[0].cargo_closure == 1:
                 frappe.throw(_("Row #{0}: vessel {1} and item {2} is closed. You can not create Delivery Note.")
                              .format(item.idx,frappe.bold(vessel_name),frappe.bold(item.item_code)))
+                
+def create_purchase_invoice_for_royalty(self, method):
+    print("Royalty Invoice")
+    if self.supplier and self.posting_date and self.custom_is_royalty_invoice == 1 :
+        posting_date = getdate(self.posting_date)
+        posting_date_month = posting_date.month
+        print(posting_date_month,'-----month')
+
+        sof_list = frappe.db.get_all("Statement of Fact",fields=["name","first_line_ashore","all_line_cast_off"])
+        print(sof_list)
+        for sof in sof_list:
+            if sof.first_line_ashore and sof.all_line_cast_off:
+                first_line_ashore,all_line_cast_off = sof.first_line_ashore,sof.all_line_cast_off
+                first_line_ashore_month,all_line_cast_off_month = first_line_ashore.month,all_line_cast_off.month
+                print(first_line_ashore_month,all_line_cast_off_month)
+
+        self.bill_no = ''
+        print("Condition satisfy")
+        # item_row = self.append("items",{})
+        # item_row.item_name =''
+        # item_row.custom_vessel_name=''
+        # item_row.custom_commodity=''
+        # item_row.custom_grt=''
+        # item_row.custom_current_month_stay_hours=''
+        # item_row.custom_custom_qty=''
+        # item_row.custom_actual_berth_hours=''
+        # item_row.qty = ''
+        # item_row.uom = ''
+        # item_row.conversion_factor = ''
+        # item_row.stock_qty = ''
+        # item_row.rate = ''
+        # item_row.amount = ''
+        # item_row.base_rate = ''
+        # item_row.base_amount = ''                                

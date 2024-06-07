@@ -149,7 +149,10 @@ doc_events = {
 	},
     "Sales Order": {
         "before_validate":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_pi"
-	},       
+	},  
+    "Purchase Invoice": {
+            "before_save": "kict.api.create_purchase_invoice_for_royalty"
+    }         
 }
 
 # Scheduled Tasks

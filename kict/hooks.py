@@ -136,9 +136,10 @@ doc_events = {
         "before_validate": "kict.api.validate_vessel_is_not_closed_in_delivery_note"
 	},
     "Sales Invoice": {
-        "on_cancel": "kict.api.change_status_for_is_billed_in_on_cancel_of_si",
+        "on_cancel": ["kict.api.change_status_for_is_billed_in_on_cancel_of_si",
+                      "kict.api.remove_calculation_for_percent_billing_on_cancel_of_si"],
         "on_trash": "kict.api.change_status_for_is_billed_in_on_cancel_of_si",
-        "validate":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_si"
+        "on_submit":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_si"
 	},
     "Stock Entry": {
         # "before_save": "kict.api.generate_and_set_batch_no",
@@ -148,8 +149,9 @@ doc_events = {
                            ]       
 	},
     "Sales Order": {
-        "before_validate":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_pi"
-	},  
+        "on_submit":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_pi",
+        "on_cancel":"kict.api.remove_calculation_for_percent_billing_on_cancel_of_pi"
+    },  
     "Purchase Invoice": {
             "before_save": "kict.api.create_purchase_invoice_for_royalty"
     }         

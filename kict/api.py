@@ -272,4 +272,23 @@ def create_purchase_invoice_for_royalty(self, method):
         # item_row.rate = ''
         # item_row.amount = ''
         # item_row.base_rate = ''
-        # item_row.base_amount = ''                                
+        # item_row.base_amount = '' 
+
+
+def remove_calculation_for_percent_billing_on_cancel_of_si(self,method):
+    if self.custom_type_of_invoice == "Berth Hire Charges":
+        vessel_doc = frappe.get_doc("Vessel",self.vessel)
+        for row in vessel_doc.get("vessel_details"):
+            if row.customer_name==self.customer:
+                row.grt_billed_for_bh_for_si = 0
+
+        vessel_doc.save(ignore_permissions = True)
+
+def remove_calculation_for_percent_billing_on_cancel_of_pi(self,method):
+    if self.custom_type_of_invoice == "Berth Hire Charges":
+        vessel_doc = frappe.get_doc("Vessel",self.vessel)
+        for row in vessel_doc.get("vessel_details"):
+            if row.customer_name==self.customer:
+                row.grt_billed_for_bh_for_pi = 0
+
+        vessel_doc.save(ignore_permissions = True)

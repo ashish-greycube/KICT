@@ -23,6 +23,8 @@
   "opa",
   "flag_country",
   "vessel_stay_hours",
+  "current_month_stay_hours",
+  "next_month_stay_hours",
   "section_break_ppjb",
   "radio_pratique_granted",
   "free_pratique_granted",
@@ -354,8 +356,20 @@
   {
    "fieldname": "vessel_stay_hours",
    "fieldtype": "Int",
-   "label": "Vessel Stay Hours",
+   "label": "Vessel Total Stay Hours",
    "precision": "3",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_month_stay_hours",
+   "fieldtype": "Int",
+   "label": "Current Month Stay Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "next_month_stay_hours",
+   "fieldtype": "Int",
+   "label": "Next Month Stay Hours",
    "read_only": 1
   }
  ],
@@ -366,7 +380,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-06-07 12:16:51.804238",
+ "modified": "2024-06-07 12:45:46.150470",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

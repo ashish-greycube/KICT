@@ -25,6 +25,7 @@ frappe.query_reports["Storage Charges"] = {
 			"fieldname": "from_date",
 			"label":__("From Date"),
 			"fieldtype": "Date",
+			"read_only":1
 		},
 		{
 			"fieldname": "to_date",

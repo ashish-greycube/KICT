@@ -114,24 +114,24 @@ def set_batch_no_and_warehouse_for_handling_loss_audit_sortage(self,method):
                 self.append("items",row)
 
 def generate_and_set_batch_no(self,method):
-    print("="*10,method)
     if self.stock_entry_type=="Cargo Received":
         copy_vessel_to_stock_entry_item(self,method)
         for item in self.get("items"):
             if item.batch_no==None:
-                batch_name=check_batch_no_exist(item.to_vessel,item.item_code,self.posting_date)
+                batch_name=check_batch_no_exist(item.to_vessel,item.item_code,self.posting_date,self.posting_time)
                 if batch_name!=None:
                     item.batch_no=batch_name
                     frappe.msgprint(_('Item {0} existing  batch {1} is added').format(item.item_code,item.batch_no),alert=True)
                 else:
-                    batch_name=generate_batch_no(item.to_vessel,item.item_code,self.posting_date)
+                    batch_name=generate_batch_no(item.to_vessel,item.item_code,self.posting_date,self.posting_time)
                     item.batch_no=batch_name
                     frappe.msgprint(_('Item {0} new batch {1} is added').format(item.item_code,item.batch_no),alert=True)
 
-def check_batch_no_exist(vessel,item_code,posting_date):
+def check_batch_no_exist(vessel,item_code,posting_date,posting_time):
+    port_date=get_port_date(posting_date,posting_time)
     batch_name=None
     batch_found = frappe.db.get_list("Batch", 
-            filters={"item":item_code,"custom_vessel":vessel,"manufacturing_date":posting_date},
+            filters={"item":item_code,"custom_vessel":vessel,"manufacturing_date":port_date},
             fields=["name"]) 
     if len(batch_found)>0:
         batch_name=batch_found[0].name
@@ -139,7 +139,8 @@ def check_batch_no_exist(vessel,item_code,posting_date):
 
     
 
-def generate_batch_no(vessel,item_code,posting_date):
+def generate_batch_no(vessel,item_code,posting_date,posting_time):
+    port_date=get_port_date(posting_date,posting_time)
     is_customer_provided_item = frappe.db.get_value('Item', item_code, 'is_customer_provided_item')
     if is_customer_provided_item==0:
         return
@@ -150,12 +151,12 @@ def generate_batch_no(vessel,item_code,posting_date):
                     kwargs.doctype = "Batch"
                     return frappe.get_doc(kwargs).insert().name
         
-    batch_id=get_name_from_hash(posting_date,item_code)
+    batch_id=get_name_from_hash(port_date,item_code)
     batch_name= make_batch(frappe._dict({
                 "batch_id":batch_id,
                 "item": item_code,
                 "custom_vessel":vessel,
-                "manufacturing_date":posting_date,
+                "manufacturing_date":port_date,
                 "stock_uom":frappe.db.get_value('Item', item_code, 'stock_uom'),
                 "use_batchwise_valuation":0
             }
@@ -163,8 +164,9 @@ def generate_batch_no(vessel,item_code,posting_date):
     )    
     return batch_name
 
-def get_name_from_hash(posting_date,item_code):
-    current_date=getdate(posting_date).strftime("%d.%m.%y")
+def get_name_from_hash(port_date,item_code):
+    current_date=getdate(port_date).strftime("%d.%m.%y")
+    print('current_date',current_date)
     coal_commodity = frappe.db.get_value("Item",item_code,"custom_coal_commodity")
     commodity_grade = frappe.db.get_value("Item",item_code,"custom_commodity_grade")
     customer_abbreviation = frappe.db.get_value("Item",item_code,"custom_customer_abbreviation")
@@ -292,3 +294,10 @@ def remove_calculation_for_percent_billing_on_cancel_of_pi(self,method):
                 row.grt_billed_for_bh_for_pi = 0
 
         vessel_doc.save(ignore_permissions = True)
+
+def get_port_date(date,time):
+    from frappe.utils import add_days
+    if time <= '06:00:00':
+        return date
+    elif time > '06:00:00' and time <= '24:00:00':
+        return add_days(date,1)

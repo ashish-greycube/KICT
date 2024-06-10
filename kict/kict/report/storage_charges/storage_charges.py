@@ -123,7 +123,7 @@ def execute(filters=None):
 					else:
 						sc_row.day_count=previous_batch_count+1
 						previous_batch_count=sc_row.day_count
-					sc_row.opening_qty=previous_opening_qty
+					sc_row.opening_qty=previous_balance_qty
 					sc_row.in_qty=previous_in_qty
 					sc_row.out_qty=previous_out_qty
 					sc_row.bal_qty=previous_balance_qty
@@ -151,7 +151,7 @@ def execute(filters=None):
 				else:
 					sc_row.day_count=previous_batch_count+1
 					previous_batch_count=sc_row.day_count				
-				sc_row.opening_qty=previous_opening_qty
+				sc_row.opening_qty=previous_balance_qty
 				sc_row.in_qty=flt(d.actual_qty, float_precision) if flt(d.actual_qty) > 0 else 0
 				sc_row.out_qty=abs(flt(d.actual_qty, float_precision))	 if flt(d.actual_qty) < 0 else 0
 				sc_row.bal_qty=sc_row.opening_qty+flt(d.actual_qty, float_precision)

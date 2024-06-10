@@ -138,6 +138,7 @@ def execute(filters=None):
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
 					previous_show_date=next_date
+				
 			# case 1B : repeat batch and incoming date is matching, so real data 
 			if d['show_date']==previous_show_date:
 				sc_row= frappe._dict({})
@@ -150,7 +151,7 @@ def execute(filters=None):
 				else:
 					sc_row.day_count=previous_batch_count+1
 					previous_batch_count=sc_row.day_count				
-				sc_row.opening_qty=previous_balance_qty
+				sc_row.opening_qty=previous_opening_qty
 				sc_row.in_qty=flt(d.actual_qty, float_precision) if flt(d.actual_qty) > 0 else 0
 				sc_row.out_qty=abs(flt(d.actual_qty, float_precision))	 if flt(d.actual_qty) < 0 else 0
 				sc_row.bal_qty=sc_row.opening_qty+flt(d.actual_qty, float_precision)

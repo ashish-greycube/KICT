@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import getdate,flt,cstr
+from frappe.utils import getdate,flt,cstr,add_days,get_first_day,get_last_day
 from kict.kict.doctype.railway_receipt.railway_receipt import get_available_batches
 
 
@@ -243,22 +243,28 @@ def validate_vessel_is_not_closed_in_delivery_note(self,method):
                              .format(item.idx,frappe.bold(vessel_name),frappe.bold(item.item_code)))
                 
 def create_purchase_invoice_for_royalty(self, method):
-    print("Royalty Invoice")
+    print("="*10,method)
+    eligible_vessels=[]
     if self.supplier and self.posting_date and self.custom_is_royalty_invoice == 1 :
-        posting_date = getdate(self.posting_date)
-        posting_date_month = posting_date.month
-        print(posting_date_month,'-----month')
-
-        sof_list = frappe.db.get_all("Statement of Fact",fields=["name","first_line_ashore","all_line_cast_off"])
-        print(sof_list)
+        filter__from_date=get_first_day(self.posting_date)
+        filter__to_date=get_last_day(self.posting_date)
+        posting_date_month = getdate(self.posting_date).month
+        filter_date=add_days(self.posting_date,-32)
+        sof_list = frappe.db.get_all("Statement of Fact",
+                                     or_filters={'first_line_ashore':['between',[filter__from_date,filter__to_date]],
+                                              'all_line_cast_off':['between',[filter__from_date,filter__to_date]] },          
+                                   fields=["name","first_line_ashore","all_line_cast_off"])
+        print(sof_list)  
         for sof in sof_list:
             if sof.first_line_ashore and sof.all_line_cast_off:
-                first_line_ashore,all_line_cast_off = sof.first_line_ashore,sof.all_line_cast_off
-                first_line_ashore_month,all_line_cast_off_month = first_line_ashore.month,all_line_cast_off.month
-                print(first_line_ashore_month,all_line_cast_off_month)
+                first_line_ashore_month,all_line_cast_off_month = (sof.first_line_ashore).month,(sof.all_line_cast_off).month
+                if posting_date_month==first_line_ashore_month and posting_date_month==all_line_cast_off_month:
+                    eligible_vessels.append(sof.name)
 
-        self.bill_no = ''
-        print("Condition satisfy")
+        if len(eligible_vessels)==0:
+            frappe.throw("No eligible vessels found for {0} month".format(posting_date_month))
+        # self.bill_no = ''
+        print("Condition satisfy",eligible_vessels)
         # item_row = self.append("items",{})
         # item_row.item_name =''
         # item_row.custom_vessel_name=''

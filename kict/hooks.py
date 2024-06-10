@@ -29,7 +29,8 @@ app_license = "unlicense"
 
 # include js in doctype views
 doctype_js = {"Item" : "public/js/item.js",
-              "Stock Entry" : "public/js/stock_entry.js"
+              "Stock Entry" : "public/js/stock_entry.js",
+              "Purchase Invoice":"public/js/purchase_invoice.js"
               }
 
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
@@ -142,7 +143,6 @@ doc_events = {
         "on_submit":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_si"
 	},
     "Stock Entry": {
-        # "before_save": "kict.api.generate_and_set_batch_no",
         "before_validate":["kict.api.validate_vessel_is_not_closed_in_stock_entry",
                             "kict.api.generate_and_set_batch_no",
                             "kict.api.set_batch_no_and_warehouse_for_handling_loss_audit_sortage"
@@ -153,7 +153,9 @@ doc_events = {
         "on_cancel":"kict.api.remove_calculation_for_percent_billing_on_cancel_of_pi"
     },  
     "Purchase Invoice": {
-            "before_save": "kict.api.create_purchase_invoice_for_royalty"
+            "before_validate": "kict.api.create_purchase_invoice_for_royalty",
+             "before_insert": "kict.api.create_purchase_invoice_for_royalty",
+             "before_naming": "kict.api.create_purchase_invoice_for_royalty",
     }         
 }
 

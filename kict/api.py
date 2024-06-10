@@ -251,7 +251,7 @@ def create_purchase_invoice_for_royalty(self, method):
         posting_date_month = getdate(self.posting_date).month
         filter_date=add_days(self.posting_date,-32)
         sof_list = frappe.db.get_all("Statement of Fact",
-                                     or_filters={'first_line_ashore':['between',[filter__from_date,filter__to_date]],
+                                     filters={'first_line_ashore':['between',[filter__from_date,filter__to_date]],
                                               'all_line_cast_off':['between',[filter__from_date,filter__to_date]] },          
                                    fields=["name","first_line_ashore","all_line_cast_off"])
         print(sof_list)  

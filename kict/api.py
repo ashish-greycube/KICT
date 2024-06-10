@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.utils import getdate,flt,cstr,add_days,get_first_day,get_last_day
 from kict.kict.doctype.railway_receipt.railway_receipt import get_available_batches
+from erpnext.stock.get_item_details import get_item_details,get_basic_details
 
 
 def set_cargo_handling_option_name_and_is_periodic(self,method):
@@ -253,7 +254,7 @@ def create_purchase_invoice_for_royalty(self, method):
         sof_list = frappe.db.get_all("Statement of Fact",
                                      filters={'first_line_ashore':['between',[filter__from_date,filter__to_date]],
                                               'all_line_cast_off':['between',[filter__from_date,filter__to_date]] },          
-                                   fields=["name","first_line_ashore","all_line_cast_off"])
+                                   fields=["name","first_line_ashore","all_line_cast_off","current_month_stay_hours"])
         print(sof_list)  
         for sof in sof_list:
             if sof.first_line_ashore and sof.all_line_cast_off:
@@ -265,22 +266,53 @@ def create_purchase_invoice_for_royalty(self, method):
             frappe.throw("No eligible vessels found for {0} month".format(posting_date_month))
         # self.bill_no = ''
         print("Condition satisfy",eligible_vessels)
-        # item_row = self.append("items",{})
-        # item_row.item_name =''
-        # item_row.custom_vessel_name=''
-        # item_row.custom_commodity=''
-        # item_row.custom_grt=''
-        # item_row.custom_current_month_stay_hours=''
-        # item_row.custom_custom_qty=''
-        # item_row.custom_actual_berth_hours=''
-        # item_row.qty = ''
-        # item_row.uom = ''
-        # item_row.conversion_factor = ''
-        # item_row.stock_qty = ''
-        # item_row.rate = ''
-        # item_row.amount = ''
-        # item_row.base_rate = ''
-        # item_row.base_amount = '' 
+        for vessel in eligible_vessels:
+            print(vessel)
+            vessel_doc = frappe.get_doc("Vessel",vessel)
+            type_of_vessel = vessel_doc.costal_foreign_vessle
+            print(type_of_vessel,"---------")
+            if type_of_vessel == "Foreign":
+                invoice_item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_foreign_vessel")
+                print(invoice_item)
+            if type_of_vessel == "Costal":
+                invoice_item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
+                print(invoice_item,"Costal")
+            
+            vessel_item_commodity = frappe.db.get_all("Vessel Details",
+                                                      parent_doctype = "Vessel",
+                                                      filters={"parent":vessel},
+                                                      fields=["item"])
+            vessel_item_list = ",".join((ele.item if ele.item!=None else '') for ele in vessel_item_commodity)
+            # for item in vessel_item_commodity:
+            #     vessel_item_list.append(item.item)
+            print(vessel_item_list)
+            
+            royalty_price_list = frappe.db.get_single_value('Coal Settings', 'royalty_price_list')
+
+            item_args=frappe._dict({'item_code':invoice_item,'buying_price_list':royalty_price_list,'company':vessel_doc.company,"doctype":"Purchase Invoice"})
+            item_defaults=get_basic_details(item_args,item=None)
+            print(item_defaults,'='*10)
+            current_month_stay_hours = frappe.db.get_value("Statement of Fact",vessel,"current_month_stay_hours")
+
+
+            custom_qty = vessel_doc.grt * current_month_stay_hours
+            item_row = self.append("items",{})
+            item_row.item_name = invoice_item
+            item_row.custom_vessel_name= vessel
+            item_row.custom_commodity= vessel_item_list
+            item_row.custom_grt= vessel_doc.grt
+            item_row.custom_current_month_stay_hours= current_month_stay_hours
+            item_row.custom_custom_qty= custom_qty
+            item_row.custom_actual_berth_hours= current_month_stay_hours
+            item_row.qty = 1
+            item_row.uom = item_defaults.stock_uom
+            item_row.conversion_factor = item_defaults.conversion_factor
+            item_row.stock_qty = item_defaults.stock_qty
+            item_row.rate = item_defaults.rate
+            item_row.amount = 0
+            item_row.base_rate = item_defaults.base_rate
+            item_row.base_amount = item_defaults.base_amount
+            item_row.expense_account = "Cost of Goods Sold - KICTPPL"
 
 
 def remove_calculation_for_percent_billing_on_cancel_of_si(self,method):
@@ -307,3 +339,8 @@ def get_port_date(date,time):
         return date
     elif time > '06:00:00' and time <= '24:00:00':
         return add_days(date,1)
+    
+
+@frappe.whitelist()
+def create_purchase_invoice_for_royalty_charges(target_doc=None,supplier_name=None,supplier_invoice_no=None,posting_date=None):
+    print("create_purchase_invoice_for_royalty_charges")

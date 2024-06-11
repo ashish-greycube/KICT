@@ -50,7 +50,7 @@ function create_purchase_invoice_for_royalty_charges(frm) {
             frappe.call({
                 method: "kict.api.create_purchase_invoice_for_royalty_charges",
                 args: {
-                    // "source_name": frm.doc.name,
+                    "source_name": undefined,
                     "target_doc": undefined,
                     "supplier_name":values.supplier_name_field,
                     "supplier_invoice_no":values.supplier_invoice_no_field,

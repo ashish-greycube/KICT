@@ -2,9 +2,8 @@ import frappe
 from frappe import _
 from frappe.utils import getdate,flt,cstr,add_days,get_first_day,get_last_day
 from kict.kict.doctype.railway_receipt.railway_receipt import get_available_batches
-from erpnext.stock.get_item_details import get_item_details,get_basic_details
+from erpnext.stock.get_item_details import get_item_details,get_basic_details,get_price_list_rate_for
 from frappe.model.mapper import get_mapped_doc
-
 
 def set_cargo_handling_option_name_and_is_periodic(self,method):
 	for row in self.get("custom_cargo_handling_charges_slots_details"):
@@ -282,7 +281,8 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 		price_list= frappe.db.get_single_value("Coal Settings", "royalty_price_list")
 		currency= frappe.db.get_value("Supplier", {"name": supplier_name}, ["default_currency"])
 		if price_list:
-			target.buying_price_list = price_list
+			# target.buying_price_list = price_list
+			pass
 		if currency:
 			target.currency = currency
 
@@ -294,14 +294,14 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 		posting_date_month = getdate(posting_date).month
 		filter_date=add_days(posting_date,-32)
 		sof_list = frappe.db.get_all("Statement of Fact",
-									 filters={'first_line_ashore':['between',[filter__from_date,filter__to_date]],
+									 or_filters={'first_line_ashore':['between',[filter__from_date,filter__to_date]],
 											  'all_line_cast_off':['between',[filter__from_date,filter__to_date]] },          
 								   fields=["name","first_line_ashore","all_line_cast_off","current_month_stay_hours"])
 		print(sof_list)  
 		for sof in sof_list:
 			if sof.first_line_ashore and sof.all_line_cast_off:
 				first_line_ashore_month,all_line_cast_off_month = (sof.first_line_ashore).month,(sof.all_line_cast_off).month
-				if posting_date_month==first_line_ashore_month and posting_date_month==all_line_cast_off_month:
+				if posting_date_month==first_line_ashore_month or posting_date_month==all_line_cast_off_month:
 					eligible_vessels.append(sof.name)
 
 		if len(eligible_vessels)==0:
@@ -330,11 +330,19 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 			print(vessel_item_list)
 			
 			item_args=frappe._dict({'item_code':bh_invoice_item,'buying_price_list':price_list,'company':vessel_doc.company,"doctype":"Purchase Invoice"})
-			# item_defaults=get_basic_details(item_args,item=None)
-			# print(item_defaults,'='*10)
+			item_defaults=get_basic_details(item_args,item=None)
+			args = frappe._dict({'price_list':'Standard Buying','qty':1,'uom':item_defaults.get('stock_uom')})
+			price_list_rate=get_price_list_rate_for(args,bh_invoice_item)
+			print(price_list_rate,"-->price_list_rate")
+
 			current_month_stay_hours = frappe.db.get_value("Statement of Fact",vessel,"current_month_stay_hours")
 			custom_qty = vessel_doc.grt * current_month_stay_hours
-			purchase_invoice_item = target.append("items",{"item_code":bh_invoice_item,"custom_vessel_name":vessel,"custom_commodity":"","custom_grt":vessel_doc.grt,"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty})
+			royalty_percentage = frappe.db.get_single_value("Coal Settings","royalty_percentage")
+			custom_amount = custom_qty * price_list_rate
+			calculated_rate = custom_amount * royalty_percentage
+			purchase_invoice_item = target.append("items",
+			{"item_code":bh_invoice_item,"custom_vessel_name":vessel,"custom_commodity":"","custom_grt":vessel_doc.grt,
+			"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {

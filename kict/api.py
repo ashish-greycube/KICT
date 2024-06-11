@@ -336,11 +336,11 @@ def remove_calculation_for_percent_billing_on_cancel_of_pi(self,method):
 		vessel_doc.save(ignore_permissions = True)
 
 def get_port_date(date,time):
-	from frappe.utils import add_days
-	if time <= '06:00:00':
-		return date
-	elif time > '06:00:00' and time <= '24:00:00':
-		return add_days(date,1)
+    from frappe.utils import add_days
+    if time <= '06:00:00':
+        return add_days(date,-1)
+    elif time > '06:00:00' and time <= '24:00:00':
+        return date
 	
 
 @frappe.whitelist()

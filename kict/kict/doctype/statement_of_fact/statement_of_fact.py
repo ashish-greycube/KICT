@@ -21,9 +21,11 @@ class StatementofFact(Document):
 				if self.vessel_given_readiness__for_sailing > self.all_line_cast_off:
 					frappe.throw(_("Vessel given readiness for sailing can not be greater than all line cast off"))
 			all_line_cast_off = self.all_line_cast_off
+			#  Round Up [ First Line Ashore - ( All Line Cast Off - Vessel given readiness - vessel delay due to terminal account ) ]
 			if self.vessel_given_readiness__for_sailing:
 				diff_of_all_line_and_readiness = frappe.utils.time_diff_in_hours(all_line_cast_off,self.vessel_given_readiness__for_sailing)
-				if diff_of_all_line_and_readiness > 4 :
+				vessel_delay_due_to_terminal_account=1
+				if diff_of_all_line_and_readiness > 4 and vessel_delay_due_to_terminal_account>0:
 					all_line_cast_off = add_to_date(self.vessel_given_readiness__for_sailing, hours=4)
 
 			print('calcuated all_line_cast_off',all_line_cast_off,'field value',self.all_line_cast_off)

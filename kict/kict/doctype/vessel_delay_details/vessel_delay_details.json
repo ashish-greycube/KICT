@@ -37,7 +37,7 @@
    "fieldname": "total_hours",
    "fieldtype": "Duration",
    "in_list_view": 1,
-   "label": "Total Hours",
+   "label": "Delay Duration",
    "read_only": 1
   },
   {
@@ -61,7 +61,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-28 15:40:04.257391",
+ "modified": "2024-06-11 16:35:00.868380",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Delay Details",

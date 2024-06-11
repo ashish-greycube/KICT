@@ -151,12 +151,7 @@ doc_events = {
     "Sales Order": {
         "on_submit":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_pi",
         "on_cancel":"kict.api.remove_calculation_for_percent_billing_on_cancel_of_pi"
-    },  
-    "Purchase Invoice": {
-            "before_validate": "kict.api.create_purchase_invoice_for_royalty",
-             "before_insert": "kict.api.create_purchase_invoice_for_royalty",
-             "before_naming": "kict.api.create_purchase_invoice_for_royalty",
-    }         
+    }        
 }
 
 # Scheduled Tasks

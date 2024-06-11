@@ -84,7 +84,7 @@ def execute(filters=None):
 				for d in frappe.get_all(
 					"Holiday",
 					fields=["holiday_date"],
-					filters={"parent": terminal_holiday_list,"custom_only_applicable_for_customer_storage":1},
+					filters={"parent": terminal_holiday_list,"custom_only_applicable_for_customer_storage":0},
 					order_by="holiday_date",
 					as_list=1,
 				)

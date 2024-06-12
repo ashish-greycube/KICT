@@ -390,3 +390,52 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 	# 		frappe.db.set_value("Railway Receipt Item Details",ele.name,"is_billed","Yes")
 	# 		frappe.db.set_value("Railway Receipt Item Details",ele.name,"sales_invoice_reference",doc.name)
 	return doc.name
+
+
+def get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date):
+		from frappe.utils.data import get_date_str
+
+		month_start_date=get_first_day(posting_date)
+		port_start_date_with_time=get_date_str(month_start_date)+' 06:00:01'
+
+		next_month_start_date = add_days(get_last_day(posting_date),1)
+		port_end_date_with_time=get_date_str(next_month_start_date)+' 06:00:00'
+
+		query = frappe.db.sql(
+		"""			select 
+				sle.vessel,
+				sle.item_code,		
+				sum(batch_package.qty) as actual_qty				
+			from
+				`tabStock Ledger Entry` sle
+			inner join `tabSerial and Batch Entry` batch_package
+			on
+				sle.serial_and_batch_bundle = batch_package.parent
+			inner join `tabBatch` batch 
+			on batch_package.batch_no =batch.name 
+			where
+				sle.docstatus < 2
+				and sle.is_cancelled = 0
+				and sle.has_batch_no = 1
+				and actual_qty >0
+				and sle.posting_datetime >='{0}'
+				and sle.posting_datetime <='{1}'
+			group by
+				sle.vessel ,sle.item_code """.format(port_start_date_with_time,port_end_date_with_time),as_dict=1,debug=1)	
+		data=[]
+		vessel_done=[]
+		if len(query)>0:
+			for row in query:
+				current_vessel=row.vessel
+				current_vessel_qty=0
+				current_vessel_item=[]
+				if current_vessel not in vessel_done:
+					for inner_row in query:
+						if inner_row.vessel==current_vessel:
+							current_vessel_qty=current_vessel_qty+inner_row.actual_qty
+							current_vessel_item.append(inner_row.item_code)
+					vessel_done.append(current_vessel)	
+					data.append({'vessel':current_vessel,'qty':current_vessel_qty,'item':",".join(current_vessel_item)})
+		return data
+
+

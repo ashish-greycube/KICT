@@ -32,7 +32,7 @@ class StatementofFact(Document):
 			
 			#  Round Up [ First Line Ashore - ( All Line Cast Off - Vessel given readiness - vessel delay due to terminal account ) ]
 			if self.vessel_given_readiness__for_sailing:
-				diff_of_all_line_and_readiness = frappe.utils.time_diff_in_hours(all_line_cast_off,self.vessel_given_readiness__for_sailing)
+				diff_of_all_line_and_readiness = frappe.utils.time_diff_in_hours(self.all_line_cast_off,self.vessel_given_readiness__for_sailing)
 				
 				if diff_of_all_line_and_readiness > 4 :
 					vessel_delay_account_for_terminal = frappe.db.get_single_value('Coal Settings', 'vessel_delay_account_for_terminal')

@@ -12,26 +12,38 @@ frappe.ui.form.on("Coal Settings", {
 
 function create_purchase_invoice_for_royalty_charges(frm) {
     console.log("dialog")
+    let month_start = frappe.datetime.month_start()
+    let last_month_end = frappe.datetime.add_days(month_start,-1)
 
     let dialog = undefined
     const dialog_field = [
+        {
+            fieldtype: "Date",
+            fieldname: "posting_date_field",
+            label: __("Posting Date"),
+            default:last_month_end,
+            reqd: 1
+        },
         {
             fieldtype: "Link",
             fieldname: "supplier_name_field",
             label: __("Supplier Name"),
             options: "Supplier",
-            reqd: 1
+            reqd: 1,
+            onchange: function(){
+                let posting_date_field = dialog.get_field("posting_date_field").value
+                let posting_date = new Date(posting_date_field)
+                let posting_date_month = posting_date.toLocaleString('default', { month: 'long' });
+                let posting_date_year = posting_date.getFullYear();
+                let supplier_name = dialog.get_field("supplier_name_field").value
+                let supplier_invoice_number = supplier_name+"-"+posting_date_month+"-"+posting_date_year
+                dialog.set_value("supplier_invoice_no_field", supplier_invoice_number)
+            }
         },
         {
             fieldtype: "Data",
             fieldname: "supplier_invoice_no_field",
             label: __("Supplier Invoice no"),
-            reqd: 1
-        },
-        {
-            fieldtype: "Date",
-            fieldname: "posting_date_field",
-            label: __("Posting Date"),
             reqd: 1
         }
     ]

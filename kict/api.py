@@ -323,8 +323,8 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 			vessel_item_commodity = frappe.db.get_all("Vessel Details",
 													  parent_doctype = "Vessel",
 													  filters={"parent":vessel},
-													  fields=["item"])
-			vessel_item_list = ",".join((ele.item if ele.item!=None else '') for ele in vessel_item_commodity)
+													  fields=["coal_commodity"])
+			vessel_item_list = ",".join((ele.coal_commodity if ele.coal_commodity!=None else '') for ele in vessel_item_commodity)
 			# for item in vessel_item_commodity:
 			#     vessel_item_list.append(item.item)
 			print(vessel_item_list)
@@ -336,13 +336,33 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 			print(price_list_rate,"-->price_list_rate")
 
 			current_month_stay_hours = frappe.db.get_value("Statement of Fact",vessel,"current_month_stay_hours")
+			print(current_month_stay_hours,"--> ",vessel)
 			custom_qty = vessel_doc.grt * current_month_stay_hours
 			royalty_percentage = frappe.db.get_single_value("Coal Settings","royalty_percentage")
 			custom_amount = custom_qty * price_list_rate
 			calculated_rate = custom_amount * royalty_percentage
+			sof = frappe.db.get_all("Statement of Fact",
+						   filters={"name":vessel},
+						   fields=["vessel_stay_hours","current_month_stay_hours","next_month_stay_hours","first_line_ashore","all_line_cast_off"])
+			actual_berth_hours = None
+			print(sof)
+			if len(sof)>0:
+				first_line_month = (sof[0].first_line_ashore).month
+				all_line_month = (sof[0].all_line_cast_off).month
+				print(first_line_month,all_line_month)
+				if posting_date_month==first_line_month and posting_date_month==all_line_month:
+					actual_berth_hours = sof[0].vessel_stay_hours
+					print("all month same ------------")
+				elif posting_date_month == first_line_month:
+					actual_berth_hours = sof[0].current_month_stay_hours
+					print("first line same ==============")
+				elif posting_date_month == all_line_month:
+					actual_berth_hours = sof[0].next_month_stay_hours
+					print("all line same ************************")
+
 			purchase_invoice_item = target.append("items",
-			{"item_code":bh_invoice_item,"custom_vessel_name":vessel,"custom_commodity":"","custom_grt":vessel_doc.grt,
-			"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate})
+			{"item_code":bh_invoice_item,"custom_vessel_name":vessel,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,
+			"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {

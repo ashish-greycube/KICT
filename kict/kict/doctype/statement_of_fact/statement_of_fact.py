@@ -38,19 +38,30 @@ class StatementofFact(Document):
 					vessel_delay_account_for_terminal = frappe.db.get_single_value('Coal Settings', 'vessel_delay_account_for_terminal')
 					if vessel_delay_account_for_terminal:
 						vessel_delay_account_row=frappe.db.get_list('Vessel Delay Details',parent_doctype='Vessel Delay', 
-												  filters={'parent':self.vessel,'type_of_delays':vessel_delay_account_for_terminal},
-												  fields=['delay_end_time'])
+												  filters={'parent':self.vessel,'account_delays':vessel_delay_account_for_terminal},
+												  fields=['total_hours'])
+						print(vessel_delay_account_row)
 						if len(vessel_delay_account_row)>0:
-							vessel_delay_end_time=vessel_delay_account_row[0].delay_end_time
-							c_all_line_cast_off=vessel_delay_end_time
+							print("condition 1")
+							vessel_delay_time=vessel_delay_account_row[0].total_hours/3600
+							int_delay_hours, delay_dec_sec = divmod(vessel_delay_time, 1)
+							print(int_delay_hours,"-->int_delay_hours",delay_dec_sec,"-->delay_dec_sec")
+							if delay_dec_sec>0:
+								int_delay_hours = int_delay_hours + 1
+							print(vessel_delay_time,"vessel_delay_time")
+							print(self.all_line_cast_off)
+							c_all_line_cast_off=add_to_date(self.all_line_cast_off, hours=-int_delay_hours)
+							print(c_all_line_cast_off,"-------c_all_line_cast_off	")
 
 						else:
+							print("condition 2")
 							c_all_line_cast_off	= self.all_line_cast_off
 
 					
 					all_line_cast_off = add_to_date(self.vessel_given_readiness__for_sailing, hours=4)
 
 				else:
+					print("condition 3")
 					c_all_line_cast_off = self.all_line_cast_off
 			
 			
@@ -60,7 +71,7 @@ class StatementofFact(Document):
 			print('berth_stay_seconds',berth_stay_seconds)
 			berth_stay_hours_in_decimal=(berth_stay_seconds/3600)
 			int_hours, dec_sec = divmod(berth_stay_hours_in_decimal, 1)
-			print('dec_sec',dec_sec)
+			print('dec_sec',dec_sec,"int_hours",int_hours)
 			if dec_sec>0:
 				int_hours=int_hours+1
 			berth_stay_hours=int_hours

@@ -314,11 +314,11 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 			type_of_vessel = vessel_doc.costal_foreign_vessle
 			print(type_of_vessel,"---------")
 			if type_of_vessel == "Foreign":
-				bh_invoice_item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_foreign_vessel")
-				print(bh_invoice_item)
+				royalty_invoice_item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_foreign_vessel")
+				print(royalty_invoice_item)
 			if type_of_vessel == "Costal":
-				bh_invoice_item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
-				print(bh_invoice_item,"Costal")
+				royalty_invoice_item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
+				print(royalty_invoice_item,"Costal")
 			
 			vessel_item_commodity = frappe.db.get_all("Vessel Details",
 													  parent_doctype = "Vessel",
@@ -329,17 +329,19 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 			#     vessel_item_list.append(item.item)
 			print(vessel_item_list)
 			
-			item_args=frappe._dict({'item_code':bh_invoice_item,'buying_price_list':price_list,'company':vessel_doc.company,"doctype":"Purchase Invoice"})
-			item_defaults=get_basic_details(item_args,item=None)
-			args = frappe._dict({'price_list':'Standard Buying','qty':1,'uom':item_defaults.get('stock_uom')})
-			price_list_rate=get_price_list_rate_for(args,bh_invoice_item)
-			print(price_list_rate,"-->price_list_rate")
+			# item_args=frappe._dict({'item_code':royalty_invoice_item,'buying_price_list':price_list,'company':vessel_doc.company,"doctype":"Purchase Invoice"})
+			# item_defaults=get_basic_details(item_args,item=None)
+			# args = frappe._dict({'price_list':'Standard Buying','qty':1,'uom':item_defaults.get('stock_uom')})
+			# price_list_rate=get_price_list_rate_for(args,royalty_invoice_item)
+
+			bh_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list)
+			print(bh_rate,"-->price_list_rate")
 
 			current_month_stay_hours = frappe.db.get_value("Statement of Fact",vessel,"current_month_stay_hours")
 			print(current_month_stay_hours,"--> ",vessel)
 			custom_qty = vessel_doc.grt * current_month_stay_hours
 			royalty_percentage = frappe.db.get_single_value("Coal Settings","royalty_percentage")
-			custom_amount = custom_qty * price_list_rate
+			custom_amount = custom_qty * bh_rate
 			calculated_rate = custom_amount * royalty_percentage
 			sof = frappe.db.get_all("Statement of Fact",
 						   filters={"name":vessel},
@@ -360,9 +362,22 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 					actual_berth_hours = sof[0].next_month_stay_hours
 					print("all line same ************************")
 
-			purchase_invoice_item = target.append("items",
-			{"item_code":bh_invoice_item,"custom_vessel_name":vessel,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,
+			purchase_invoice_item_bh = target.append("items",
+			{"item_code":royalty_invoice_item,"custom_vessel_name":vessel,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,
 			"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours})
+
+			royalty_invoice_item = frappe.db.get_single_value("Coal Settings","ch_charges")
+			cargo_handling_data = get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date)
+			for row in cargo_handling_data:
+				if row.get("vessel") == vessel:
+					ch_price_list_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list)
+					qty = vessel_doc.total_tonnage_mt
+					ch_amount = qty * ch_price_list_rate
+					ch_rate = ch_amount * royalty_percentage
+
+					purchase_invoice_item_ch =target.append("items",
+					{"item_code":royalty_invoice_item,"custom_vessel_name":vessel,"custom_commodity":row.get("item"),"custom_grt":vessel_doc.total_tonnage_mt,
+					"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":vessel_doc.total_tonnage_mt,"rate":ch_rate,"custom_actual_berth_hours":actual_berth_hours})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {
@@ -438,4 +453,12 @@ def get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date):
 					data.append({'vessel':current_vessel,'qty':current_vessel_qty,'item':",".join(current_vessel_item)})
 		return data
 
+def get_item_price_list_rate(vessel,royalty_invoice_item,price_list):
+	vessel_doc = frappe.get_doc("Vessel",vessel)
+	item_args=frappe._dict({'item_code':royalty_invoice_item,'buying_price_list':price_list,'company':vessel_doc.company,"doctype":"Purchase Invoice"})
+	item_defaults=get_basic_details(item_args,item=None)
+	args = frappe._dict({'price_list':'Standard Buying','qty':1,'uom':item_defaults.get('stock_uom')})
+	price_list_rate=get_price_list_rate_for(args,royalty_invoice_item)
+	print(price_list_rate,"-->price_list_rate")
+	return price_list_rate
 

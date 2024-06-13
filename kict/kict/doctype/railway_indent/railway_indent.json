@@ -75,11 +75,11 @@
   },
   {
    "fieldname": "commodity",
-   "fieldtype": "Link",
+   "fieldtype": "Select",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Commodity",
-   "options": "Item"
+   "options": "\nCoking coal\nSteam Coal"
   },
   {
    "fieldname": "scheme_code",
@@ -102,7 +102,7 @@
    "link_fieldname": "fnr_no"
   }
  ],
- "modified": "2024-05-28 15:39:53.222222",
+ "modified": "2024-06-13 11:55:23.216020",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Indent",

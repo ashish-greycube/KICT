@@ -11,5 +11,16 @@ frappe.ui.form.on("Stock Entry", {
             }
 
         })
+
+        frm.set_query("custom_vessel", function (doc){
+            if (frm.doc.stock_entry_type=="Cargo Received") {
+                return {
+                    filters: {
+                        vessel_closure: 0
+                    },
+                };       
+            }
+
+        })
     }
 })

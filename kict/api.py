@@ -324,7 +324,14 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 													  parent_doctype = "Vessel",
 													  filters={"parent":vessel},
 													  fields=["coal_commodity"])
-			vessel_item_list = ",".join((ele.coal_commodity if ele.coal_commodity!=None else '') for ele in vessel_item_commodity)
+			distinct_item_commodity = []
+			if len(vessel_item_commodity)>0:
+				for row in vessel_item_commodity:
+					if row.coal_commodity not in distinct_item_commodity:
+						distinct_item_commodity.append(row.coal_commodity)
+
+			print(distinct_item_commodity,"distinct_item_commodity")
+			vessel_item_list = ",".join((ele if ele!=None else '') for ele in distinct_item_commodity)
 			# for item in vessel_item_commodity:
 			#     vessel_item_list.append(item.item)
 			print(vessel_item_list)
@@ -368,16 +375,17 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 
 			royalty_invoice_item = frappe.db.get_single_value("Coal Settings","ch_charges")
 			cargo_handling_data = get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date)
-			for row in cargo_handling_data:
-				if row.get("vessel") == vessel:
-					ch_price_list_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list)
-					qty = vessel_doc.total_tonnage_mt
-					ch_amount = qty * ch_price_list_rate
-					ch_rate = ch_amount * royalty_percentage
+			if len(cargo_handling_data)>0:
+				for row in cargo_handling_data:
+					if row.get("vessel") == vessel:
+						ch_price_list_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list)
+						qty = vessel_doc.total_tonnage_mt
+						ch_amount = qty * ch_price_list_rate
+						ch_rate = ch_amount * royalty_percentage
 
-					purchase_invoice_item_ch =target.append("items",
-					{"item_code":royalty_invoice_item,"custom_vessel_name":vessel,"custom_commodity":row.get("item"),"custom_grt":vessel_doc.total_tonnage_mt,
-					"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":vessel_doc.total_tonnage_mt,"rate":ch_rate,"custom_actual_berth_hours":actual_berth_hours})
+						purchase_invoice_item_ch =target.append("items",
+						{"item_code":royalty_invoice_item,"custom_vessel_name":vessel,"custom_commodity":row.get("item"),"custom_grt":vessel_doc.total_tonnage_mt,
+						"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":vessel_doc.total_tonnage_mt,"rate":ch_rate,"custom_actual_berth_hours":actual_berth_hours})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {

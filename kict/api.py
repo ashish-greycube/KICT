@@ -456,7 +456,9 @@ def get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date):
 					for inner_row in query:
 						if inner_row.vessel==current_vessel:
 							current_vessel_qty=current_vessel_qty+inner_row.actual_qty
-							current_vessel_item.append(inner_row.item_code)
+							current_vessel_comodity = frappe.db.get_value('Item', inner_row.item_code, 'custom_coal_commodity')
+							if  current_vessel_comodity not in current_vessel_item:
+								current_vessel_item.append(current_vessel_comodity)							
 					vessel_done.append(current_vessel)	
 					data.append({'vessel':current_vessel,'qty':current_vessel_qty,'item':",".join(current_vessel_item)})
 		return data

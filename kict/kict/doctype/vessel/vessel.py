@@ -347,11 +347,12 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 	from erpnext.stock.report.stock_balance.stock_balance import execute
 	
 	company_name=frappe.get_value(doctype,source_name,"company")
-	filter_for_lv =frappe._dict({"company":company_name,"from_date":today(),"to_date":today(),"item_code":cargo_item_field,"valuation_field_type":"Currency","vessel":[source_name]})
+	first_line_ashore = frappe.db.get_value('Statement of Fact', source_name, 'first_line_ashore')
+	filter_for_lv =frappe._dict({"company":company_name,"from_date":first_line_ashore,"to_date":today(),"item_code":cargo_item_field,"valuation_field_type":"Currency","vessel":[source_name]})
 	data = execute(filter_for_lv)
 
 	if len(data[1])==0:
-		frappe.throw(_("There is no stock entry for {0}. <br> You can not create tax invoice of storage charges.").format(cargo_item_field))
+		frappe.throw(_("There is no stock entry for {0}. <br>  invoice of storage charges.").format(cargo_item_field))
 	else:
 		total_bal_val = 0
 		for record in data[1]:

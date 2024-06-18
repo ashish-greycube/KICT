@@ -281,7 +281,7 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 		price_list= frappe.db.get_single_value("Coal Settings", "royalty_price_list")
 		currency= frappe.db.get_value("Supplier", {"name": supplier_name}, ["default_currency"])
 		if price_list:
-			# target.buying_price_list = price_list
+			target.buying_price_list = price_list
 			pass
 		if currency:
 			target.currency = currency

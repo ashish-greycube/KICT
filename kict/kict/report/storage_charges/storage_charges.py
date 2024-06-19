@@ -18,6 +18,13 @@ def get_columns(filters):
 			"options": "Item",
 			"width":"300"
 		},
+		# {
+		# 	"fieldname": "customer",
+		# 	"label":_("Customer"),
+		# 	"fieldtype": "Link",
+		# 	"options": "Customer",
+		# 	"width":"150"
+		# },
 		{
 			"fieldname": "batch_no",
 			"label":_("Batch"),
@@ -76,8 +83,9 @@ def get_columns(filters):
 	]
 
 def execute(filters=None):
-	storage_charges_16_25_days = get_item_price(frappe.db.get_single_value('Coal Settings', 'storage_charges_16_25_days')) or 0
-	storage_charges_beyond_26_days = get_item_price(frappe.db.get_single_value('Coal Settings', 'storage_charges_beyond_26_days')) or 0
+
+	
+	
 	terminal_holiday_list = frappe.db.get_single_value('Coal Settings', 'terminal_holiday_list')
 	holiday_list_days = [
 				getdate(d[0])
@@ -92,6 +100,31 @@ def execute(filters=None):
 	if not filters:
 		filters = {}
 	columns = get_columns(filters)
+	customer=filters.get("customer")
+	custom_storage_charge_based_on = frappe.db.get_value('Customer', customer, 'custom_storage_charge_based_on')
+	if custom_storage_charge_based_on=='Fixed Days':
+		frappe.msgprint("Report is not applicable for customer having storage charge based on Fixed Days")
+		return columns,[]
+	
+
+	if custom_storage_charge_based_on=='Actual Storage Days':
+		first_slot_storage_charges=0
+		second_slot_storage_charges=0		
+		
+		custom_free_storage_days=cint(frappe.db.get_value('Customer', customer, 'custom_free_storage_days'))
+		custom_is_holiday_applicable_for_free_storage_days=cint(frappe.db.get_value('Customer', customer, 'custom_is_holiday_applicable_for_free_storage_days'))
+		customer_doc=frappe.get_doc('Customer',customer)
+		if len(customer_doc.get("custom_chargeable_storage_charges_slots_details"))>0:
+			first_slot_from_days=cint(customer_doc.custom_chargeable_storage_charges_slots_details[0].from_days)
+			first_slot_to_days=cint(customer_doc.custom_chargeable_storage_charges_slots_details[0].to_days)
+			first_slot_item=customer_doc.custom_chargeable_storage_charges_slots_details[0].item
+			first_slot_storage_charges = get_item_price(first_slot_item) or 0
+			if len(customer_doc.get("custom_chargeable_storage_charges_slots_details"))>1:
+				second_slot_from_days=cint(customer_doc.custom_chargeable_storage_charges_slots_details[1].from_days)
+				# second_slot_to_days=cint(customer_doc.custom_chargeable_storage_charges_slots_details[1].to_days)
+				second_slot_item=customer_doc.custom_chargeable_storage_charges_slots_details[1].item
+				second_slot_storage_charges = get_item_price(second_slot_item) or 0				
+		
 	float_precision = cint(frappe.db.get_default("float_precision")) or 3
 	data=get_stock_ledger_entries_for_batch_bundle(filters)
 	# initialize variables
@@ -117,7 +150,7 @@ def execute(filters=None):
 					sc_row.item_code=d['item_code']
 					sc_row.batch_no=d['batch_no']
 					sc_row.datewise=next_date
-					if next_date in holiday_list_days and previous_batch_count <15:
+					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
 						sc_row.day_count='H'
 						previous_batch_count=previous_batch_count
 					else:
@@ -129,11 +162,11 @@ def execute(filters=None):
 					sc_row.bal_qty=previous_balance_qty
 					sc_row.rate=0
 					sc_row.amount=0
-					if sc_row.day_count!='H' and cint(sc_row.day_count)>=16 and cint(sc_row.day_count)<=25:
-						sc_row.rate=storage_charges_16_25_days
+					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
+						sc_row.rate=first_slot_storage_charges
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-					elif sc_row.day_count!='H' and cint(sc_row.day_count)>25:
-						sc_row.rate=storage_charges_beyond_26_days
+					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
+						sc_row.rate=second_slot_storage_charges
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
@@ -145,7 +178,7 @@ def execute(filters=None):
 				sc_row.item_code=d['item_code']
 				sc_row.batch_no=d['batch_no']
 				sc_row.datewise=d['show_date']
-				if d['show_date'] in holiday_list_days and previous_batch_count <15:
+				if custom_is_holiday_applicable_for_free_storage_days==1 and (d['show_date'] in holiday_list_days and previous_batch_count <custom_free_storage_days):
 					sc_row.day_count='H'
 					previous_batch_count=previous_batch_count
 				else:
@@ -157,11 +190,11 @@ def execute(filters=None):
 				sc_row.bal_qty=sc_row.opening_qty+flt(d.actual_qty, float_precision)
 				sc_row.rate=0
 				sc_row.amount=0
-				if sc_row.day_count!='H' and cint(sc_row.day_count)>=16 and cint(sc_row.day_count)<=25:
-					sc_row.rate=storage_charges_16_25_days
+				if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
+					sc_row.rate=first_slot_storage_charges
 					sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-				elif sc_row.day_count!='H' and cint(sc_row.day_count)>25:
-					sc_row.rate=storage_charges_beyond_26_days
+				elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
+					sc_row.rate=second_slot_storage_charges
 					sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 				sc_data.append(sc_row)
 				previous_batch_no=d['batch_no']
@@ -184,7 +217,7 @@ def execute(filters=None):
 					sc_row.item_code=previous_item_code
 					sc_row.batch_no=previous_batch_no				
 					sc_row.datewise=next_date
-					if next_date in holiday_list_days and previous_batch_count <15:
+					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
 						sc_row.day_count='H'
 						previous_batch_count=previous_batch_count
 					else:
@@ -196,11 +229,11 @@ def execute(filters=None):
 					sc_row.bal_qty=previous_balance_qty
 					sc_row.rate=0
 					sc_row.amount=0
-					if sc_row.day_count!='H' and cint(sc_row.day_count)>=16 and cint(sc_row.day_count)<=25:
-						sc_row.rate=storage_charges_16_25_days
+					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
+						sc_row.rate=first_slot_storage_charges
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-					elif sc_row.day_count!='H' and cint(sc_row.day_count)>25:
-						sc_row.rate=storage_charges_beyond_26_days
+					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
+						sc_row.rate=second_slot_storage_charges
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
@@ -212,7 +245,7 @@ def execute(filters=None):
 			sc_row.batch_no=d['batch_no']
 			sc_row.datewise=d['show_date']
 			sc_row.day_count=1
-			if d['show_date'] in holiday_list_days and previous_batch_count <=15:
+			if custom_is_holiday_applicable_for_free_storage_days==1 and (d['show_date'] in holiday_list_days and previous_batch_count <=custom_free_storage_days):
 				sc_row.day_count='H'
 				previous_batch_count=previous_batch_count
 			else:
@@ -225,11 +258,11 @@ def execute(filters=None):
 			sc_row.bal_qty=sc_row.opening_qty+flt(d.actual_qty, float_precision)
 			sc_row.rate=0
 			sc_row.amount=0
-			if sc_row.day_count!='H' and cint(sc_row.day_count)>=16 and cint(sc_row.day_count)<=25:
-				sc_row.rate=storage_charges_16_25_days
+			if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
+				sc_row.rate=first_slot_storage_charges
 				sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-			elif sc_row.day_count!='H' and cint(sc_row.day_count)>25:
-				sc_row.rate=storage_charges_beyond_26_days
+			elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
+				sc_row.rate=second_slot_storage_charges
 				sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 			sc_data.append(sc_row)
 			
@@ -256,7 +289,7 @@ def execute(filters=None):
 					sc_row.item_code=previous_item_code
 					sc_row.batch_no=previous_batch_no				
 					sc_row.datewise=next_date
-					if next_date in holiday_list_days and previous_batch_count <15:
+					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
 						sc_row.day_count='H'
 						previous_batch_count=previous_batch_count
 					else:
@@ -268,11 +301,11 @@ def execute(filters=None):
 					sc_row.bal_qty=previous_balance_qty
 					sc_row.rate=0
 					sc_row.amount=0
-					if sc_row.day_count!='H' and cint(sc_row.day_count)>=16 and cint(sc_row.day_count)<=25:
-						sc_row.rate=storage_charges_16_25_days
+					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
+						sc_row.rate=first_slot_storage_charges
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-					elif sc_row.day_count!='H' and cint(sc_row.day_count)>25:
-						sc_row.rate=storage_charges_beyond_26_days
+					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
+						sc_row.rate=second_slot_storage_charges
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
@@ -299,6 +332,7 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 				sle.vessel,
 				sle.item_code,
 				batch_package.batch_no,	
+				item.customer,
 				case 
 					when (sle.posting_time > '06:00:00'
 					and sle.posting_time <= '24:00:00')
@@ -314,6 +348,8 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 				sle.serial_and_batch_bundle = batch_package.parent
 			inner join `tabBatch` batch 
 			on batch_package.batch_no =batch.name 
+			inner join `tabItem` item
+			on item.name=sle.item_code
 			where
 				sle.docstatus < 2
 				and sle.is_cancelled = 0
@@ -322,6 +358,7 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 			 {0}
 			group by
 				sle.vessel,
+				item.customer,
 				sle.item_code,
 				batch_package.batch_no,
 				show_date
@@ -330,6 +367,7 @@ UNION
 				sle.vessel,
 				sle.item_code,
 				batch_package.batch_no,
+				item.customer,
 				sle.posting_date as show_date,
 				sum(batch_package.qty) as actual_qty,
 				manufacturing_date
@@ -340,6 +378,8 @@ UNION
 				sle.serial_and_batch_bundle = batch_package.parent
 			inner join `tabBatch` batch 
 			on batch_package.batch_no =batch.name 
+			inner join `tabItem` item
+			on item.name=sle.item_code			
 			where
 				sle.docstatus < 2
 				and sle.is_cancelled = 0
@@ -348,6 +388,7 @@ UNION
 			{0}
 			group by
 				sle.vessel,
+				item.customer,
 				sle.item_code,
 				batch_package.batch_no,
 				posting_date
@@ -363,6 +404,8 @@ def get_conditions(filters):
 	if filters.vessel:
 		conditions += " and sle.vessel = %(vessel)s"
 
+	if filters.customer:
+		conditions += " and item.customer = %(customer)s"
 
 	first_line_ashore=frappe.db.get_value('Statement of Fact', filters.vessel, 'first_line_ashore')
 	print(first_line_ashore,type(first_line_ashore))
@@ -400,3 +443,16 @@ def get_item_price(item_code):
 		'qty':1,
 		'uom':frappe.db.get_value('Item', item_code, 'stock_uom')})
 	return get_price_list_rate_for(args,item_code)		
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_unique_customer_list(doctype, txt, searchfield, start, page_len, filters):
+	vessel = filters.get("vessel")
+	return frappe.get_all(
+		"Vessel Details",
+		parent_doctype="Vessel",
+		filters={"parent": vessel},
+		fields=["distinct customer_name"],
+		as_list=1,
+	)

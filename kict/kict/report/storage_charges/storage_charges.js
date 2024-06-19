@@ -19,8 +19,26 @@ frappe.query_reports["Storage Charges"] = {
 					frappe.query_report.set_filter_value("from_date", values.first_line_ashore);
 				})
 
-}
+		 }
 		},
+		{
+			"fieldname": "customer",
+			"label":__("Customer"),
+			"fieldtype": "Link",
+			"options": "Customer",
+			"reqd":1,
+			get_query: function () {
+				let vessel = frappe.query_report.get_filter_value("vessel");
+				var filters = {
+					vessel: vessel,
+				};
+				return {
+					query: "kict.kict.report.storage_charges.storage_charges.get_unique_customer_list",
+					filters: filters,
+				};
+			},	
+
+		},		
 		{
 			"fieldname": "from_date",
 			"label":__("From Date"),

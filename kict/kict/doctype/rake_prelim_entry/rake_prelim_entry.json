@@ -30,6 +30,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Customer Name",
+   "link_filters": "[[\"Customer\",\"custom_customer_abbreviation\",\"is\",\"set\"]]",
    "options": "Customer"
   },
   {
@@ -129,7 +130,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-04 10:05:33.278209",
+ "modified": "2024-06-19 11:45:28.848166",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Prelim Entry",

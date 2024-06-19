@@ -344,12 +344,22 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 
 @frappe.whitelist()
 def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,total_tonnage_field=None,customer_po_no_field=None,doctype=None):
+	# storage_charges_type = frappe.db.get_value("Customer",customer_name_field,"custom_storage_charge_based_on")
+	# if storage_charges_type == "Fixed Days":
+	# 	storage_charges_item_fixed = frappe.db.get_single_value("Coal Settings","storage_charges_fixed")
+	# if storage_charges_type == "Actual Storage Days":
+	# 	storage_charges_item_16_25 = frappe.db.get_single_value("Coal Settings","storage_charges_16_25_days")
+	# 	storage_charges_item_beyond_26 = frappe.db.get_single_value("Coal Settings","storage_charges_beyond_26_days")
+
 	from erpnext.stock.report.stock_balance.stock_balance import execute
 	
 	company_name=frappe.get_value(doctype,source_name,"company")
 	first_line_ashore = frappe.db.get_value('Statement of Fact', source_name, 'first_line_ashore')
 	filter_for_lv =frappe._dict({"company":company_name,"from_date":first_line_ashore,"to_date":today(),"item_code":cargo_item_field,"valuation_field_type":"Currency","vessel":[source_name]})
 	data = execute(filter_for_lv)
+
+	calculated_amount_first_slot,calculated_amount_second_slot  = get_amount_for_actual_storage_type_based_on_storage_report(source_name,customer_name_field)
+	print(calculated_amount_first_slot,calculated_amount_second_slot,"--------------amount calculated")
 
 	if len(data[1])==0:
 		frappe.throw(_("There is no stock entry for {0}. <br>  invoice of storage charges.").format(cargo_item_field))
@@ -407,6 +417,38 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 			frappe.msgprint(_("Tax Invoice of Storage Charges for {0} is created.").format(cargo_item_field),alert=True)	
 			return doc.name
 		
+def get_amount_for_actual_storage_type_based_on_storage_report(vessel,customer_name):
+	customer_doc=frappe.get_doc('Customer',customer_name)
+	if len(customer_doc.get("custom_chargeable_storage_charges_slots_details"))>0:
+		first_slot_item=customer_doc.custom_chargeable_storage_charges_slots_details[0].item
+		first_slot_storage_charges = get_item_price(first_slot_item) or 0
+		print(first_slot_storage_charges,"---first")
+		if len(customer_doc.get("custom_chargeable_storage_charges_slots_details"))>1:
+			second_slot_item=customer_doc.custom_chargeable_storage_charges_slots_details[1].item
+			second_slot_storage_charges = get_item_price(second_slot_item) or 0
+			print(second_slot_storage_charges,"---second")
+	
+	from kict.kict.report.storage_charges.storage_charges import execute
+	report_filters = frappe._dict({"vessel":vessel,"customer":customer_name})
+	storage_charges_report_data = execute(report_filters)
+
+	first_slot_amount, second_slot_amount = 0,0
+	for item in storage_charges_report_data[1]:
+		if item.rate == first_slot_storage_charges:
+			first_slot_amount = first_slot_amount + item.amount
+		if item.rate == second_slot_storage_charges:
+			second_slot_amount = second_slot_amount + item.amount
+	
+	return first_slot_amount, second_slot_amount
+
+
+def get_item_price(item_code):
+	from erpnext.stock.get_item_details import get_price_list_rate_for
+	args=frappe._dict({
+		'price_list':"Standard Selling",
+		'qty':1,
+		'uom':frappe.db.get_value('Item', item_code, 'stock_uom')})
+	return get_price_list_rate_for(args,item_code)
 
 @frappe.whitelist()
 def get_cargo_handling_rate_for_customer_based_on_billing_type(docname,customer,billing_type)	:

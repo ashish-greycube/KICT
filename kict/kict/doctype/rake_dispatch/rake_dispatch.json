@@ -99,7 +99,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Commodity",
-   "options": "Item"
+   "options": "Coal Commodity"
   },
   {
    "fetch_from": "railway_indent.scheme_code",
@@ -259,7 +259,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-06-06 15:27:47.082415",
+ "modified": "2024-06-19 18:37:22.974232",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

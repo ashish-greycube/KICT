@@ -326,12 +326,12 @@
   {
    "fieldname": "vessel_converted__to_coastal_run",
    "fieldtype": "Datetime",
-   "label": "Vessel Converted  to Coastal Run"
+   "label": "Vessel Converted to Coastal Run"
   },
   {
    "fieldname": "vessel_given_readiness__for_sailing",
    "fieldtype": "Datetime",
-   "label": "Vessel Given Readiness  for Sailing "
+   "label": "Vessel Given Readiness for Sailing "
   },
   {
    "fieldname": "pilot_on_board_for_sailing_shifting",
@@ -380,7 +380,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-06-07 12:45:46.150470",
+ "modified": "2024-06-20 07:59:33.767922",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

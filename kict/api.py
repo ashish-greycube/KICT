@@ -170,8 +170,14 @@ def get_name_from_hash(port_date,item_code):
 	current_date=getdate(port_date).strftime("%d.%m.%y")
 	print('current_date',current_date)
 	coal_commodity = frappe.db.get_value("Item",item_code,"custom_coal_commodity")
+	if not coal_commodity:
+		frappe.throw(_("Item {0} doesnot have coal commodity. It is required to generate batch no.").format(frappe.bold(item_code)))
 	commodity_grade = frappe.db.get_value("Item",item_code,"custom_commodity_grade")
+	if not commodity_grade:
+		frappe.throw(_("Item {0} doesnot have commodity grade. It is required to generate batch no.").format(frappe.bold(item_code)))
 	customer_abbreviation = frappe.db.get_value("Item",item_code,"custom_customer_abbreviation")
+	if not customer_abbreviation:
+		frappe.throw(_("Item {0} doesnot have customer abbreviation. It is required to generate batch no.").format(frappe.bold(item_code)))	
 	"""
 	Get a name for a Batch by generating a unique hash.
 	:return: The hash that was generated.

@@ -344,12 +344,6 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 
 @frappe.whitelist()
 def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,total_tonnage_field=None,customer_po_no_field=None,doctype=None):
-	# storage_charges_type = frappe.db.get_value("Customer",customer_name_field,"custom_storage_charge_based_on")
-	# if storage_charges_type == "Fixed Days":
-	# 	storage_charges_item_fixed = frappe.db.get_single_value("Coal Settings","storage_charges_fixed")
-	# if storage_charges_type == "Actual Storage Days":
-	# 	storage_charges_item_16_25 = frappe.db.get_single_value("Coal Settings","storage_charges_16_25_days")
-	# 	storage_charges_item_beyond_26 = frappe.db.get_single_value("Coal Settings","storage_charges_beyond_26_days")
 
 	from erpnext.stock.report.stock_balance.stock_balance import execute
 	
@@ -389,11 +383,23 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 				target.custom_quantity_in_mt = total_tonnage_field		
 				target.vessel=source_name
 				target.po_no = customer_po_no_field
-				item_code = frappe.db.get_single_value("Coal Settings","storage_charges_fixed")
+				# item_code = frappe.db.get_single_value("Coal Settings","storage_charges_fixed")
+
+				storage_charges_type = frappe.db.get_value("Customer",customer_name_field,"custom_storage_charge_based_on")
+				if storage_charges_type == "Fixed Days":
+					storage_charges_item_fixed = frappe.db.get_single_value("Coal Settings","storage_charges_fixed")
+					item_tonnage = frappe.db.get_value("Vessel Details",{"parent":source_name,"item":cargo_item_field},["tonnage_mt"])
+					print(item_tonnage,total_tonnage_field)
+					handling_qty = get_qty_for_handling_loss_and_audit_shortage(source_name,cargo_item_field)
+					storage_charges_qty = item_tonnage - handling_qty
+					item_row=target.append("items",{"item_code":storage_charges_item_fixed,"qty":storage_charges_qty,"description":cargo_item_field})
+				if storage_charges_type == "Actual Storage Days":
+					storage_charges_item_16_25 = frappe.db.get_single_value("Coal Settings","storage_charges_16_25_days")
+					storage_charges_item_beyond_26 = frappe.db.get_single_value("Coal Settings","storage_charges_beyond_26_days")
 
 				# nothing on vessel type
 
-				item_row=target.append("items",{"item_code":item_code,"qty":2*flt(total_tonnage_field),"description":cargo_item_field})
+				# item_row=target.append("items",{"item_code":item_code,"qty":2*flt(total_tonnage_field),"description":cargo_item_field})
 			
 			doc = get_mapped_doc('Vessel', source_name, {
 				'Vessel': {
@@ -633,6 +639,6 @@ def get_qty_for_handling_loss_and_audit_shortage(vessel,item_code):
 							sle.vessel,
 							sle.item_code				
 		""".format(vessel,item_code,stock_entry_type_for_handling_loss,stock_entry_type_for_audit_shortage),as_dict=1,debug=1
-	)	
+	)
 	if len(qty_entries)>0:
 		return qty_entries[0].actual_qty

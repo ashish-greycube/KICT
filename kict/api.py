@@ -46,13 +46,15 @@ def change_status_for_is_billed_in_on_cancel_of_si(self,method):
 
 def copy_vessel_to_stock_entry_item(self,method):
 	vessel=self.custom_vessel
-	for item in self.get("items"):
-		item.to_vessel=vessel
+	if vessel:
+		for item in self.get("items"):
+			item.to_vessel=vessel
 
 def copy_source_vessel_to_stock_entry_item(self,method):
 	vessel=self.custom_vessel
-	for item in self.get("items"):
-		item.vessel=vessel
+	if vessel:
+		for item in self.get("items"):
+			item.vessel=vessel
 
 def set_batch_no_and_warehouse_for_handling_loss_audit_sortage(self,method):
 	if self.stock_entry_type=="Audit Shortage" or self.stock_entry_type=="Handling Loss":

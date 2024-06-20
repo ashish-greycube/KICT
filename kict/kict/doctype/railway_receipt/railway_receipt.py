@@ -80,7 +80,7 @@ def create_delivery_note_from_railway_receipt(docname):
 			dn.custom_transports_mode = 'By Rake'
 			dn.custom_rcn = doc.name
 			dn.custom_railway_receipt_detail = row.name
-
+			dn.custom_rake_no = frappe.db.get_value("Rake Dispatch",docname,"rake_no")
 			price_list, currency = frappe.db.get_value("Customer", {"name": row.customer_name}, ["default_price_list", "default_currency"])
 			if price_list:
 				dn.selling_price_list = price_list

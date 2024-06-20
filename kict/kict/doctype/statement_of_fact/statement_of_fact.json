@@ -66,7 +66,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Vessel",
+   "label": "VCN No",
    "options": "Vessel",
    "unique": 1
   },
@@ -380,7 +380,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-06-20 09:41:19.985773",
+ "modified": "2024-06-20 12:31:02.763054",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

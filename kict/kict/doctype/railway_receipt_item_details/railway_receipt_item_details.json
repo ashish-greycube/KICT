@@ -99,6 +99,7 @@
   {
    "fieldname": "plot",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Plot",
    "options": "Warehouse"
   }
@@ -106,7 +107,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-19 11:46:11.219163",
+ "modified": "2024-06-20 13:06:36.746119",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt Item Details",

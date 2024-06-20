@@ -240,6 +240,7 @@
   {
    "fieldname": "plotwise_silo_qty_detail",
    "fieldtype": "Table",
+   "hidden": 1,
    "label": "Plotwise SILO Qty Detail",
    "options": "Plotwise SILO Qty Detail"
   }
@@ -259,7 +260,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-06-19 18:37:22.974232",
+ "modified": "2024-06-20 13:16:58.214897",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

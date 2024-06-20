@@ -24,7 +24,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Vessel",
+   "label": "VCN No",
    "options": "Vessel",
    "unique": 1
   },
@@ -90,7 +90,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-05-28 15:39:58.820869",
+ "modified": "2024-06-20 12:37:14.995656",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hourly Operations",

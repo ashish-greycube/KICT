@@ -11,14 +11,18 @@
   "ch_charges",
   "royalty_price_list",
   "royalty_percentage",
-  "default_uom_for_cargo",
+  "cargo_received",
+  "handling_loss",
+  "audit_shortage",
   "column_break_fars",
+  "default_uom_for_cargo",
   "storage_charges_fixed",
   "storage_charges_16_25_days",
   "storage_charges_beyond_26_days",
   "customer_group_for_agent",
   "vessel_delay_account_for_terminal",
-  "terminal_holiday_list"
+  "terminal_holiday_list",
+  "customer_group_for_cargo_customer"
  ],
  "fields": [
   {
@@ -128,12 +132,40 @@
    "fieldname": "royalty_percentage",
    "fieldtype": "Percent",
    "label": "Royalty Percentage"
+  },
+  {
+   "fieldname": "customer_group_for_cargo_customer",
+   "fieldtype": "Link",
+   "label": "Customer Group for Cargo Customer",
+   "options": "Customer Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cargo_received",
+   "fieldtype": "Link",
+   "label": "Cargo Received",
+   "options": "Stock Entry Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "handling_loss",
+   "fieldtype": "Link",
+   "label": "Handling Loss",
+   "options": "Stock Entry Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "audit_shortage",
+   "fieldtype": "Link",
+   "label": "Audit Shortage",
+   "options": "Stock Entry Type",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-06-07 12:13:16.339050",
+ "modified": "2024-06-20 13:35:22.691907",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

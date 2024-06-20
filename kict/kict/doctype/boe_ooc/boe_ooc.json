@@ -22,7 +22,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Vessel",
+   "label": "VCN No",
    "options": "Vessel",
    "unique": 1
   },
@@ -83,7 +83,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-06-19 11:49:03.710062",
+ "modified": "2024-06-20 12:33:32.775826",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "BOE OOC",

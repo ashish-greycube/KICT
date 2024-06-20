@@ -140,6 +140,7 @@ def execute(filters=None):
 	for d in data:
 		# case 1 : repeat batch
 		if previous_batch_no==d['batch_no']:
+			print(d['batch_no'],d['show_date']==previous_show_date,d['show_date'],previous_show_date,d.actual_qty)
 			# case 1A : repeat batch but date is not the next data, so create dummy repeat data
 			if d['show_date']!=previous_show_date:
 				# dummy data till matching batch date of incoming
@@ -171,9 +172,12 @@ def execute(filters=None):
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
 					previous_show_date=next_date
+				# case when entry is side by side date, i.e. 1st and 2nd
+				previous_show_date=next_date
 				
 			# case 1B : repeat batch and incoming date is matching, so real data 
 			if d['show_date']==previous_show_date:
+				print(d['show_date']==previous_show_date,d['show_date'],previous_show_date,d.actual_qty)
 				sc_row= frappe._dict({})
 				sc_row.item_code=d['item_code']
 				sc_row.batch_no=d['batch_no']

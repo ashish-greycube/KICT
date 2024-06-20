@@ -335,7 +335,7 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 				item.customer,
 				case 
 					when (sle.posting_time > '06:00:00'
-					and sle.posting_time <= '24:00:00')
+					and sle.posting_time <= '23:59:59')
 						then  sle.posting_date
 					else date_add(sle.posting_date, INTERVAL -1 DAY)  
 				end as show_date,				

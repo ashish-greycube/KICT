@@ -4,6 +4,7 @@ from frappe.utils import getdate,flt,cstr,add_days,get_first_day,get_last_day
 from kict.kict.doctype.railway_receipt.railway_receipt import get_available_batches
 from erpnext.stock.get_item_details import get_item_details,get_basic_details,get_price_list_rate_for
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils import add_days,get_time
 
 def set_cargo_handling_option_name_and_is_periodic(self,method):
 	for row in self.get("custom_cargo_handling_charges_slots_details"):
@@ -262,11 +263,11 @@ def remove_calculation_for_percent_billing_on_cancel_of_pi(self,method):
 		vessel_doc.save(ignore_permissions = True)
 
 def get_port_date(date,time):
-    from frappe.utils import add_days
-    if time <= '06:00:00':
-        return add_days(date,-1)
-    elif time > '06:00:00' and time <= '24:00:00':
-        return date
+	time=get_time(time)
+	if time <= get_time('06:00:00'):
+		return add_days(date,-1)
+	elif time > get_time('06:00:00') and time <= get_time('23:59:59'):
+		return date
 	
 
 @frappe.whitelist()

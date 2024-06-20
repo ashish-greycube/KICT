@@ -604,3 +604,35 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 	print(table_html,'table_html')
 	return qty_entries,table_html,participating_rr_details
 	
+
+def get_qty_for_handling_loss_and_audit_shortage(vessel,item_code):
+	stock_entry_type_for_handling_loss=frappe.db.get_single_value('Coal Settings', 'handling_loss')
+	stock_entry_type_for_audit_shortage=frappe.db.get_single_value('Coal Settings',  'audit_shortage')
+	qty_entries = frappe.db.sql(
+		"""select 
+				ABS(sum(batch_package.qty)) as actual_qty
+			from
+							`tabStock Ledger Entry` sle
+			inner join `tabSerial and Batch Entry` batch_package
+						on
+							sle.serial_and_batch_bundle = batch_package.parent
+			inner join `tabBatch` batch 
+						on
+				batch_package.batch_no = batch.name
+			inner join `tabStock Entry` tse 
+						on
+				tse.name = sle.voucher_no
+			where
+							sle.docstatus < 2
+				and sle.is_cancelled = 0
+				and sle.has_batch_no = 1
+				and sle.vessel = '{0}'
+				and sle.item_code = '{1}'
+				and tse.stock_entry_type in ('{2}', '{3}')
+			group by
+							sle.vessel,
+							sle.item_code				
+		""".format(vessel,item_code,stock_entry_type_for_handling_loss,stock_entry_type_for_audit_shortage),as_dict=1,debug=1
+	)	
+	if len(qty_entries)>0:
+		return qty_entries[0].actual_qty

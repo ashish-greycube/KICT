@@ -57,7 +57,9 @@ def copy_source_vessel_to_stock_entry_item(self,method):
 			item.vessel=vessel
 
 def set_batch_no_and_warehouse_for_handling_loss_audit_sortage(self,method):
-	if self.stock_entry_type=="Audit Shortage" or self.stock_entry_type=="Handling Loss":
+	stock_entry_type_for_audit_shortage = frappe.db.get_single_value("Coal Settings","audit_shortage")
+	stock_entry_type_for_handling_loss = frappe.db.get_single_value("Coal Settings","handling_loss")
+	if self.stock_entry_type==stock_entry_type_for_audit_shortage or self.stock_entry_type==stock_entry_type_for_handling_loss:
 		copy_source_vessel_to_stock_entry_item(self,method)
 		item_table_with_batches=[]
 		item_rows_to_be_removed=[]
@@ -500,4 +502,8 @@ def validate_vessel_is_present_in_items(self,method):
 				if (not row.vessel) or (row.vessel==''):
 					frappe.throw(_("Source vessel is missing for row {0}.".format(frappe.bold(row.idx))))				
 
-			
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def set_query_for_item_based_on_stock_entry_type(doctype, txt, searchfield, start, page_len, filters):
+	stock_entry_types_in_coal_setting = frappe.db.get_value("Coal Settings","Coal Settings",["cargo_received","handling_loss","audit_shortage"])
+	

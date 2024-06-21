@@ -30,7 +30,8 @@ app_license = "unlicense"
 # include js in doctype views
 doctype_js = {"Item" : "public/js/item.js",
               "Stock Entry" : "public/js/stock_entry.js",
-              "Purchase Invoice":"public/js/purchase_invoice.js"
+              "Purchase Invoice":"public/js/purchase_invoice.js",
+              "Customer":"public/js/customer.js"
               }
 
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}

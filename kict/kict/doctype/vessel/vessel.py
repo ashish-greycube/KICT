@@ -5,8 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe import _
-from frappe.utils import flt,cstr
-from frappe.utils import today
+from frappe.utils import flt,cstr,today
 from erpnext.stock.doctype.item.item import get_item_defaults
 from erpnext.stock.get_item_details import get_price_list_rate_for
 
@@ -352,9 +351,6 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 	filter_for_lv =frappe._dict({"company":company_name,"from_date":first_line_ashore,"to_date":today(),"item_code":cargo_item_field,"valuation_field_type":"Currency","vessel":[source_name]})
 	data = execute(filter_for_lv)
 
-	calculated_amount_first_slot,calculated_amount_second_slot  = get_amount_for_actual_storage_type_based_on_storage_report(source_name,customer_name_field)
-	print(calculated_amount_first_slot,calculated_amount_second_slot,"--------------amount calculated")
-
 	if len(data[1])==0:
 		frappe.throw(_("There is no stock entry for {0}. <br>  invoice of storage charges.").format(cargo_item_field))
 	else:
@@ -388,18 +384,23 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 				storage_charges_type = frappe.db.get_value("Customer",customer_name_field,"custom_storage_charge_based_on")
 				if storage_charges_type == "Fixed Days":
 					storage_charges_item_fixed = frappe.db.get_single_value("Coal Settings","storage_charges_fixed")
-					item_tonnage = frappe.db.get_value("Vessel Details",{"parent":source_name,"item":cargo_item_field},["tonnage_mt"])
-					print(item_tonnage,total_tonnage_field)
 					handling_qty = get_qty_for_handling_loss_and_audit_shortage(source_name,cargo_item_field)
-					storage_charges_qty = item_tonnage - handling_qty
+					print(handling_qty)
+					custom_no_of_days = frappe.db.get_value("Customer",customer_name_field,"custom_no_of_days")
+					print(custom_no_of_days)
+					storage_charges_qty = (flt(total_tonnage_field) - handling_qty) * custom_no_of_days
 					item_row=target.append("items",{"item_code":storage_charges_item_fixed,"qty":storage_charges_qty,"description":cargo_item_field})
 				if storage_charges_type == "Actual Storage Days":
 					storage_charges_item_16_25 = frappe.db.get_single_value("Coal Settings","storage_charges_16_25_days")
 					storage_charges_item_beyond_26 = frappe.db.get_single_value("Coal Settings","storage_charges_beyond_26_days")
-
-				# nothing on vessel type
-
-				# item_row=target.append("items",{"item_code":item_code,"qty":2*flt(total_tonnage_field),"description":cargo_item_field})
+					charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26 = get_rate_and_qty_for_actual_storage_type_based_on_storage_report(source_name,customer_name_field)
+					print(charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26,"charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26")
+					if qty_for_16_25 > 0:
+						item_row=target.append("items",{"item_code":storage_charges_item_16_25,"qty":qty_for_16_25,"rate":charges_for_16_25,"description":cargo_item_field})
+					else:
+						frappe.throw(_("You cannot create Tax Invoice for Storage Charges as there are no paid days."))
+					if qty_for_beyond_26 > 0:
+						item_row=target.append("items",{"item_code":storage_charges_item_beyond_26,"qty":qty_for_beyond_26,"rate":charges_for_beyond_26,"description":cargo_item_field})
 			
 			doc = get_mapped_doc('Vessel', source_name, {
 				'Vessel': {
@@ -423,7 +424,7 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 			frappe.msgprint(_("Tax Invoice of Storage Charges for {0} is created.").format(cargo_item_field),alert=True)	
 			return doc.name
 		
-def get_amount_for_actual_storage_type_based_on_storage_report(vessel,customer_name):
+def get_rate_and_qty_for_actual_storage_type_based_on_storage_report(vessel,customer_name):
 	customer_doc=frappe.get_doc('Customer',customer_name)
 	if len(customer_doc.get("custom_chargeable_storage_charges_slots_details"))>0:
 		first_slot_item=customer_doc.custom_chargeable_storage_charges_slots_details[0].item
@@ -438,14 +439,14 @@ def get_amount_for_actual_storage_type_based_on_storage_report(vessel,customer_n
 	report_filters = frappe._dict({"vessel":vessel,"customer":customer_name})
 	storage_charges_report_data = execute(report_filters)
 
-	first_slot_amount, second_slot_amount = 0,0
+	first_slot_closing_balance, second_slot_closing_balance = 0,0
 	for item in storage_charges_report_data[1]:
 		if item.rate == first_slot_storage_charges:
-			first_slot_amount = first_slot_amount + item.amount
+			first_slot_closing_balance = first_slot_closing_balance + item.bal_qty
 		if item.rate == second_slot_storage_charges:
-			second_slot_amount = second_slot_amount + item.amount
+			second_slot_closing_balance = second_slot_closing_balance + item.bal_qty
 	
-	return first_slot_amount, second_slot_amount
+	return first_slot_storage_charges, second_slot_storage_charges, first_slot_closing_balance, second_slot_closing_balance
 
 
 def get_item_price(item_code):

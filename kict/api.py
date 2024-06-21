@@ -481,3 +481,23 @@ def get_item_price_list_rate(vessel,royalty_invoice_item,price_list):
 	print(price_list_rate,"-->price_list_rate")
 	return price_list_rate
 
+def validate_vessel_is_present_in_items(self,method):
+	if self.doctype=='Stock Entry' and self.stock_entry_type in ['Handling Loss','Audit Shortage','Cargo Received']:
+		if self.stock_entry_type=='Cargo Received':
+			for row in self.items:
+				if (not row.to_vessel) or (row.to_vessel==''):
+					frappe.throw(_("Target vessel is missing for row {0}.".format(frappe.bold(row.idx))))
+		if self.stock_entry_type in ['Handling Loss','Audit Shortage']:
+			for row in self.items:
+				if (not row.vessel) or (row.vessel==''):
+					frappe.throw(_("Source vessel is missing for row {0}.".format(frappe.bold(row.idx))))
+	
+
+	if self.doctype=='Delivery Note':
+		for row in self.items:
+			is_customer_provided_item = frappe.db.get_value('Item', row.item_code, 'is_customer_provided_item')
+			if is_customer_provided_item==1:
+				if (not row.vessel) or (row.vessel==''):
+					frappe.throw(_("Source vessel is missing for row {0}.".format(frappe.bold(row.idx))))				
+
+			

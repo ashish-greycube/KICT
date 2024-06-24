@@ -392,7 +392,7 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 					print(handling_qty)
 					custom_no_of_days = frappe.db.get_value("Customer",customer_name_field,"custom_no_of_days")
 					print(custom_no_of_days)
-					storage_charges_qty = (flt(total_tonnage_field) - handling_qty) * custom_no_of_days
+					storage_charges_qty = flt(total_tonnage_field) * custom_no_of_days
 					item_row=target.append("items",{"item_code":storage_charges_item_fixed,"qty":storage_charges_qty,"description":cargo_item_field})
 				if storage_charges_type == "Actual Storage Days":
 					customer_doc=frappe.get_doc('Customer',customer_name_field)

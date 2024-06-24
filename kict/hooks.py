@@ -63,6 +63,12 @@ doctype_js = {"Item" : "public/js/item.js",
 # Jinja
 # ----------
 
+jinja = {
+    "methods": [
+        "kict.kict.doctype.vessel.vessel.get_item_price",
+    ]
+}
+
 # add methods and filters to jinja environment
 # jinja = {
 # 	"methods": "kict.utils.jinja_methods",

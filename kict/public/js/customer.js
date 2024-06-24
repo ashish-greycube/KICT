@@ -6,26 +6,21 @@ frappe.ui.form.on('Customer', {
         set_required_for_custom_storage_charge_based_on_table(frm) 
     },
     setup(frm) {
-        frappe.db.get_value('Coal Settings', 'Coal Settings', ['storage_charges_16_25_days', 'storage_charges_beyond_26_days'])
-        .then(r => {
-            let values = r.message;
-            let item_require = []
-            if (values){
-                item_require.push(values.storage_charges_16_25_days)
-                item_require.push(values.storage_charges_beyond_26_days)
-            }
-            console.log(item_require)
+        frappe.db.get_single_value('Coal Settings', 'storage_charges_item_group')
+        .then(storage_charges_item_group => {
+            console.log('storage_charges_item_group',storage_charges_item_group)
             frm.set_query("item", "custom_chargeable_storage_charges_slots_details", function (doc, cdt, cdn) {
                 return {
                     filters: {
                         // item_code: item_code,
-                        name: ["in", item_require],
+                        item_group: ["=", storage_charges_item_group],
                     },
                 };
 
             })
         })
-        frm.set_query("item", "custom_chargeable_storage_charges_slots_details", function (doc, cdt, cdn) {
+
+       frm.set_query("item", "custom_chargeable_storage_charges_slots_details", function (doc, cdt, cdn) {
             let row = locals[cdt][cdn];
             return {
                 query: "kict.api.get_item_from_coal_settings",

@@ -223,6 +223,16 @@ def calculate_customer_specific_total_tonnage(self,method):
 			customer_specific_total_tonnage = customer_specific_total_tonnage + item.tonnage_mt
 	return customer_specific_total_tonnage
 
+
+def validate_items_for_cargoreceived_handlingloss_auditsortage(self,method):
+	cargo_received,handling_loss,audit_shortage = frappe.db.get_value("Coal Settings","Coal Settings",["cargo_received","handling_loss","audit_shortage"])
+	stock_entry_type = self.get("stock_entry_type")
+	if stock_entry_type ==cargo_received or stock_entry_type ==handling_loss or stock_entry_type ==audit_shortage:	
+		for item in self.items:
+			is_customer_provided_item = frappe.db.get_value('Item', item.item_code, 'is_customer_provided_item')
+			if is_customer_provided_item == 0:
+				frappe.throw(_("Row {0} has item {1}. It should be customer provided item as stock entry type is {2}.").format(frappe.bold(item.idx),item.item_code,stock_entry_type))			
+
 def validate_vessel_is_not_closed_in_stock_entry(self,method):
 	vessel_name = self.custom_vessel
 	vessel_closure_value = frappe.db.get_value("Vessel",vessel_name,"vessel_closure")
@@ -484,12 +494,14 @@ def get_item_price_list_rate(vessel,royalty_invoice_item,price_list):
 	return price_list_rate
 
 def validate_vessel_is_present_in_items(self,method):
-	if self.doctype=='Stock Entry' and self.stock_entry_type in ['Handling Loss','Audit Shortage','Cargo Received']:
-		if self.stock_entry_type=='Cargo Received':
+	cargo_received,handling_loss,audit_shortage = frappe.db.get_value("Coal Settings","Coal Settings",["cargo_received","handling_loss","audit_shortage"])
+	stock_entry_type = self.get("stock_entry_type")
+	if self.doctype=='Stock Entry' and stock_entry_type ==cargo_received or stock_entry_type ==handling_loss or stock_entry_type ==audit_shortage:
+		if self.stock_entry_type==cargo_received:
 			for row in self.items:
 				if (not row.to_vessel) or (row.to_vessel==''):
 					frappe.throw(_("Target vessel is missing for row {0}.".format(frappe.bold(row.idx))))
-		if self.stock_entry_type in ['Handling Loss','Audit Shortage']:
+		if stock_entry_type ==handling_loss or stock_entry_type ==audit_shortage:
 			for row in self.items:
 				if (not row.vessel) or (row.vessel==''):
 					frappe.throw(_("Source vessel is missing for row {0}.".format(frappe.bold(row.idx))))
@@ -505,5 +517,15 @@ def validate_vessel_is_present_in_items(self,method):
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def set_query_for_item_based_on_stock_entry_type(doctype, txt, searchfield, start, page_len, filters):
-	stock_entry_types_in_coal_setting = frappe.db.get_value("Coal Settings","Coal Settings",["cargo_received","handling_loss","audit_shortage"])
-	
+	cargo_received,handling_loss,audit_shortage = frappe.db.get_value("Coal Settings","Coal Settings",["cargo_received","handling_loss","audit_shortage"])
+	stock_entry_type = filters.get("stock_entry_type")
+	print(stock_entry_type,cargo_received,handling_loss,audit_shortage)
+	if stock_entry_type ==cargo_received or stock_entry_type ==handling_loss or stock_entry_type ==audit_shortage:
+		return frappe.get_all(
+			"Item",
+			filters={"is_stock_item": 1,"is_customer_provided_item": 1},
+			fields=["item_code"],
+			as_list=1,
+		)	
+	else:
+		return 

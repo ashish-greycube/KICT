@@ -146,6 +146,7 @@ doc_events = {
 	},
     "Stock Entry": {
         "before_validate":["kict.api.validate_vessel_is_not_closed_in_stock_entry",
+                           "kict.api.validate_items_for_cargoreceived_handlingloss_auditsortage",
                             "kict.api.generate_and_set_batch_no",
                             "kict.api.set_batch_no_and_warehouse_for_handling_loss_audit_sortage"
                            ],

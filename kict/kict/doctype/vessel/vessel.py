@@ -306,12 +306,15 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		target.vessel=source_name
 		target.po_no = customer_po_no_field
 		item_code = frappe.db.get_single_value("Coal Settings","ch_charges")
-
+		vessel_first_line_ashore = frappe.db.get_value("Statement of Fact",source_name,"first_line_ashore")
+		vessel_all_line_cast_off = frappe.db.get_value("Statement of Fact",source_name,"all_line_cast_off")
+		vessel_total_stay_hours = frappe.db.get_value("Statement of Fact",source_name,"vessel_stay_hours")
+		description = cargo_item_field + "<br> First Line Ashore : " + vessel_first_line_ashore + "<br> All Line Cast Off : " + vessel_all_line_cast_off + "<br> Total Hours : " +vessel_total_stay_hours
 		# nothing on vessel type
 		if is_periodic_or_dispatch_field=="Non-Periodic":
-			item_row=target.append("items",{"item_code":item_code,"qty":flt(non_periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
+			item_row=target.append("items",{"item_code":item_code,"qty":flt(non_periodic_cargo_qty),"description":description,"rate":rate_field})
 		else:
-			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
+			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":description,"rate":rate_field})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {
@@ -391,8 +394,10 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 					storage_charges_qty = (flt(total_tonnage_field) - handling_qty) * custom_no_of_days
 					item_row=target.append("items",{"item_code":storage_charges_item_fixed,"qty":storage_charges_qty,"description":cargo_item_field})
 				if storage_charges_type == "Actual Storage Days":
-					storage_charges_item_16_25 = frappe.db.get_single_value("Coal Settings","storage_charges_16_25_days")
-					storage_charges_item_beyond_26 = frappe.db.get_single_value("Coal Settings","storage_charges_beyond_26_days")
+					customer_doc=frappe.get_doc('Customer',customer_name_field)
+
+					storage_charges_item_16_25 = customer_doc.custom_chargeable_storage_charges_slots_details[0].item
+					storage_charges_item_beyond_26 = customer_doc.custom_chargeable_storage_charges_slots_details[1].item
 					charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26 = get_rate_and_qty_for_actual_storage_type_based_on_storage_report(source_name,customer_name_field)
 					print(charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26,"charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26")
 					if qty_for_16_25 > 0:

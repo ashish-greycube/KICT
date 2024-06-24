@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"LFDHgpF1Sa\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">KICT</span>\",\"col\":12}},{\"id\":\"ytYRxLdGgb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vessel</b></span>\",\"col\":12}},{\"id\":\"8B63SGI3D8\",\"type\":\"card\",\"data\":{\"card_name\":\"Vessel\",\"col\":4}},{\"id\":\"UAMVua-3sM\",\"type\":\"card\",\"data\":{\"card_name\":\"SOF\",\"col\":4}},{\"id\":\"fi_Oq-w7mb\",\"type\":\"card\",\"data\":{\"card_name\":\"Hatch wise\",\"col\":4}},{\"id\":\"Ifelm4X9YD\",\"type\":\"card\",\"data\":{\"card_name\":\"BOE OOC\",\"col\":4}},{\"id\":\"p6-6EfgY2b\",\"type\":\"card\",\"data\":{\"card_name\":\"Hourly Operations\",\"col\":4}},{\"id\":\"7dVuzkHOOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Equipments In & Out\",\"col\":4}},{\"id\":\"MU1RJjKrnU\",\"type\":\"card\",\"data\":{\"card_name\":\"Agents DO\",\"col\":4}},{\"id\":\"Pn0CA4NaT4\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"vSusa19kqN\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Rake</b></span>\",\"col\":12}},{\"id\":\"7vN-lajsL3\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Doctype\",\"col\":4}},{\"id\":\"9u3I7mPleJ\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"eZDecRR9HV\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"LgciQEuuXr\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}}]",
+ "content": "[{\"id\":\"LFDHgpF1Sa\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">KICT</span>\",\"col\":12}},{\"id\":\"ytYRxLdGgb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vessel</b></span>\",\"col\":12}},{\"id\":\"8B63SGI3D8\",\"type\":\"card\",\"data\":{\"card_name\":\"Vessel\",\"col\":4}},{\"id\":\"UAMVua-3sM\",\"type\":\"card\",\"data\":{\"card_name\":\"SOF\",\"col\":4}},{\"id\":\"fi_Oq-w7mb\",\"type\":\"card\",\"data\":{\"card_name\":\"Hatch wise\",\"col\":4}},{\"id\":\"Ifelm4X9YD\",\"type\":\"card\",\"data\":{\"card_name\":\"BOE OOC\",\"col\":4}},{\"id\":\"p6-6EfgY2b\",\"type\":\"card\",\"data\":{\"card_name\":\"Hourly Operations\",\"col\":4}},{\"id\":\"7dVuzkHOOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Equipments In & Out\",\"col\":4}},{\"id\":\"MU1RJjKrnU\",\"type\":\"card\",\"data\":{\"card_name\":\"Agents DO\",\"col\":4}},{\"id\":\"Pn0CA4NaT4\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"vSusa19kqN\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Rake</b></span>\",\"col\":12}},{\"id\":\"7vN-lajsL3\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Doctype\",\"col\":4}},{\"id\":\"LgciQEuuXr\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}},{\"id\":\"eZDecRR9HV\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"9u3I7mPleJ\",\"type\":\"spacer\",\"data\":{\"col\":12}}]",
  "creation": "2024-05-09 13:13:13.628115",
  "custom_blocks": [],
  "docstatus": 0,
@@ -334,7 +334,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-06-08 18:04:10.037209",
+ "modified": "2024-06-24 10:08:13.678016",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "KICT",

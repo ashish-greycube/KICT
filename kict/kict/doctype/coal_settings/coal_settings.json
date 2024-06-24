@@ -17,8 +17,7 @@
   "column_break_fars",
   "default_uom_for_cargo",
   "storage_charges_fixed",
-  "storage_charges_16_25_days",
-  "storage_charges_beyond_26_days",
+  "storage_charges_item_group",
   "customer_group_for_agent",
   "vessel_delay_account_for_terminal",
   "terminal_holiday_list",
@@ -63,22 +62,6 @@
    "fieldname": "storage_charges_fixed",
    "fieldtype": "Link",
    "label": "Storage Charges Fixed",
-   "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
-   "options": "Item",
-   "reqd": 1
-  },
-  {
-   "fieldname": "storage_charges_16_25_days",
-   "fieldtype": "Link",
-   "label": "Storage Charges 16-25 days",
-   "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
-   "options": "Item",
-   "reqd": 1
-  },
-  {
-   "fieldname": "storage_charges_beyond_26_days",
-   "fieldtype": "Link",
-   "label": "Storage Charges beyond 26 days",
    "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
    "options": "Item",
    "reqd": 1
@@ -160,12 +143,19 @@
    "label": "Audit Shortage",
    "options": "Stock Entry Type",
    "reqd": 1
+  },
+  {
+   "fieldname": "storage_charges_item_group",
+   "fieldtype": "Link",
+   "label": "Storage Charges Item Group",
+   "options": "Item Group",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-06-20 13:35:22.691907",
+ "modified": "2024-06-24 10:08:55.078169",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

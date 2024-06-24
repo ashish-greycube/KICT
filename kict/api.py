@@ -23,14 +23,38 @@ def set_cargo_handling_option_name_and_is_periodic(self,method):
 
 def validate_rate_percent_billing(self,method):
 	total_percent = 0
-	if len(self.get("custom_cargo_handling_charges_slots_details")) > 0:
-		for row in self.get("custom_cargo_handling_charges_slots_details"):
-			total_percent = total_percent + row.percent_billing
-	
-		if total_percent != 100:
-			frappe.throw(_("Total of Rate Percent Billing must be 100%"))
+	cargo_customer_group = frappe.db.get_single_value("Coal Settings","customer_group_for_cargo_customer")
+	if self.customer_group == cargo_customer_group:
+		if len(self.get("custom_cargo_handling_charges_slots_details")) == 0:
+			frappe.throw(_("Please fill cargo handling charges slots details"))
 		else:
-			pass
+			for row in self.get("custom_cargo_handling_charges_slots_details"):
+				total_percent = total_percent + row.percent_billing
+		
+			if total_percent != 100:
+				frappe.throw(_("Total of rate percent billing must be 100%"))
+			else:
+				pass
+			
+			if self.custom_storage_charge_based_on == "":
+				frappe.throw(_("Please select storage charge based on type"))
+			else:
+				if self.custom_storage_charge_based_on == "Fixed Days":
+					if self.custom_no_of_days == None:
+						frappe.throw(_("Please add fixed number of days"))
+				if self.custom_storage_charge_based_on == "Actual Storage Days":
+					if self.custom_free_storage_days == None:
+						frappe.throw(_("Please add number of free storage days"))
+					if len(self.get("custom_chargeable_storage_charges_slots_details")) == 0:
+						frappe.throw(_("Please fill chargeable storage charges slots details"))
+					else:
+						chargeable_slots_details = self.get("custom_chargeable_storage_charges_slots_details")
+						for row in chargeable_slots_details:
+							if row.item == None:
+								frappe.throw(_("Row {0} : Please select item").format(row.idx))
+					if len(self.get("custom_chargeable_storage_charges_slots_details")) < 2:
+						frappe.throw(_("Please add row in chargeable storage charges slots details"))
+
 
 def change_status_for_dn_creation_in_railway_receipt_on_cancel_of_dn(self,method):
 	frappe.db.set_value("Railway Receipt Item Details",self.custom_railway_receipt_detail,"is_dn_created","No")

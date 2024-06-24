@@ -522,7 +522,8 @@ def get_customer_and_tonnage_based_on_cargo_item(item_code,docname):
 def get_cargo_handling_option_name_and_is_periodic_or_not_based_on_customer(docname,customer_name):
 	cargo_handling_charges_details = frappe.db.get_all("Cargo Handling Charges Slots Details",
 													filters = {"parent":customer_name},
-													fields = ["cargo_handling_option_name","billing_type"])
+													fields = ["cargo_handling_option_name","billing_type"],
+													order_by = "idx")
 	return cargo_handling_charges_details
 
 @frappe.whitelist()
@@ -649,3 +650,20 @@ def get_qty_for_handling_loss_and_audit_shortage(vessel,item_code):
 	)
 	if len(qty_entries)>0:
 		return qty_entries[0].actual_qty
+	
+@frappe.whitelist()
+def get_unique_customer_form_vessel(docname):
+	return frappe.get_all(
+		"Vessel Details",
+		parent_doctype="Vessel",
+		filters={"parent": docname},
+		fields=["distinct customer_name"]
+	)
+
+@frappe.whitelist()
+def get_item_based_on_customer(docname,customer):
+	items_list = frappe.db.get_list("Vessel Details",
+								parent_doctype="Vessel",
+								filters={"parent":docname,"customer_name":customer},
+								fields=["item"])
+	return items_list

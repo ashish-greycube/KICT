@@ -52,6 +52,9 @@ frappe.ui.form.on("Vessel", {
         }
         if (frm.is_new() == undefined) {
             frm.add_custom_button(__('Tax Invoice for S/C'), () => create_sales_invoice_for_storage_charges_from_vessel(frm), __("Create"));
+        }
+        if (frm.is_new() == undefined) {
+            frm.add_custom_button(__('Storage Charges Report'), () => show_storage_charges_report_from_vessel(frm));
         }     
     }
 });
@@ -968,6 +971,96 @@ function create_sales_invoice_for_storage_charges_from_vessel(frm){
                                 window.open(`/app/sales-invoice/` + response.message);
                             }
                         }
+                    });
+                    dialog.hide();                    
+                }
+            })
+            dialog.show()
+        }
+    })
+}
+
+function show_storage_charges_report_from_vessel(frm) {
+    let dialog = undefined
+    const dialog_field = []
+
+    frappe.call({
+        method: "kict.kict.doctype.vessel.vessel.get_unique_customer_form_vessel",
+        args: {
+            docname: frm.doc.name
+        },
+        callback: function (r) {
+            let values = r.message
+            let unique_customer = []
+            values.forEach(element => {
+                unique_customer.push(element.customer_name)
+            });
+
+            let customer_name_field
+            let cargo_item_field
+            customer_name_field={
+                fieldtype: "Select",
+                fieldname: "customer_name_field",
+                label: __("Customer Name"),
+                options: unique_customer,
+                onchange: function(){
+                    let customer_name = dialog.get_field("customer_name_field")
+                    frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.get_item_based_on_customer",
+                        args: {
+                            docname: cur_frm.doc.name,
+                            customer: customer_name.value,
+                        },
+                        callback: function (r) {
+                            let values = r.message
+                            if (values.length == 1){
+                                dialog.set_value("cargo_item_field",values[0].item) 
+                            } 
+                            let item_list = []
+                            values.forEach(ele => {
+                                item_list.push(ele.item)
+                            });
+                            dialog.set_df_property("cargo_item_field","options",item_list) 
+                        }
+                    })
+                }
+            }
+            if (unique_customer.length==1) {
+                customer_name_field["default"]=unique_customer[0]
+                frappe.call({
+                    method: "kict.kict.doctype.vessel.vessel.get_item_based_on_customer",
+                    args: {
+                        docname: cur_frm.doc.name,
+                        customer: unique_customer[0]
+                    },
+                    callback: function (r) {
+                        let values = r.message
+                        if (values.length == 1){
+                            dialog.set_value("cargo_item_field",values[0].item) 
+                        } 
+                        let item_list = []
+                        values.forEach(ele => {
+                            item_list.push(ele.item)
+                        });
+                        dialog.set_df_property("cargo_item_field","options",item_list) 
+                    }
+                })
+            }
+            cargo_item_field = {
+                fieldtype: "Select",
+                fieldname: "cargo_item_field",
+                label: __("Cargo Item"),
+            }
+            dialog_field.push(customer_name_field)
+            dialog_field.push(cargo_item_field)
+
+            dialog = new frappe.ui.Dialog({
+                title: __("Enter Details for Storage Charges"),
+                fields: dialog_field,
+                primary_action_label: 'Show Report',
+                primary_action: function (values) {
+                    frappe.open_in_new_tab = true;
+                    frappe.set_route("query-report", "Storage Charges", { vessel: frm.doc.name,customer: values.customer_name_field,customer_item: values.cargo_item_field
                     });
                     dialog.hide();                    
                 }

@@ -80,7 +80,27 @@ def get_columns(filters):
 			"fieldtype": "Currency",
 			"width":"130"
 		},
+		{
+			"fieldname": "remark",
+			"label":_("Remark"),
+			"fieldtype": "Data",
+			"width":"130"
+		},		
 	]
+
+def get_holiday_description(holiday_date):
+	terminal_holiday_list = frappe.db.get_single_value('Coal Settings', 'terminal_holiday_list')
+	description=''
+	description=frappe.get_all(
+							"Holiday",
+							fields=["description"],
+							filters={"parent": terminal_holiday_list,"holiday_date":holiday_date},
+							order_by="holiday_date",							
+							limit=1
+						)
+	if len(description)>0:
+		description=description[0].description
+	return description
 
 def execute(filters=None):
 
@@ -153,6 +173,7 @@ def execute(filters=None):
 					sc_row.datewise=next_date
 					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
 						sc_row.day_count='H'
+						sc_row.remark=get_holiday_description(next_date)
 						previous_batch_count=previous_batch_count
 					else:
 						sc_row.day_count=previous_batch_count+1
@@ -184,6 +205,7 @@ def execute(filters=None):
 				sc_row.datewise=d['show_date']
 				if custom_is_holiday_applicable_for_free_storage_days==1 and (d['show_date'] in holiday_list_days and previous_batch_count <custom_free_storage_days):
 					sc_row.day_count='H'
+					sc_row.remark=get_holiday_description(d['show_date'])
 					previous_batch_count=previous_batch_count
 				else:
 					sc_row.day_count=previous_batch_count+1
@@ -223,6 +245,7 @@ def execute(filters=None):
 					sc_row.datewise=next_date
 					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
 						sc_row.day_count='H'
+						sc_row.remark=get_holiday_description(next_date)
 						previous_batch_count=previous_batch_count
 					else:
 						sc_row.day_count=previous_batch_count+1
@@ -251,6 +274,7 @@ def execute(filters=None):
 			sc_row.day_count=1
 			if custom_is_holiday_applicable_for_free_storage_days==1 and (d['show_date'] in holiday_list_days and previous_batch_count <=custom_free_storage_days):
 				sc_row.day_count='H'
+				sc_row.remark=get_holiday_description(d['show_date'])
 				previous_batch_count=previous_batch_count
 			else:
 				sc_row.day_count=previous_batch_count+1
@@ -295,6 +319,7 @@ def execute(filters=None):
 					sc_row.datewise=next_date
 					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
 						sc_row.day_count='H'
+						sc_row.remark=get_holiday_description(next_date)
 						previous_batch_count=previous_batch_count
 					else:
 						sc_row.day_count=previous_batch_count+1
@@ -453,6 +478,16 @@ def get_item_price(item_code):
 @frappe.validate_and_sanitize_search_inputs
 def get_unique_customer_list(doctype, txt, searchfield, start, page_len, filters):
 	vessel = filters.get("vessel")
+	return frappe.get_all(
+		"Vessel Details",
+		parent_doctype="Vessel",
+		filters={"parent": vessel},
+		fields=["distinct customer_name"],
+		as_list=1,
+	)
+
+@frappe.whitelist()
+def get_unique_customer_to_set(vessel):
 	return frappe.get_all(
 		"Vessel Details",
 		parent_doctype="Vessel",

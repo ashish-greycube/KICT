@@ -244,7 +244,11 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 			item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
 			item_code = item
 
-		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_actual_hours_of_stay":bill_hours})
+		vessel_first_line_ashore = cstr(frappe.format(frappe.db.get_value("Statement of Fact",source_name,"first_line_ashore"),"Datetime"))
+		vessel_all_line_cast_off = cstr(frappe.format(frappe.db.get_value("Statement of Fact",source_name,"all_line_cast_off"),"Datetime"))
+		vessel_total_stay_hours = cstr(frappe.format(frappe.db.get_value("Statement of Fact",source_name,"vessel_stay_hours"),"Datetime"))
+		description = item_code + "<br> First Line Ashore : " + vessel_first_line_ashore + "<br> All Line Cast Off : " + vessel_all_line_cast_off + "<br> Total Hours : " + vessel_total_stay_hours
+		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_actual_hours_of_stay":bill_hours,"description":description})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {
@@ -306,15 +310,12 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		target.vessel=source_name
 		target.po_no = customer_po_no_field
 		item_code = frappe.db.get_single_value("Coal Settings","ch_charges")
-		vessel_first_line_ashore = frappe.db.get_value("Statement of Fact",source_name,"first_line_ashore")
-		vessel_all_line_cast_off = frappe.db.get_value("Statement of Fact",source_name,"all_line_cast_off")
-		vessel_total_stay_hours = frappe.db.get_value("Statement of Fact",source_name,"vessel_stay_hours")
-		description = cargo_item_field + "<br> First Line Ashore : " + vessel_first_line_ashore + "<br> All Line Cast Off : " + vessel_all_line_cast_off + "<br> Total Hours : " +vessel_total_stay_hours
+
 		# nothing on vessel type
 		if is_periodic_or_dispatch_field=="Non-Periodic":
-			item_row=target.append("items",{"item_code":item_code,"qty":flt(non_periodic_cargo_qty),"description":description,"rate":rate_field})
+			item_row=target.append("items",{"item_code":item_code,"qty":flt(non_periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
 		else:
-			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":description,"rate":rate_field})
+			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {

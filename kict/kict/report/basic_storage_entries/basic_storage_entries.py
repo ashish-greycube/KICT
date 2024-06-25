@@ -23,6 +23,12 @@ def get_columns(filters):
 			"label":_("Voucher"),
 			"fieldtype": "Data",
 			"width":"190"
+		},
+		{
+			"fieldname": "voucher_type",
+			"label":_("Voucher Type"),
+			"fieldtype": "Data",
+			"width":"190"
 		},		
 		{
 			"fieldname": "item_code",
@@ -166,204 +172,27 @@ def execute(filters=None):
 		
 	float_precision = cint(frappe.db.get_default("float_precision")) or 3
 	data=get_stock_ledger_entries_for_batch_bundle(filters)
-	return columns,data
-	
 
-	
-	# initialize variables
-	sc_row= frappe._dict({})
 	sc_data = []
-	loop=1
-	previous_batch_no=None
-	previous_batch_count=0
-	previous_show_date=None
-	to_date = getdate(filters.to_date)
-	result_length=len(data)
+	starting_opening_balance = 0
+	previous_row_item = None
 
 	for d in data:
-		# case 1 : repeat batch
-		if previous_batch_no==d['batch_no']:
-			print(d['batch_no'],d['show_date']==previous_show_date,d['show_date'],previous_show_date,d.actual_qty)
-			# case 1A : repeat batch but date is not the next data, so create dummy repeat data
-			if d['show_date']!=previous_show_date:
-				# dummy data till matching batch date of incoming
-				next_date=add_days(previous_show_date,1)
-				while next_date <  d['show_date']:
-				# sequential data
-					sc_row= frappe._dict({})
-					sc_row.item_code=d['item_code']
-					sc_row.batch_no=d['batch_no']
-					sc_row.datewise=next_date
-					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
-						sc_row.day_count='H'
-						sc_row.remark=get_holiday_description(next_date)
-						previous_batch_count=previous_batch_count
-					else:
-						sc_row.day_count=previous_batch_count+1
-						previous_batch_count=sc_row.day_count
-					sc_row.opening_qty=previous_balance_qty
-					sc_row.in_qty=0
-					sc_row.out_qty=0
-					sc_row.bal_qty=previous_balance_qty
-					sc_row.rate=0
-					sc_row.amount=0
-					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-						sc_row.rate=first_slot_storage_charges
-						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-						sc_row.rate=second_slot_storage_charges
-						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-					sc_data.append(sc_row)
-					next_date=add_days(next_date,1)
-					previous_show_date=next_date
-				# case when entry is side by side date, i.e. 1st and 2nd
-				previous_show_date=next_date
-				
-			# case 1B : repeat batch and incoming date is matching, so real data 
-			if d['show_date']==previous_show_date:
-				print(d['show_date']==previous_show_date,d['show_date'],previous_show_date,d.actual_qty)
-				sc_row= frappe._dict({})
-				sc_row.item_code=d['item_code']
-				sc_row.batch_no=d['batch_no']
-				sc_row.datewise=d['show_date']
-				if custom_is_holiday_applicable_for_free_storage_days==1 and (d['show_date'] in holiday_list_days and previous_batch_count <custom_free_storage_days):
-					sc_row.day_count='H'
-					sc_row.remark=get_holiday_description(d['show_date'])
-					previous_batch_count=previous_batch_count
-				else:
-					sc_row.day_count=previous_batch_count+1
-					previous_batch_count=sc_row.day_count				
-				sc_row.opening_qty=previous_balance_qty
-				sc_row.in_qty=flt(d.actual_qty, float_precision) if flt(d.actual_qty) > 0 else 0
-				sc_row.out_qty=abs(flt(d.actual_qty, float_precision))	 if flt(d.actual_qty) < 0 else 0
-				sc_row.bal_qty=sc_row.opening_qty+flt(d.actual_qty, float_precision)
-				sc_row.rate=0
-				sc_row.amount=0
-				if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-					sc_row.rate=first_slot_storage_charges
-					sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-				elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-					sc_row.rate=second_slot_storage_charges
-					sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-				sc_data.append(sc_row)
-				previous_batch_no=d['batch_no']
-				previous_balance_qty=sc_row.bal_qty
-				previous_show_date=d['show_date']
-				# use for dummy
-				previous_opening_qty=sc_row.opening_qty
-				previous_in_qty=sc_row.in_qty
-				previous_out_qty=sc_row.out_qty				
-
-		# case 2 : new batch
-		elif previous_batch_no!=d['batch_no']:
-			#  case 2A: new batch but there is dummy pending for PB as bal is not zero, so stretch till to date
-			if previous_show_date and previous_show_date < to_date and previous_balance_qty>0:
-				# dummy data till to date as balance is not zero
-				next_date=add_days(previous_show_date,1)
-				while next_date <= to_date:
-				# sequential data
-					sc_row= frappe._dict({})
-					sc_row.item_code=previous_item_code
-					sc_row.batch_no=previous_batch_no				
-					sc_row.datewise=next_date
-					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
-						sc_row.day_count='H'
-						sc_row.remark=get_holiday_description(next_date)
-						previous_batch_count=previous_batch_count
-					else:
-						sc_row.day_count=previous_batch_count+1
-						previous_batch_count=sc_row.day_count					
-					sc_row.opening_qty=previous_balance_qty
-					sc_row.in_qty=0
-					sc_row.out_qty=0
-					sc_row.bal_qty=previous_balance_qty
-					sc_row.rate=0
-					sc_row.amount=0
-					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-						sc_row.rate=first_slot_storage_charges
-						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-						sc_row.rate=second_slot_storage_charges
-						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-					sc_data.append(sc_row)
-					next_date=add_days(next_date,1)
-
-			# new batch
-			previous_batch_count=0
-			sc_row= frappe._dict({})
-			sc_row.item_code=d['item_code']
-			sc_row.batch_no=d['batch_no']
-			sc_row.datewise=d['show_date']
-			sc_row.day_count=1
-			if custom_is_holiday_applicable_for_free_storage_days==1 and (d['show_date'] in holiday_list_days and previous_batch_count <=custom_free_storage_days):
-				sc_row.day_count='H'
-				sc_row.remark=get_holiday_description(d['show_date'])
-				previous_batch_count=previous_batch_count
-			else:
-				sc_row.day_count=previous_batch_count+1
-				previous_batch_count=sc_row.day_count				
-			
-			sc_row.opening_qty=0
-			sc_row.in_qty=flt(d.actual_qty, float_precision) if flt(d.actual_qty) > 0 else 0
-			sc_row.out_qty=abs(flt(d.actual_qty, float_precision))	 if flt(d.actual_qty) < 0 else 0
-			sc_row.bal_qty=sc_row.opening_qty+flt(d.actual_qty, float_precision)
-			sc_row.rate=0
-			sc_row.amount=0
-			if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-				sc_row.rate=first_slot_storage_charges
-				sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-			elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-				sc_row.rate=second_slot_storage_charges
-				sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-			sc_data.append(sc_row)
-			
-		
-			previous_batch_no=d['batch_no']
-			previous_balance_qty=sc_row.bal_qty
-			previous_show_date=d['show_date']
-			# use for dummy
-			previous_opening_qty=sc_row.opening_qty
-			previous_in_qty=sc_row.in_qty
-			previous_out_qty=sc_row.out_qty
-			#  use for dummy and to date filler
-			previous_item_code=d['item_code']
-
-		if loop==result_length:
-			# last raw is reached
-			#  new batch but is dummy pending for PB as bal is not zero
-			if previous_show_date and previous_show_date < to_date and previous_balance_qty>0:
-				# dummy data till to date as balance is not zero
-				next_date=add_days(previous_show_date,1)
-				while next_date <= to_date:
-				# sequential data
-					sc_row= frappe._dict({})
-					sc_row.item_code=previous_item_code
-					sc_row.batch_no=previous_batch_no				
-					sc_row.datewise=next_date
-					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
-						sc_row.day_count='H'
-						sc_row.remark=get_holiday_description(next_date)
-						previous_batch_count=previous_batch_count
-					else:
-						sc_row.day_count=previous_batch_count+1
-						previous_batch_count=sc_row.day_count					
-					sc_row.opening_qty=previous_balance_qty
-					sc_row.in_qty=0
-					sc_row.out_qty=0
-					sc_row.bal_qty=previous_balance_qty
-					sc_row.rate=0
-					sc_row.amount=0
-					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-						sc_row.rate=first_slot_storage_charges
-						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-						sc_row.rate=second_slot_storage_charges
-						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
-					sc_data.append(sc_row)
-					next_date=add_days(next_date,1)
-		loop=loop+1
-
-	return columns, sc_data
+		if previous_row_item == None or previous_row_item == d.item_code:
+			d["opening_qty"] = starting_opening_balance
+			starting_opening_balance = starting_opening_balance + d.in_qty + d.out_qty
+			d["bal_qty"] = starting_opening_balance
+			previous_row_item = d.item_code
+			print(d)
+		else :
+			starting_opening_balance = 0
+			d["opening_qty"] = starting_opening_balance
+			starting_opening_balance = starting_opening_balance + d.in_qty + d.out_qty
+			d["bal_qty"] = starting_opening_balance
+			previous_row_item = d.item_code
+			print(d,"---d")
+		sc_data.append(d)
+	return columns,sc_data
 
 
 # def get_dates(filters):

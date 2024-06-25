@@ -199,8 +199,8 @@
    "fieldname": "costal_foreign_vessle",
    "fieldtype": "Select",
    "in_list_view": 1,
-   "label": "Costal / Foreign Vessle",
-   "options": "\nCostal\nForeign"
+   "label": "Coastal / Foreign Vessel",
+   "options": "\nCoastal\nForeign"
   },
   {
    "fieldname": "section_break_lmdg",
@@ -313,7 +313,7 @@
    "link_fieldname": "vessel"
   }
  ],
- "modified": "2024-06-20 11:47:05.737045",
+ "modified": "2024-06-25 17:20:26.911128",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

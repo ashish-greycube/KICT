@@ -388,7 +388,9 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 					storage_charges_item_fixed = frappe.db.get_single_value("Coal Settings","storage_charges_fixed")
 					handling_qty = get_qty_for_handling_loss_and_audit_shortage(source_name,cargo_item_field)
 					storage_charges_qty = flt(total_tonnage_field)
-					item_row=target.append("items",{"item_code":storage_charges_item_fixed,"qty":storage_charges_qty,"description":cargo_item_field})
+					fixed_number_of_days = frappe.db.get_value("Customer",customer_name_field,"custom_no_of_days")
+					description = "Storage Charges for "+cstr(fixed_number_of_days)+" days <br>"+cargo_item_field
+					item_row=target.append("items",{"item_code":storage_charges_item_fixed,"qty":storage_charges_qty,"description":description})
 				if storage_charges_type == "Actual Storage Days":
 					customer_doc=frappe.get_doc('Customer',customer_name_field)
 

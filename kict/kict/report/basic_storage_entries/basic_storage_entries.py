@@ -178,6 +178,12 @@ def execute(filters=None):
 	previous_row_item = None
 
 	for d in data:
+		if d.voucher_type == "Delivery Note":
+			rake_dispatch_name = frappe.db.get_value("Delivery Note",d.voucher_no,"custom_rcn")
+			d.voucher_type = rake_dispatch_name
+		elif d.voucher_type == "Stock Entry":
+			stock_entry_type = frappe.db.get_value("Stock Entry",d.voucher_no,"stock_entry_type")
+			d.voucher_type = stock_entry_type
 		if previous_row_item == None or previous_row_item == d.item_code:
 			d["opening_qty"] = starting_opening_balance
 			starting_opening_balance = starting_opening_balance + d.in_qty + d.out_qty
@@ -212,6 +218,7 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 			select 
 				sle.name as sle_name,
 				sle.voucher_no,
+				sle.voucher_type,
 				sle.vessel,
 				sle.item_code,
 				batch_package.batch_no,	
@@ -245,6 +252,7 @@ UNION
 			select 
 				sle.name as sle_name,
 				sle.voucher_no,
+				sle.voucher_type,
 				sle.vessel,
 				sle.item_code,
 				batch_package.batch_no,

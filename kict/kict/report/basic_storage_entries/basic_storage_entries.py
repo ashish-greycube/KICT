@@ -63,12 +63,12 @@ def get_columns(filters):
 			"fieldtype": "Date",
 			"width":"180"
 		},
-		# {
-		# 	"fieldname": "opening_qty",
-		# 	"label":_("Opening Balance"),
-		# 	"fieldtype": "Float",
-		# 	"width":"130"
-		# },
+		{
+			"fieldname": "opening_qty",
+			"label":_("Opening Balance"),
+			"fieldtype": "Float",
+			"width":"130"
+		},
 		{
 			"fieldname": "in_qty",
 			"label":_("Recpt"),
@@ -81,12 +81,12 @@ def get_columns(filters):
 			"fieldtype": "Float",
 			"width":"130"
 		},
-		# {
-		# 	"fieldname": "bal_qty",
-		# 	"label":_("Closing Balance"),
-		# 	"fieldtype": "Float",
-		# 	"width":"130"
-		# },
+		{
+			"fieldname": "bal_qty",
+			"label":_("Closing Balance"),
+			"fieldtype": "Float",
+			"width":"130"
+		},
 		# {
 		# 	"fieldname": "rate",
 		# 	"label":_("Rate"),
@@ -167,7 +167,8 @@ def execute(filters=None):
 	float_precision = cint(frappe.db.get_default("float_precision")) or 3
 	data=get_stock_ledger_entries_for_batch_bundle(filters)
 	return columns,data
-	# for d in data:
+	
+
 	
 	# initialize variables
 	sc_row= frappe._dict({})

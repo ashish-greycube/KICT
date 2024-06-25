@@ -12,6 +12,19 @@ def get_columns(filters):
 # 	Item Batch Days Date wise OB Recpt Issue CB Rate Amount
 	return [
 		{
+			"fieldname": "sle_name",
+			"label":_("Item"),
+			"fieldtype": "Link",
+			"options": "Stock Ledger Entry",
+			"width":"110"
+		},		
+		{
+			"fieldname": "voucher_no",
+			"label":_("Voucher"),
+			"fieldtype": "Data",
+			"width":"190"
+		},		
+		{
 			"fieldname": "item_code",
 			"label":_("Item"),
 			"fieldtype": "Link",
@@ -365,6 +378,8 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 	query = frappe.db.sql(
 		"""
 			select 
+				sle.name as sle_name,
+				sle.voucher_no,
 				sle.vessel,
 				sle.item_code,
 				batch_package.batch_no,	
@@ -395,6 +410,8 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 			 {0}
 UNION 
 			select 
+				sle.name as sle_name,
+				sle.voucher_no,
 				sle.vessel,
 				sle.item_code,
 				batch_package.batch_no,

@@ -13,7 +13,7 @@ def get_columns(filters):
 	return [
 		{
 			"fieldname": "sle_name",
-			"label":_("Item"),
+			"label":_("SLE"),
 			"fieldtype": "Link",
 			"options": "Stock Ledger Entry",
 			"width":"110"
@@ -167,6 +167,8 @@ def execute(filters=None):
 	float_precision = cint(frappe.db.get_default("float_precision")) or 3
 	data=get_stock_ledger_entries_for_batch_bundle(filters)
 	return columns,data
+	# for d in data:
+	
 	# initialize variables
 	sc_row= frappe._dict({})
 	sc_data = []
@@ -392,6 +394,7 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 					else date_add(sle.posting_date, INTERVAL -1 DAY)  
 				end as datewise,				
 				batch_package.qty as in_qty,
+				0 as out_qty,
 				manufacturing_date
 			from
 				`tabStock Ledger Entry` sle
@@ -418,6 +421,7 @@ UNION
 				item.customer,
 				sle.posting_datetime as sedate,
 				sle.posting_date as datewise,
+				0 as in_qty,
 				batch_package.qty as out_qty,
 				manufacturing_date
 			from

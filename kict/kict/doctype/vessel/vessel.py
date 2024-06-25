@@ -295,15 +295,13 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		target.custom_quantity_in_mt = flt(non_periodic_cargo_qty)
 
 		# target.type_of_invoice=type_of_invoice
+		target.custom_type_of_cargo_handling_invoice=is_periodic_or_dispatch_field
+		target.custom_cargo_sub_type_of_invoice = type_of_billing_field
+
 		target.custom_type_of_invoice="Cargo Handling Charges"
-		if is_periodic_or_dispatch_field=="Non-Periodic":
-			target.custom_type_of_cargo_handling_invoice="Non-Periodic"
-			target.custom_cargo_sub_type_of_invoice = type_of_billing_field
-		else:
-			target.custom_type_of_cargo_handling_invoice="Periodic"
+		if is_periodic_or_dispatch_field=="Periodic":
 			target.custom_cargo_from_date = from_date_field
 			target.custom_cargo_to_date = to_date_field
-			target.custom_cargo_sub_type_of_invoice = type_of_billing_field
 			print(type_of_billing_field,"-----------type_of_billing_field")
 		target.customer=customer_name_field
 		target.due_date = today()		
@@ -312,9 +310,9 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		item_code = frappe.db.get_single_value("Coal Settings","ch_charges")
 
 		# nothing on vessel type
-		if is_periodic_or_dispatch_field=="Non-Periodic":
+		if is_periodic_or_dispatch_field in ["Non-Periodic","Dispatch"]:
 			item_row=target.append("items",{"item_code":item_code,"qty":flt(non_periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
-		else:
+		elif is_periodic_or_dispatch_field=="Periodic":
 			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
 	
 	doc = get_mapped_doc('Vessel', source_name, {

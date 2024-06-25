@@ -361,7 +361,7 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 			if type_of_vessel == "Foreign":
 				royalty_invoice_item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_foreign_vessel")
 				print(royalty_invoice_item)
-			if type_of_vessel == "Costal":
+			if type_of_vessel == "Coastal":
 				royalty_invoice_item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
 				print(royalty_invoice_item,"Costal")
 			

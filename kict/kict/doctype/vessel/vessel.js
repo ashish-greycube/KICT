@@ -675,7 +675,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 read_only:1,
                 onchange: function(){
                     let periodic_option = dialog.get_field("is_periodic_or_dispatch_field")
-                    if(periodic_option.value == "Dispatch" || periodic_option.value == "Periodic"){
+                    if(periodic_option.value == "Periodic"){
                         dialog.set_df_property('from_date_field','hidden',0)
                         dialog.set_df_property('to_date_field','hidden',0)
                         dialog.set_df_property('periodic_cargo_qty','hidden',0)
@@ -811,7 +811,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 primary_action_label: 'Create Sales Invoice',
                 primary_action: function (values) {
                     console.log(values,"values")
-                    if ((values.is_periodic_or_dispatch_field != "Non-Periodic") && (values.periodic_cargo_qty == undefined || 0)){
+                    if ((values.is_periodic_or_dispatch_field == "Periodic") && (values.periodic_cargo_qty == undefined || 0)){
                         frappe.throw(__("Qty cannot be zero"))
                     }
                     frappe.call({

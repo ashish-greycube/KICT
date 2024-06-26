@@ -437,17 +437,11 @@ def get_conditions(filters):
 		conditions += " and item.customer = %(customer)s"
 
 	first_line_ashore=frappe.db.get_value('Statement of Fact', filters.vessel, 'first_line_ashore')
-	print(first_line_ashore,type(first_line_ashore))
-	first_line_ashore=get_datetime(datetime_in_user_format(first_line_ashore))
-	print(first_line_ashore,type(first_line_ashore))
 	if not first_line_ashore:
 		frappe.throw(_("First line ashore is required in SOF for the vessel"))
 
-
-
 	if filters.get("from_date") and filters.get("to_date"):
-		print(type(first_line_ashore),type(filters.get("to_date")))
-		if get_datetime(filters.get("to_date")) < first_line_ashore:
+		if getdate(filters.get("to_date")) < getdate(first_line_ashore):
 			frappe.throw(_("To date {0} should be greater then first line ashore {1}".format(filters.get("to_date"),first_line_ashore)))
 		if filters.get("to_date") < filters.get("from_date"):	
 			frappe.throw(_("To Date should be greater then From Date"))

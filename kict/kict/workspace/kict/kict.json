@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"LFDHgpF1Sa\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">KICT</span>\",\"col\":12}},{\"id\":\"LgciQEuuXr\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}},{\"id\":\"eZDecRR9HV\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"ytYRxLdGgb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vessel</b></span>\",\"col\":12}},{\"id\":\"8B63SGI3D8\",\"type\":\"card\",\"data\":{\"card_name\":\"Vessel\",\"col\":4}},{\"id\":\"UAMVua-3sM\",\"type\":\"card\",\"data\":{\"card_name\":\"SOF\",\"col\":4}},{\"id\":\"fi_Oq-w7mb\",\"type\":\"card\",\"data\":{\"card_name\":\"Hatch wise\",\"col\":4}},{\"id\":\"Ifelm4X9YD\",\"type\":\"card\",\"data\":{\"card_name\":\"BOE OOC\",\"col\":4}},{\"id\":\"p6-6EfgY2b\",\"type\":\"card\",\"data\":{\"card_name\":\"Hourly Operations\",\"col\":4}},{\"id\":\"7dVuzkHOOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Equipments In & Out\",\"col\":4}},{\"id\":\"MU1RJjKrnU\",\"type\":\"card\",\"data\":{\"card_name\":\"Agents DO\",\"col\":4}},{\"id\":\"Pn0CA4NaT4\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"vSusa19kqN\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Rake</b></span>\",\"col\":12}},{\"id\":\"7vN-lajsL3\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Doctype\",\"col\":4}},{\"id\":\"W_lEM4m7wx\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Master\",\"col\":4}},{\"id\":\"9u3I7mPleJ\",\"type\":\"spacer\",\"data\":{\"col\":12}}]",
+ "content": "[{\"id\":\"LFDHgpF1Sa\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">KICT</span>\",\"col\":12}},{\"id\":\"LgciQEuuXr\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}},{\"id\":\"eZDecRR9HV\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"jz22b0y3Dw\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"nHZX24LwC8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Pending RR\",\"col\":4}},{\"id\":\"ytYRxLdGgb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Vessel</b></span>\",\"col\":12}},{\"id\":\"8B63SGI3D8\",\"type\":\"card\",\"data\":{\"card_name\":\"Vessel\",\"col\":4}},{\"id\":\"UAMVua-3sM\",\"type\":\"card\",\"data\":{\"card_name\":\"SOF\",\"col\":4}},{\"id\":\"fi_Oq-w7mb\",\"type\":\"card\",\"data\":{\"card_name\":\"Hatch wise\",\"col\":4}},{\"id\":\"Ifelm4X9YD\",\"type\":\"card\",\"data\":{\"card_name\":\"BOE OOC\",\"col\":4}},{\"id\":\"p6-6EfgY2b\",\"type\":\"card\",\"data\":{\"card_name\":\"Hourly Operations\",\"col\":4}},{\"id\":\"7dVuzkHOOK\",\"type\":\"card\",\"data\":{\"card_name\":\"Equipments In & Out\",\"col\":4}},{\"id\":\"MU1RJjKrnU\",\"type\":\"card\",\"data\":{\"card_name\":\"Agents DO\",\"col\":4}},{\"id\":\"Pn0CA4NaT4\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"vSusa19kqN\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Rake</b></span>\",\"col\":12}},{\"id\":\"7vN-lajsL3\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Doctype\",\"col\":4}},{\"id\":\"W_lEM4m7wx\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Master\",\"col\":4}},{\"id\":\"9u3I7mPleJ\",\"type\":\"spacer\",\"data\":{\"col\":12}}]",
  "creation": "2024-05-09 13:13:13.628115",
  "custom_blocks": [],
  "docstatus": 0,
@@ -324,6 +324,7 @@
    "type": "Link"
   },
   {
+   "description": "Vessel Wise Stock Balance:Shows the remaining quantity in the vessel along with receipt and issue quantities.\r\nNote: Only applicable for vessels with a balance.<br><br>Storage Charges:Show the receipt and issue of cargo items by vessel and customer, including batch dates received. For Tata Steel Limited, this is not applicable. For customers with holidays applicable for free storage days, it automatically skips holidays set in the coal settings.<br><br>Basic Storage Entries:Shows the bifurcation for the issue quantity.",
    "hidden": 0,
    "is_query_report": 0,
    "label": "Report",
@@ -335,9 +336,9 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "Storage Charges",
+   "label": "Vessel Wise Stock Balance",
    "link_count": 0,
-   "link_to": "Storage Charges",
+   "link_to": "Vessel Wise Stock Balance",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
@@ -345,9 +346,9 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "Vessel Wise Stock Balance",
+   "label": "Storage Charges",
    "link_count": 0,
-   "link_to": "Vessel Wise Stock Balance",
+   "link_to": "Storage Charges",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
@@ -363,11 +364,16 @@
    "type": "Link"
   }
  ],
- "modified": "2024-06-25 11:06:27.488435",
+ "modified": "2024-06-26 13:09:53.730418",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "KICT",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Pending RR",
+   "number_card_name": "Railway Receipt Pending"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,

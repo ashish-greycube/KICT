@@ -63,6 +63,7 @@
    "reqd": 1
   },
   {
+   "description": "for fixed days Sales Invoice",
    "fieldname": "storage_charges_fixed",
    "fieldtype": "Link",
    "label": "Storage Charges Fixed",
@@ -116,11 +117,13 @@
    "reqd": 1
   },
   {
+   "description": "for calculation of Purchase Invoice Amount",
    "fieldname": "royalty_percentage",
    "fieldtype": "Percent",
    "label": "Royalty Percentage"
   },
   {
+   "description": "to set default Customer Group while creating customer provided item.",
    "fieldname": "customer_group_for_cargo_customer",
    "fieldtype": "Link",
    "label": "Customer Group for Cargo Customer",
@@ -183,7 +186,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-06-24 17:57:43.487696",
+ "modified": "2024-06-26 12:22:48.741159",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

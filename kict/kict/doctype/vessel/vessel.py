@@ -246,8 +246,10 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 
 		vessel_first_line_ashore = cstr(frappe.format(frappe.db.get_value("Statement of Fact",source_name,"first_line_ashore"),"Datetime"))
 		vessel_all_line_cast_off = cstr(frappe.format(frappe.db.get_value("Statement of Fact",source_name,"all_line_cast_off"),"Datetime"))
-		vessel_total_stay_hours = cstr(frappe.format(frappe.db.get_value("Statement of Fact",source_name,"vessel_stay_hours"),"Datetime"))
+		vessel_total_stay_hours = cstr(frappe.db.get_value("Statement of Fact",source_name,"vessel_stay_hours"),"Datetime")
+		print(vessel_total_stay_hours,"total hours")
 		description = item_code + "<br> First Line Ashore : " + vessel_first_line_ashore + "<br> All Line Cast Off : " + vessel_all_line_cast_off + "<br> Total Hours : " + vessel_total_stay_hours
+		print(description,"description---------------------------")
 		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_actual_hours_of_stay":bill_hours,"description":description})
 	
 	doc = get_mapped_doc('Vessel', source_name, {

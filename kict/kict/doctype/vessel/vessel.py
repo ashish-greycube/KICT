@@ -568,7 +568,7 @@ def get_qty_for_dispatch_periodic_type(vessel=None,cargo_item_field=None,from_da
 		conditions =""
 
 		conditions += " and rr_item.vessel = %(vessel)s"
-		conditions += " and rr_item.item = %(cargo_item_field)s"
+		conditions += " and rr_item.commercial_destination_item = %(cargo_item_field)s"
 		
 		conditions += " and rr.rr_date between '{0}' and '{1}'".format(
 					filters.get("from_date_field"),

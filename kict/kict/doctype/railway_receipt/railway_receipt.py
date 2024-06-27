@@ -27,6 +27,10 @@ class RailwayReceipt(Document):
 				railway_receipt_item_row.coal_commodity = row.coal_commodity
 			if row.silo_loading_weight:
 				railway_receipt_item_row.rr_item_weight_mt = row.silo_loading_weight
+			if row.commercial_destination_customer:
+				railway_receipt_item_row.commercial_destination_customer = row.commercial_destination_customer
+			if row.commercial_destination_item:
+				railway_receipt_item_row.commercial_destination_item = row.commercial_destination_item
 			
 			railway_receipt_item_row.is_billed = "No"
 			railway_receipt_item_row.is_dn_created = "No"
@@ -47,17 +51,6 @@ class RailwayReceipt(Document):
 	def on_submit(self):
 		create_delivery_note_from_railway_receipt(self.name)
 
-	# def _cancel_all(self):
-	# 	dn_connected_to_rr = frappe.db.get_all("Delivery Note",
-	# 									 filters = {"custom_rcn":self.name},
-	# 									 fields = ["name"])
-	# 	print(dn_connected_to_rr,"rr name")
-	# 	if len(dn_connected_to_rr)>0:
-	# 		for item in dn_connected_to_rr:
-	# 			dn_doc = frappe.get_doc("Delivery Note",item.name)
-	# 			dn_doc.cancel()
-	# 		frappe.msgprint(_("All Delivery Note Connected to {0} is cnacelled.").format(self.name),alert=True)	
-			
 @frappe.whitelist()
 def create_delivery_note_from_railway_receipt(docname):
 	
@@ -84,7 +77,7 @@ def create_delivery_note_from_railway_receipt(docname):
 	for row in railway_receipt_item:
 		if row.is_dn_created != 'Yes':
 			dn = frappe.new_doc("Delivery Note")
-			dn.customer = row.customer_name
+			dn.customer = row.commercial_destination_customer
 			dn.set_posting_time = 1
 			dn.posting_date = release_date
 			dn.posting_time=release_time 
@@ -93,7 +86,7 @@ def create_delivery_note_from_railway_receipt(docname):
 			dn.vessel = row.vessel
 			dn.custom_railway_receipt_detail = row.name
 			dn.custom_rake_no = frappe.db.get_value("Rake Dispatch",docname,"rake_no")
-			price_list, currency = frappe.db.get_value("Customer", {"name": row.customer_name}, ["default_price_list", "default_currency"])
+			price_list, currency = frappe.db.get_value("Customer", {"name": row.commercial_destination_customer}, ["default_price_list", "default_currency"])
 			if price_list:
 				dn.selling_price_list = price_list
 			if currency:

@@ -14,12 +14,14 @@
   "customer_name",
   "vessel_name",
   "column_break_zcto",
+  "commercial_destination_customer",
+  "commercial_destination_item",
+  "column_break_kuys",
   "no_of_wagons_placed",
   "no_of_wagons_loaded",
-  "no_of_wagons_reject",
-  "no_of_wagon_rejected_due_to_foreign_material",
-  "column_break_kuys",
   "no_of_wagon_rejected_by_railway",
+  "no_of_wagon_rejected_due_to_foreign_material",
+  "no_of_wagons_reject",
   "incoming_rake_no",
   "rake_prelim_entry_remark"
  ],
@@ -29,7 +31,7 @@
    "fieldname": "customer_name",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Customer Name",
+   "label": "Stock Customer Name",
    "link_filters": "[[\"Customer\",\"custom_customer_abbreviation\",\"is\",\"set\"]]",
    "options": "Customer"
   },
@@ -115,7 +117,7 @@
    "fieldname": "item",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Customer's Item",
+   "label": "Customer's Stock Item",
    "options": "Item"
   },
   {
@@ -125,12 +127,26 @@
    "in_list_view": 1,
    "label": "Commodity",
    "options": "Coal Commodity"
+  },
+  {
+   "fieldname": "commercial_destination_customer",
+   "fieldtype": "Link",
+   "label": "Commercial Destination Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "commercial_destination_item",
+   "fieldtype": "Link",
+   "label": "Commercial Destination Item",
+   "options": "Item",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-19 11:45:28.848166",
+ "modified": "2024-06-27 14:59:22.482087",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Prelim Entry",

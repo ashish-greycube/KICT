@@ -4,7 +4,7 @@ from frappe.utils import getdate,flt,cstr,add_days,get_first_day,get_last_day
 from kict.kict.doctype.railway_receipt.railway_receipt import get_available_batches
 from erpnext.stock.get_item_details import get_item_details,get_basic_details,get_price_list_rate_for
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import add_days,get_time
+from frappe.utils import add_days,get_time,get_first_day,get_last_day
 
 def set_cargo_handling_option_name_and_is_periodic(self,method):
 	for row in self.get("custom_cargo_handling_charges_slots_details"):
@@ -318,6 +318,9 @@ def get_port_date(date,time):
 def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None,supplier_name=None,supplier_invoice_no=None,posting_date=None):
 	print("create_purchase_invoice_for_royalty_charges----",source_name,supplier_name,supplier_invoice_no,posting_date)
 	source_name = frappe.get_last_doc('Vessel').name
+	# vessel_list = vessel_to_pick_as_per_stock_ledger_entry(posting_date)
+	# print(vessel_list)
+	# return 
 	def set_missing_values(source, target):
 		eligible_vessels = []
 		target.supplier = supplier_name
@@ -553,3 +556,20 @@ def set_query_for_item_based_on_stock_entry_type(doctype, txt, searchfield, star
 		)	
 	else:
 		return 
+	
+def vessel_to_pick_as_per_stock_ledger_entry(posting_date):
+	print("---")
+	from frappe.utils.data import get_date_str
+
+	month_start_date = get_first_day(posting_date)
+	month_end_date = get_last_day(posting_date)
+	month_port_start_date = get_port_date(month_start_date,'00:00:00')
+	month_port_end_date = get_port_date(month_end_date,'23:59:59')
+	print(month_port_start_date, "   month_port_start_date   ",month_port_end_date, "   month_port_end_date   ")
+
+	vessel_list = frappe.db.get_all("Stock Entry",
+								 filters={"stock_entry_type":"Cargo Received","posting_date":["between", (month_port_start_date, month_port_end_date)]},
+								 fields=["distinct custom_vessel"])
+	print(vessel_list)
+def get_all_non_closed_vessel():
+	vessel_list = 0

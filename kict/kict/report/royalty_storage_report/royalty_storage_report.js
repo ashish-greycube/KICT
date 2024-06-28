@@ -18,7 +18,7 @@ frappe.query_reports["Storage Charges"] = {
 					let values = r.message;
 					frappe.query_report.set_filter_value("from_date", values.first_line_ashore);
 					
-					frappe.call('kict.kict.report.storage_charges.storage_charges.get_unique_customer_to_set', {
+					frappe.call('kict.kict.report.royalty_storage_report.royalty_storage_report.get_unique_customer_to_set', {
 						vessel: vessel
 					}).then(r => {
 						console.log(r.message)
@@ -43,7 +43,7 @@ frappe.query_reports["Storage Charges"] = {
 				};
 				
 				return {
-					query: "kict.kict.report.storage_charges.storage_charges.get_unique_customer_list",
+					query: "kict.kict.report.royalty_storage_report.royalty_storage_report.get_unique_customer_list",
 					filters: filters,
 				};
 			},	

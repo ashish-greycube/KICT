@@ -16,25 +16,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Hourly Operations",
-   "link_count": 1,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Hourly Operations",
-   "link_count": 0,
-   "link_to": "Hourly Operations",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Settings",
    "link_count": 1,
    "link_type": "DocType",
@@ -219,56 +200,6 @@
    "type": "Link"
   },
   {
-   "description": "Vessel Wise Stock Balance:Shows the remaining quantity in the vessel along with receipt and issue quantities.\r\nNote: Only applicable for vessels with a balance.<br><br>Storage Charges:Show the receipt and issue of cargo items by vessel and customer, including batch dates received. For Tata Steel Limited, this is not applicable. For customers with holidays applicable for free storage days, it automatically skips holidays set in the coal settings.<br><br>Basic Storage Entries:Shows the bifurcation for the issue quantity.",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Report",
-   "link_count": 4,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Vessel Wise Stock Balance",
-   "link_count": 0,
-   "link_to": "Vessel Wise Stock Balance",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Storage Charges",
-   "link_count": 0,
-   "link_to": "Storage Charges",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Basic Storage Entries",
-   "link_count": 0,
-   "link_to": "Basic Storage Entries",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Commercial Stock Balance Report",
-   "link_count": 0,
-   "link_to": "Commercial Stock Balance Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
    "hidden": 0,
    "is_query_report": 0,
    "label": "Other Info",
@@ -355,9 +286,59 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "description": "Vessel Wise Stock Balance:Shows the remaining quantity in the vessel along with receipt and issue quantities.\r\nNote: Only applicable for vessels with a balance.<br><br>Storage Charges:Show the receipt and issue of cargo items by vessel and customer, including batch dates received. For Tata Steel Limited, this is not applicable. For customers with holidays applicable for free storage days, it automatically skips holidays set in the coal settings.<br><br>Basic Storage Entries:Shows the bifurcation for the issue quantity.",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Report",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Vessel Wise Stock Balance",
+   "link_count": 0,
+   "link_to": "Vessel Wise Stock Balance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Storage Charges",
+   "link_count": 0,
+   "link_to": "Storage Charges",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Basic Storage Entries",
+   "link_count": 0,
+   "link_to": "Basic Storage Entries",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Commercial Stock Balance Report",
+   "link_count": 0,
+   "link_to": "Commercial Stock Balance Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2024-06-28 10:17:55.139927",
+ "modified": "2024-06-28 12:57:52.505539",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "KICT",

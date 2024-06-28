@@ -46,14 +46,12 @@
    "fetch_from": "vcn_no.vessel_name",
    "fieldname": "vessel_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Vessel Name"
   },
   {
    "fetch_from": "item.custom_commodity_grade",
    "fieldname": "grade",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Commodity Grade",
    "options": "Commodity Grade"
   },
@@ -64,19 +62,16 @@
   {
    "fieldname": "no_of_wagons_placed",
    "fieldtype": "Int",
-   "in_list_view": 1,
    "label": "No of Wagons Placed"
   },
   {
    "fieldname": "no_of_wagons_loaded",
    "fieldtype": "Int",
-   "in_list_view": 1,
    "label": "No of Wagons Loaded"
   },
   {
    "fieldname": "no_of_wagons_reject",
    "fieldtype": "Int",
-   "in_list_view": 1,
    "label": "No of Wagons Reject"
   },
   {
@@ -88,13 +83,11 @@
   {
    "fieldname": "no_of_wagon_rejected_by_railway",
    "fieldtype": "Int",
-   "in_list_view": 1,
    "label": "No of Wagon Rejected by Railway"
   },
   {
    "fieldname": "no_of_wagon_rejected_due_to_foreign_material",
    "fieldtype": "Int",
-   "in_list_view": 1,
    "label": "No of Wagon Rejected due to Foreign Material"
   },
   {
@@ -104,13 +97,11 @@
   {
    "fieldname": "incoming_rake_no",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Incoming Rake No"
   },
   {
    "fieldname": "rake_prelim_entry_remark",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Rake Prelim Entry Remark"
   },
   {
@@ -124,7 +115,6 @@
    "fetch_from": "item.custom_coal_commodity",
    "fieldname": "coal_commodity",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Commodity",
    "options": "Coal Commodity"
   },
@@ -132,6 +122,7 @@
    "fetch_from": "commercial_destination_item.customer",
    "fieldname": "commercial_destination_customer",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Commercial Destination Customer (For DN)",
    "options": "Customer",
    "read_only": 1,
@@ -140,6 +131,7 @@
   {
    "fieldname": "commercial_destination_item",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Commercial Destination Item",
    "options": "Item",
    "reqd": 1
@@ -148,7 +140,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-28 09:40:52.040576",
+ "modified": "2024-06-28 12:57:08.342139",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Prelim Entry",

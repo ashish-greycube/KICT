@@ -62,19 +62,21 @@ def get_data(filters):
 	conditions = get_conditions(filters)
 	query = frappe.db.sql(
 		""" SELECT
-		vd.parent vessel,
-		vd.customer_name customer ,
-		vd.item customer_item,
-		vd.tonnage_mt received_qty,
-		rrd.commercial_destination_item commercial_destination_item,
-		IFNULL(rrd.rr_item_weight_mt, 0) dispatch_qty
-	FROM
-		`tabVessel Details` vd
-	left outer join `tabRailway Receipt Item Details` rrd on
-		vd.parent = rrd.vessel
-		and vd.item = rrd.commercial_destination_item
-		and rrd.docstatus < 2
-		{0}
+					vd.parent vessel,
+					vd.customer_name customer ,
+					vd.item customer_item,
+					vd.tonnage_mt received_qty,
+					rrd.commercial_destination_item commercial_destination_item,
+					IFNULL(sum(rrd.rr_item_weight_mt), 0) dispatch_qty
+			FROM
+					`tabVessel Details` vd
+			left outer join `tabRailway Receipt Item Details` rrd on
+					vd.parent = rrd.vessel
+				and vd.item = rrd.commercial_destination_item
+				and rrd.docstatus < 2
+			group by
+				rrd.commercial_destination_item
+				{0}
 """.format(conditions),filters,as_dict=1,debug=1)
 
 	from kict.kict.doctype.vessel.vessel import get_qty_for_handling_loss_and_audit_shortage

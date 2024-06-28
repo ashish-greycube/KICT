@@ -84,6 +84,20 @@ class Vessel(Document):
 
 	def set_cargo_closer_when_vessel_is_closed(self):
 		if self.vessel_closure==1:
+			for row in self.get("vessel_details"):
+
+				from erpnext.stock.report.stock_balance.stock_balance import execute
+				company_name=frappe.get_value("Vessel",self.name,"company")
+				first_line_ashore = frappe.db.get_value('Statement of Fact', self.name, 'first_line_ashore')
+				filter_for_lv =frappe._dict({"company":company_name,"from_date":first_line_ashore,"to_date":today(),"item_code":row.item,"valuation_field_type":"Currency","vessel":[self.name]})
+				data = execute(filter_for_lv)
+				total_bal_val = 0
+				for record in data[1]:
+					total_bal_val = total_bal_val + record.bal_qty
+
+				if(total_bal_val>0):
+					frappe.throw(_("Row {0}: {1} stock is remaining {2}.<br>  You cannot close vessel.").format(row.idx,row.item,total_bal_val))
+
 			for row in self.vessel_details:
 				row.cargo_closure = 1
 			frappe.msgprint(_("Cargo closure is set for all vessel items."),alert=True)

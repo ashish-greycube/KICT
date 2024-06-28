@@ -418,8 +418,8 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 					print("all line same ************************")
 
 			purchase_invoice_item_bh = target.append("items",
-			{"item_code":royalty_invoice_item,"custom_vessel_name":vessel,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,
-			"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours})
+			{"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,
+			"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})
 
 			royalty_invoice_item = frappe.db.get_single_value("Coal Settings","ch_charges")
 			cargo_handling_data = get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date)
@@ -432,8 +432,8 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 						ch_rate = ch_amount * royalty_percentage
 
 						purchase_invoice_item_ch =target.append("items",
-						{"item_code":royalty_invoice_item,"custom_vessel_name":vessel,"custom_commodity":row.get("item"),"custom_grt":vessel_doc.total_tonnage_mt,
-						"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":vessel_doc.total_tonnage_mt,"rate":ch_rate,"custom_actual_berth_hours":actual_berth_hours})
+						{"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":row.get("item"),"custom_grt":vessel_doc.total_tonnage_mt,
+						"custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":vessel_doc.total_tonnage_mt,"rate":ch_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {

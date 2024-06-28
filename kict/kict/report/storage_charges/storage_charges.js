@@ -73,6 +73,12 @@ frappe.query_reports["Storage Charges"] = {
 			"fieldtype": "Link",
 			"options": "Batch",
 		},
+		{
+			"fieldname": "only_for_royalty",
+			"label":__("Only for Royalty"),
+			"fieldtype": "Check",
+			"default": 0,
+		},		
 
 	]
 };

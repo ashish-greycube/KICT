@@ -103,22 +103,34 @@ def get_holiday_description(holiday_date):
 	return description
 
 def execute(filters=None):
-
-	
-	
-	terminal_holiday_list = frappe.db.get_single_value('Coal Settings', 'terminal_holiday_list')
-	holiday_list_days = [
-				getdate(d[0])
-				for d in frappe.get_all(
-					"Holiday",
-					fields=["holiday_date"],
-					filters={"parent": terminal_holiday_list},
-					order_by="holiday_date",
-					as_list=1,
-				)
-			]
 	if not filters:
 		filters = {}
+	
+	terminal_holiday_list = frappe.db.get_single_value('Coal Settings', 'terminal_holiday_list')
+	only_for_royalty=filters.get("only_for_royalty")
+	if only_for_royalty==None or only_for_royalty==0:
+		holiday_list_days = [
+					getdate(d[0])
+					for d in frappe.get_all(
+						"Holiday",
+						fields=["holiday_date"],
+						filters={"parent": terminal_holiday_list},
+						order_by="holiday_date",
+						as_list=1,
+					)
+				]
+	elif only_for_royalty==1:
+		holiday_list_days = [
+					getdate(d[0])
+					for d in frappe.get_all(
+						"Holiday",
+						fields=["holiday_date"],
+						filters={"parent": terminal_holiday_list,"custom_only_applicable_for_customer_storage":0},
+						order_by="holiday_date",
+						as_list=1,
+					)
+				]		
+
 	columns = get_columns(filters)
 	customer=filters.get("customer")
 	custom_storage_charge_based_on = frappe.db.get_value('Customer', customer, 'custom_storage_charge_based_on')

@@ -117,7 +117,7 @@
    "fieldname": "item",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Customer's Stock Item",
+   "label": "Customer's Stock Item (For DN)",
    "options": "Item"
   },
   {
@@ -132,7 +132,7 @@
    "fetch_from": "commercial_destination_item.customer",
    "fieldname": "commercial_destination_customer",
    "fieldtype": "Link",
-   "label": "Commercial Destination Customer",
+   "label": "Commercial Destination Customer (For DN)",
    "options": "Customer",
    "read_only": 1,
    "reqd": 1
@@ -148,7 +148,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-28 09:10:40.194838",
+ "modified": "2024-06-28 09:40:52.040576",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Prelim Entry",

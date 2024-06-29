@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 
-frappe.query_reports["Storage Charges"] = {
+frappe.query_reports["Royalty storage report"] = {
 	// Filter----Vessel From Date : first_line_ashore To Date : today CustomerItem Batch
 	"filters": [
 		{
@@ -17,38 +17,11 @@ frappe.query_reports["Storage Charges"] = {
 				.then(r => {
 					let values = r.message;
 					frappe.query_report.set_filter_value("from_date", values.first_line_ashore);
-					
-					frappe.call('kict.kict.report.royalty_storage_report.royalty_storage_report.get_unique_customer_to_set', {
-						vessel: vessel
-					}).then(r => {
-						console.log(r.message)
-						if (r.message) {
-							frappe.query_report.set_filter_value("customer", r.message[0][0]);
-						}
-					})					
+		
 				})
 
 		 }
 		},
-		{
-			"fieldname": "customer",
-			"label":__("Customer"),
-			"fieldtype": "Link",
-			"options": "Customer",
-			"reqd":1,
-			get_query: function () {
-				let vessel = frappe.query_report.get_filter_value("vessel");
-				var filters = {
-					vessel: vessel,
-				};
-				
-				return {
-					query: "kict.kict.report.royalty_storage_report.royalty_storage_report.get_unique_customer_list",
-					filters: filters,
-				};
-			},	
-
-		},		
 		{
 			"fieldname": "from_date",
 			"label":__("From Date"),
@@ -61,7 +34,7 @@ frappe.query_reports["Storage Charges"] = {
 			"label":__("To Date"),
 			"fieldtype": "Date",
 			// "width": "40px",
-            "default": frappe.datetime.nowdate()
+            "default": frappe.datetime.month_end()
 		},
 		{
 			"fieldname": "customer_item",
@@ -79,7 +52,8 @@ frappe.query_reports["Storage Charges"] = {
 			"fieldname": "only_for_royalty",
 			"label":__("Only for Royalty"),
 			"fieldtype": "Check",
-			"default": 0,
+			"default": 1,
+			"read_only":1
 		},		
 
 	]

@@ -107,9 +107,8 @@ def execute(filters=None):
 		filters = {}
 	
 	terminal_holiday_list = frappe.db.get_single_value('Coal Settings', 'terminal_holiday_list')
-	only_for_royalty=filters.get("only_for_royalty")
-	if only_for_royalty==None or only_for_royalty==0:
-		holiday_list_days = [
+
+	holiday_list_days = [
 					getdate(d[0])
 					for d in frappe.get_all(
 						"Holiday",
@@ -119,17 +118,7 @@ def execute(filters=None):
 						as_list=1,
 					)
 				]
-	elif only_for_royalty==1:
-		holiday_list_days = [
-					getdate(d[0])
-					for d in frappe.get_all(
-						"Holiday",
-						fields=["holiday_date"],
-						filters={"parent": terminal_holiday_list,"custom_only_applicable_for_customer_storage":0},
-						order_by="holiday_date",
-						as_list=1,
-					)
-				]		
+	
 
 	columns = get_columns(filters)
 	customer=filters.get("customer")

@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 
-frappe.query_reports["Royalty storage report"] = {
+frappe.query_reports["Royalty Storage"] = {
 	// Filter----Vessel From Date : first_line_ashore To Date : today CustomerItem Batch
 	"filters": [
 		{
@@ -58,3 +58,4 @@ frappe.query_reports["Royalty storage report"] = {
 
 	]
 };
+

@@ -292,7 +292,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Report",
-   "link_count": 4,
+   "link_count": 5,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -330,15 +330,25 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "Commercial Stock Balance Report",
+   "label": "Commercial Stock Balance",
    "link_count": 0,
-   "link_to": "Commercial Stock Balance Report",
+   "link_to": "Commercial Stock Balance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Royalty Storage",
+   "link_count": 0,
+   "link_to": "Royalty Storage",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2024-06-28 12:57:52.505539",
+ "modified": "2024-07-01 16:09:11.101365",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "KICT",

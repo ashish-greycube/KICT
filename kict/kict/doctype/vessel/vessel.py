@@ -131,7 +131,8 @@ def get_unique_customer_and_customer_specific_grt_from_vessel(docname):
 
 @frappe.whitelist()
 def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,
-													 customer_specific_grt_percentage=None,customer_specific_grt_field=None,customer_po_no_field=None,bill_hours=None,doctype=None):
+													 customer_specific_grt_percentage=None,customer_specific_grt_field=None,customer_po_no_field=None,
+													 bill_hours=None,proportionate_berth_hours_field=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	
@@ -176,7 +177,7 @@ def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=Non
 			item = frappe.db.get_single_value("Coal Settings","birth_hire_item_for_coastal_vessel")
 			item_code = item
 
-		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_expected_hours_of_stay":bill_hours})
+		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_expected_hours_of_stay":bill_hours,"custom_proportionate_berth_hours":proportionate_berth_hours_field})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {
@@ -213,7 +214,8 @@ def get_berth_stay_hours(vessel):
 
 @frappe.whitelist()
 def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=None, qty=None, customer=None,is_single_customer=None,
-														customer_specific_grt_percentage=None,customer_specific_grt_field=None,customer_po_no_field=None,bill_hours=None,doctype=None):
+														customer_specific_grt_percentage=None,customer_specific_grt_field=None,customer_po_no_field=None,
+														bill_hours=None,proportionate_berth_hours_field=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	
@@ -264,7 +266,7 @@ def create_sales_invoice_from_vessel_for_berth_charges(source_name, target_doc=N
 		print(vessel_total_stay_hours,"total hours")
 		description = item_code + "<br> First Line Ashore : " + vessel_first_line_ashore + "<br> All Line Cast Off : " + vessel_all_line_cast_off + "<br> Total Hours : " + vessel_total_stay_hours
 		print(description,"description---------------------------")
-		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_actual_hours_of_stay":bill_hours,"description":description})
+		target.append("items",{"item_code":item_code,"qty":qty,"custom_grt":customer_specific_grt_field,"custom_actual_hours_of_stay":bill_hours,"custom_proportionate_berth_hours":proportionate_berth_hours_field,"description":description})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {

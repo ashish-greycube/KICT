@@ -135,19 +135,20 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                         let agent_name = frm.doc.agent_name
                         let opa_name = frm.doc.opa
                         let is_single_customer = false
-                        let customer_specific_grt_value = frm.doc.grt
+                        let vessel_level_grt_value = flt(frm.doc.grt)
                         let customer_name
                         if (customer_with_grt.length == 1) {
                             is_single_customer = true
-                            customer_name = customer_with_grt[0].customer_name
-                            customer_specific_grt_value = frm.doc.grt                            
+                            customer_name = customer_with_grt[0].customer_name                                                   
                         }
-                        total_qty_default=customer_specific_grt_value*bill_hours
+                        total_qty_default=vessel_level_grt_value*bill_hours
                         // dialog fields
                         let bill_to_field
                         let customer_specific_grt_field      
                         let total_qty_field 
                         let customer_po_no_field
+                        let vessel_level_grt_field
+                        let customer_specific_grt_percentage
                         
                         customer_po_no_field={
                             fieldtype: "Data",
@@ -162,6 +163,27 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                             label: __("Total Qty"),
                             read_only: 1,
                         }
+                        proportionate_berth_hours_field={
+                            fieldtype: "Float",
+                            fieldname: "proportionate_berth_hours_field",
+                            label: __("Proportionate Berth Hours"),
+                            read_only: 1, 
+                            precision:9                           
+                        }
+                        vessel_level_grt_field = {
+                            fieldtype: "Float",
+                            fieldname: "vessel_level_grt_field",
+                            label: __("Vessel GRT"),
+                            read_only: 1,
+                            default:frm.doc.grt
+                        }
+                        customer_specific_grt_percentage = {
+                            fieldtype: "Percent",
+                            fieldname: "customer_specific_grt_percentage",
+                            label: __("Customer Specific GRT %"),
+                            hidden:0 ,
+                            read_only: 1,
+                        }
                         // multi customer
                         if (is_bill_to == "Customer" && is_single_customer == false) {
                             bill_to_field = {
@@ -174,7 +196,8 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                     let bill_to_name = dialog.get_field("bill_to_field")
                                     for (customer of customer_with_grt) {
                                         if (bill_to_name.value == customer.customer_name) {
-                                            dialog.set_value("customer_specific_grt_field", ((customer.customer_specific_grt*frm.doc.grt))/100)
+                                            dialog.set_value("proportionate_berth_hours_field",flt((customer.customer_specific_grt/100)*bill_hours))
+                                            dialog.set_value("customer_specific_grt_field", ((customer.customer_specific_grt*vessel_level_grt_value))/100)
                                             dialog.set_value("customer_specific_grt_percentage",customer.customer_specific_grt)
                                             dialog.set_value("customer_po_no_field",customer.customer_po_no)
                                         }
@@ -187,11 +210,10 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                 fieldname: "customer_specific_grt_field",
                                 label: __("Customer Specific GRT"),
                                 read_only: 1,
-                                description: "GRT x child.Customer Specific GRT",
+                                hidden:0,
                                 onchange: function () {
-                                    let hrs = dialog.get_field("bill_hours")
-                                    let grt = dialog.get_field("customer_specific_grt_field")
-                                    let total_qty = hrs.value * grt.value
+                                    let proportionate_berth_hours = dialog.get_field("proportionate_berth_hours_field")
+                                    let total_qty = proportionate_berth_hours.value * vessel_level_grt_value
                                     dialog.set_value("total_qty", total_qty)
                                 }                                
                             }
@@ -211,20 +233,24 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                             }else if(is_bill_to == "Agent"){
                                 bill_to_field["default"]=agent_name
                             }
+                            proportionate_berth_hours = (vessel_level_grt_value/vessel_level_grt_value)*bill_hours
+                            proportionate_berth_hours_field["default"]=flt(proportionate_berth_hours)
                             customer_specific_grt_field = {
                                     fieldtype: "Float",
                                     fieldname: "customer_specific_grt_field",
                                     label: __("Customer Specific GRT"),
                                     read_only: 1,
-                                    default: customer_specific_grt_value,
+                                    default: vessel_level_grt_value,
+                                    hidden:1,
                                     onchange: function () {
-                                        let hrs = dialog.get_field("bill_hours")
-                                        let grt = dialog.get_field("customer_specific_grt_field")
-                                        let total_qty = hrs.value * grt.value
+                                        let proportionate_berth_hours_value = dialog.get_field("proportionate_berth_hours_field")
+                                        let total_qty = proportionate_berth_hours_value.value * vessel_level_grt_value 
                                         dialog.set_value("total_qty", total_qty)
                                     }                                    
                                 }
-                                total_qty_field["default"]=total_qty_default                                
+                            total_qty_field["default"]=proportionate_berth_hours*vessel_level_grt_value
+                            customer_specific_grt_percentage["default"]=flt(100)
+                            customer_specific_grt_percentage["label"]="GRT %"                                
 
                         }    
                         // single customer
@@ -237,29 +263,29 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                 default: customer_name,
                                 reqd: 1
                             },
+                            proportionate_berth_hours = (vessel_level_grt_value/frm.doc.grt)*bill_hours
+                            proportionate_berth_hours_field["default"]=flt(proportionate_berth_hours)
                             customer_specific_grt_field = {
                                     fieldtype: "Float",
                                     fieldname: "customer_specific_grt_field",
                                     label: __("Customer Specific GRT"),
                                     read_only: 1,
-                                    default: customer_specific_grt_value,
-                                    description: "GRT x child.Customer Specific GRT",
+                                    default: vessel_level_grt_value,
+                                    hidden:1,
                                     onchange: function () {
-                                        let hrs = dialog.get_field("bill_hours")
-                                        let grt = dialog.get_field("customer_specific_grt_field")
-                                        let total_qty = hrs.value * grt.value
+                                        let proportionate_berth_hours_value = dialog.get_field("proportionate_berth_hours_field")
+                                        let total_qty = proportionate_berth_hours_value.value * vessel_level_grt_value 
                                         dialog.set_value("total_qty", total_qty)
                                     }                                    
                             },
-                            total_qty_field["default"]=total_qty_default 
-                            customer_po_no_field["default"]=customer_with_grt[0].customer_po_no                             
+                            total_qty_field["default"]=proportionate_berth_hours * vessel_level_grt_value
+                            customer_po_no_field["default"]=customer_with_grt[0].customer_po_no
+                            customer_specific_grt_percentage["default"]= flt(customer_with_grt[0].customer_specific_grt)     
+                            customer_specific_grt_percentage["label"]="GRT %"                             
                         }   
                         // create and push dialog fields  
                         dialog_field.push(bill_to_field)
-                        dialog_field.push({
-                            fieldtype: "Section Break",
-                            fieldname: "section_break_1",
-                        })
+                        dialog_field.push({fieldtype: "Section Break",fieldname: "section_break_1"})
                         dialog_field.push({
                             fieldtype: "Float",
                             fieldname: "bill_hours",
@@ -267,26 +293,17 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                             default:bill_hours,
                             read_only:1
                         })
-                        dialog_field.push({
-                            fieldtype: "Percent",
-                            fieldname: "customer_specific_grt_percentage",
-                            hidden:1,
-                            default:0
-                        })            
-                        dialog_field.push({
-                            fieldtype: "Column Break",
-                            fieldname: "column_break_1",
-                        })
+                        dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_1"})
+                        dialog_field.push(vessel_level_grt_field)
+                        dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_2"})
+                        dialog_field.push(customer_specific_grt_percentage)        
+                        dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_3"})
                         dialog_field.push(customer_specific_grt_field)
-                        dialog_field.push({
-                            fieldtype: "Column Break",
-                            fieldname: "column_break_2",
-                        })
+                        dialog_field.push({fieldtype: "Section Break",fieldname: "section_break_2"})
+                        dialog_field.push(proportionate_berth_hours_field)
+                        dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_4"})
                         dialog_field.push(total_qty_field)
-                        dialog_field.push({
-                            fieldtype: "Column Break",
-                            fieldname: "column_break_1",
-                        })
+                        dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_5"})
                         dialog_field.push(customer_po_no_field)    
                         
                         dialog = new frappe.ui.Dialog({
@@ -313,7 +330,8 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                                         "customer_specific_grt_percentage":values.customer_specific_grt_percentage,
                                         "customer_specific_grt_field":values.customer_specific_grt_field,
                                         "customer_po_no_field":values.customer_po_no_field,
-                                        "bill_hours":values.bill_hours,                                        
+                                        "bill_hours":values.bill_hours,
+                                        "proportionate_berth_hours_field":values.proportionate_berth_hours_field,                                        
                                         "doctype": frm.doc.doctype
                                     },
                                     callback: function (response) {
@@ -367,18 +385,22 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
             let agent_name = frm.doc.agent_name
             let opa_name = frm.doc.opa
             let is_single_customer = false
-            let customer_specific_grt_value = frm.doc.grt
+            let customer_specific_grt_value
+            let vessel_level_grt_value= frm.doc.grt 
             let customer_name
 
             if (customer_with_grt.length == 1) {
                 is_single_customer = true
                 customer_name = customer_with_grt[0].customer_name
-                customer_specific_grt_value = frm.doc.grt
+                customer_specific_grt_value = vessel_level_grt_value
+               
             }
             // dialog fields
             let bill_to_field
             let customer_specific_grt_field
             let customer_po_no_field
+            let customer_specific_grt_percentage
+            let vessel_level_grt_field
 
             customer_po_no_field={
                 fieldtype: "Data",
@@ -392,6 +414,21 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 fieldname: "customer_specific_grt_field",
                 label: __("Customer Specific GRT"),
                 read_only: 1,
+                hidden:1
+            }            
+            vessel_level_grt_field = {
+                fieldtype: "Float",
+                fieldname: "vessel_level_grt_field",
+                label: __("Vessel GRT"),
+                read_only: 1,
+                default:frm.doc.grt
+            }
+            customer_specific_grt_percentage={                
+                fieldtype: "Percent",
+                fieldname: "customer_specific_grt_percentage",
+                label: __("Customer Specific GRT %"),
+                hidden:0 ,
+                read_only: 1,              
             }
             // multi customer
             if (is_bill_to == "Customer" && is_single_customer == false) {
@@ -406,14 +443,14 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                         for (customer of customer_with_grt) {
                             if (bill_to_name.value == customer.customer_name) {
                                 dialog.set_value("customer_specific_grt_field", ((customer.customer_specific_grt*frm.doc.grt))/100)
-                                dialog.set_value("customer_specific_grt_percentage",customer.customer_specific_grt)
+                                dialog.set_value("customer_specific_grt_percentage",flt(customer.customer_specific_grt))
                                 dialog.set_value("customer_po_no_field",customer.customer_po_no)
-                                dialog.set_value("bill_hours",)
+                                dialog.set_value("bill_hours",0)
                             }
                         }
                     }
                 }
-                customer_specific_grt_field["description"]="GRT x child.Customer Specific GRT"
+                customer_specific_grt_field["hidden"]=0
             }
             // agent
             if (is_bill_to == "Agent" || is_bill_to =="OPA") {
@@ -429,8 +466,9 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 }else if(is_bill_to == "Agent"){
                     bill_to_field["default"]=agent_name
                 }
-                customer_specific_grt_field["default"]=customer_specific_grt_value
-                customer_specific_grt_field["description"]=""
+                customer_specific_grt_field["default"]=vessel_level_grt_value               
+                customer_specific_grt_percentage["default"]=flt(100)
+                customer_specific_grt_percentage["label"]="GRT %"
 
             }
             // single customer
@@ -443,52 +481,55 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                     default: customer_name,
                     reqd: 1
                 },
-                customer_specific_grt_field["default"]=customer_specific_grt_value
+                customer_specific_grt_field["default"]=vessel_level_grt_value
                 customer_po_no_field["default"]=customer_with_grt[0].customer_po_no
-                customer_specific_grt_field["description"]="GRT x child.Customer Specific GRT"
+                customer_specific_grt_percentage["default"]= flt(customer_with_grt[0].customer_specific_grt)     
+                customer_specific_grt_percentage["label"]="GRT %"         
             }
             // create and push dialog fields
             dialog_field.push(bill_to_field)
-            dialog_field.push({
-                fieldtype: "Section Break",
-                fieldname: "section_break_1",
-            })
+            dialog_field.push({fieldtype: "Section Break",fieldname: "section_break_1"})
             dialog_field.push({
                 fieldtype: "Float",
                 fieldname: "bill_hours",
                 label: __("Expected Hours"),
                 onchange: function () {
                     let hrs = dialog.get_field("bill_hours")
-                    let grt = dialog.get_field("customer_specific_grt_field")
-                    let total_qty = hrs.value * grt.value
-                    dialog.set_value("total_qty", total_qty)
+                    let grt = dialog.get_field("customer_specific_grt_percentage")
+                    console.log((flt(grt.value)/100)*flt(hrs),'9',hrs.value,grt.value)
+                    dialog.set_value("proportionate_berth_hours_field",(flt(grt.value)/100)*flt(hrs.value))
+                    // let total_qty = hrs.value * grt.value
+                    // dialog.set_value("total_qty", total_qty)
                 }
             })
-            dialog_field.push({
-                fieldtype: "Percent",
-                fieldname: "customer_specific_grt_percentage",
-                hidden:1,
-                default:0
-            })
-            dialog_field.push({
-                fieldtype: "Column Break",
-                fieldname: "column_break_1",
-            })
+            
+            dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_1"})
+            dialog_field.push(vessel_level_grt_field)
+            dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_2"})
+            dialog_field.push(customer_specific_grt_percentage)
+            dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_3"})
             dialog_field.push(customer_specific_grt_field)
+            dialog_field.push({fieldtype: "Section Break",fieldname: "section_break_2"})
             dialog_field.push({
-                fieldtype: "Column Break",
-                fieldname: "column_break_2",
+                fieldtype: "Float",
+                fieldname: "proportionate_berth_hours_field",
+                label: __("Proportionate Berth Hours"),
+                precision:9,
+                read_only: 1,
+                onchange: function (frm){
+                    let proportionate_berth_hours = dialog.get_field("proportionate_berth_hours_field")
+                    let vessel_level_grt_field_value=dialog.get_field("vessel_level_grt_field")                     
+                    dialog.set_value("total_qty",flt(proportionate_berth_hours.value) * flt(vessel_level_grt_field_value.value))
+                }                            
             })
+            dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_4"})
             dialog_field.push({
                 fieldtype: "Float",
                 fieldname: "total_qty",
                 label: __("Total Qty"),
                 read_only: 1,
             })
-            dialog_field.push({
-                fieldtype: "Column Break",
-                fieldname: "column_break_1",
-            })
+            dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_5"})
             dialog_field.push(customer_po_no_field) 
 
             dialog = new frappe.ui.Dialog({
@@ -516,6 +557,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                             "customer_specific_grt_field":values.customer_specific_grt_field,
                             "customer_po_no_field":values.customer_po_no_field,
                             "bill_hours":values.bill_hours,
+                            "proportionate_berth_hours_field":values.proportionate_berth_hours_field,
                             "doctype": frm.doc.doctype
                         },
                         callback: function (response) {

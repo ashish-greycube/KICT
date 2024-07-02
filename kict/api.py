@@ -6,6 +6,8 @@ from erpnext.stock.get_item_details import get_item_details,get_basic_details,ge
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import add_days,get_time,get_first_day,get_last_day,cint
 from kict.kict.report.royalty_storage.royalty_storage import get_item_price
+from kict.kict.doctype.vessel.vessel import get_unique_item
+from kict.kict.report.royalty_storage.royalty_storage import get_royalty_storage_items_and_rate
 
 def set_cargo_handling_option_name_and_is_periodic(self,method):
 	for row in self.get("custom_cargo_handling_charges_slots_details"):
@@ -581,9 +583,9 @@ def vessel_to_pick_from_batch(posting_date):
 
 	month_start_date = get_first_day(posting_date)
 	month_end_date = get_last_day(posting_date)
-	month_port_start_date = get_port_date(month_start_date,'00:00:00')
-	month_port_end_date = get_port_date(month_end_date,'23:59:59')
-	print(month_port_start_date, "   month_port_start_date   ",month_port_end_date, "   month_port_end_date   ")
+	# month_port_start_date = get_port_date(month_start_date,'00:00:00')
+	# month_port_end_date = get_port_date(month_end_date,'23:59:59')
+	# print(month_port_start_date, "   month_port_start_date   ",month_port_end_date, "   month_port_end_date   ")
 
 	query = frappe.db.sql(
 		"""SELECT
@@ -594,7 +596,8 @@ def vessel_to_pick_from_batch(posting_date):
 			disabled = 0
 			and manufacturing_date >= '{0}'
 			and manufacturing_date <= '{1}'
-		""".format(month_port_start_date,month_port_end_date),as_dict=1,debug=1)
+			order by manufacturing_date asc
+		""".format(month_start_date,month_end_date),as_dict=1,debug=1)
 
 	vessel_list = []
 	for row in query:
@@ -608,16 +611,19 @@ def vessel_to_pick_from_batch(posting_date):
 	non_closed_vessel_set = set(non_closed_vessel)
 
 	distinct_vessel_list = list(vessel_set.union(non_closed_vessel_set))
+	print(distinct_vessel_list[0],"vessel")
 
-	report_data = get_amount_from_royalty_charges_report(distinct_vessel_list[0],month_port_end_date)
+	
+
+	report_data = get_amount_from_royalty_charges_report(distinct_vessel_list[0],month_start_date,month_end_date)
 	print(report_data,"--"*100)
 	return distinct_vessel_list
 
 def get_all_non_closed_vessel():
-	vessel_list = 0
 	non_closed_vessels = frappe.db.get_all("Vessel",
 										filters={"vessel_closure":0},
-										fields=["name"])
+										fields=["name"],
+										order_by="modified asc")
 	non_closed_vessel_list = []
 	for vessel in non_closed_vessels:
 		non_closed_vessel_list.append(vessel.name)
@@ -625,12 +631,18 @@ def get_all_non_closed_vessel():
 
 def get_amount_from_royalty_charges_report(vessel,start_date,end_date):
 	from kict.kict.report.royalty_storage.royalty_storage import execute
-
-	filter_for_royalty =frappe._dict({"vessel":vessel,"to_date":end_date})
-
+	first_line_ashore_of_vessel = frappe.db.get_value("Statement of Fact", vessel, "first_line_ashore")
+	filter_for_royalty =frappe._dict({"vessel":vessel,"from_date":getdate(first_line_ashore_of_vessel),"to_date":getdate(end_date),"only_for_royalty":1})
+	print(filter_for_royalty)
+	unique_items=get_unique_item(vessel)
+	first_slot_item,first_slot_storage_charges,second_slot_item,second_slot_storage_charges=get_royalty_storage_items_and_rate(type="PI")
 	report_data = execute(filter_for_royalty)
-	print(report_data,"data ---------")
-	get_filtered_data = []
-	for row in report_data[1]:
-		if row.rate > 0 and row.datewise > start_date:
-			get_filtered_data
+	print(report_data,"data ---------",len(report_data[1]))
+	# get_filtered_data = []
+	# for row in report_data[1]:
+	# 	for item in report_data[1]:
+	# 		if item.item_code == row.item_code:
+	# 			if row.rate > 0 and row.datewise >= start_date:
+	# 				get_filtered_data.append(row)
+
+	# print(get_filtered_data[0],"---filter data")

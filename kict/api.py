@@ -4,7 +4,8 @@ from frappe.utils import getdate,flt,cstr,add_days,get_first_day,get_last_day
 from kict.kict.doctype.railway_receipt.railway_receipt import get_available_batches
 from erpnext.stock.get_item_details import get_item_details,get_basic_details,get_price_list_rate_for
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import add_days,get_time,get_first_day,get_last_day
+from frappe.utils import add_days,get_time,get_first_day,get_last_day,cint
+from kict.kict.report.royalty_storage.royalty_storage import get_item_price
 
 def set_cargo_handling_option_name_and_is_periodic(self,method):
 	for row in self.get("custom_cargo_handling_charges_slots_details"):
@@ -317,9 +318,26 @@ def get_port_date(date,time):
 @frappe.whitelist()
 def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None,supplier_name=None,supplier_invoice_no=None,posting_date=None):
 	print("create_purchase_invoice_for_royalty_charges----",source_name,supplier_name,supplier_invoice_no,posting_date)
-	source_name = frappe.get_last_doc('Vessel').name
-	# vessel_list = vessel_to_pick_as_per_stock_ledger_entry(posting_date)
-	# print(vessel_list)
+	# source_name = frappe.get_last_doc('Vessel').name
+	# vessel_list = vessel_to_pick_from_batch(posting_date)
+	# print(vessel_list,"--")
+	# coal_settings=frappe.get_doc('Coal Settings','Coal Settings')
+	# custom_free_storage_days=cint(coal_settings.free_storage_days)
+	# if len(coal_settings.get("storage_charges_slab_for_royalty"))>0:
+	# 	first_slot_from_days=cint(coal_settings.storage_charges_slab_for_royalty[0].from_days)
+	# 	first_slot_to_days=cint(coal_settings.storage_charges_slab_for_royalty[0].to_days)
+	# 	first_slot_item=coal_settings.storage_charges_slab_for_royalty[0].item
+	# 	first_slot_storage_charges = get_item_price(first_slot_item,coal_settings.royalty_price_list) or 0
+		
+	# 	if len(coal_settings.get("storage_charges_slab_for_royalty"))>1:
+	# 		second_slot_from_days=cint(coal_settings.storage_charges_slab_for_royalty[1].from_days)
+	# 		# second_slot_to_days=cint(customer_doc.custom_chargeable_storage_charges_slots_details[1].to_days)
+	# 		second_slot_item=coal_settings.storage_charges_slab_for_royalty[1].item
+	# 		second_slot_storage_charges = get_item_price(second_slot_item,coal_settings.royalty_price_list) or 0
+
+	# # report_data = get_amount_from_royalty_charges_report(source_name,)
+
+	
 	# return 
 	def set_missing_values(source, target):
 		eligible_vessels = []
@@ -557,7 +575,7 @@ def set_query_for_item_based_on_stock_entry_type(doctype, txt, searchfield, star
 	else:
 		return 
 	
-def vessel_to_pick_as_per_stock_ledger_entry(posting_date):
+def vessel_to_pick_from_batch(posting_date):
 	print("---")
 	from frappe.utils.data import get_date_str
 
@@ -567,9 +585,52 @@ def vessel_to_pick_as_per_stock_ledger_entry(posting_date):
 	month_port_end_date = get_port_date(month_end_date,'23:59:59')
 	print(month_port_start_date, "   month_port_start_date   ",month_port_end_date, "   month_port_end_date   ")
 
-	vessel_list = frappe.db.get_all("Stock Entry",
-								 filters={"stock_entry_type":"Cargo Received","posting_date":["between", (month_port_start_date, month_port_end_date)]},
-								 fields=["distinct custom_vessel"])
-	print(vessel_list)
+	query = frappe.db.sql(
+		"""SELECT
+			DISTINCT custom_vessel
+		FROM
+			`tabBatch`
+		WHERE
+			disabled = 0
+			and manufacturing_date >= '{0}'
+			and manufacturing_date <= '{1}'
+		""".format(month_port_start_date,month_port_end_date),as_dict=1,debug=1)
+
+	vessel_list = []
+	for row in query:
+		vessel_list.append(row.custom_vessel)
+
+	non_closed_vessel = get_all_non_closed_vessel()
+	print(non_closed_vessel,"--------------non closed")
+	print(vessel_list,"------------ vessel from SE")
+
+	vessel_set = set(vessel_list)
+	non_closed_vessel_set = set(non_closed_vessel)
+
+	distinct_vessel_list = list(vessel_set.union(non_closed_vessel_set))
+
+	report_data = get_amount_from_royalty_charges_report(distinct_vessel_list[0],month_port_end_date)
+	print(report_data,"--"*100)
+	return distinct_vessel_list
+
 def get_all_non_closed_vessel():
 	vessel_list = 0
+	non_closed_vessels = frappe.db.get_all("Vessel",
+										filters={"vessel_closure":0},
+										fields=["name"])
+	non_closed_vessel_list = []
+	for vessel in non_closed_vessels:
+		non_closed_vessel_list.append(vessel.name)
+	return non_closed_vessel_list
+
+def get_amount_from_royalty_charges_report(vessel,start_date,end_date):
+	from kict.kict.report.royalty_storage.royalty_storage import execute
+
+	filter_for_royalty =frappe._dict({"vessel":vessel,"to_date":end_date})
+
+	report_data = execute(filter_for_royalty)
+	print(report_data,"data ---------")
+	get_filtered_data = []
+	for row in report_data[1]:
+		if row.rate > 0 and row.datewise > start_date:
+			get_filtered_data

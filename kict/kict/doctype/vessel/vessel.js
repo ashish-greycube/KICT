@@ -162,6 +162,7 @@ function create_sales_invoice_from_vessel_for_berth_charges(frm) {
                             fieldname: "total_qty",
                             label: __("Total Qty"),
                             read_only: 1,
+                            precision:9
                         }
                         proportionate_berth_hours_field={
                             fieldtype: "Float",
@@ -528,6 +529,7 @@ function create_sales_order_from_vessel_for_berth_charges(frm) {
                 fieldname: "total_qty",
                 label: __("Total Qty"),
                 read_only: 1,
+                precision:9
             })
             dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_5"})
             dialog_field.push(customer_po_no_field) 

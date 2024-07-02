@@ -205,7 +205,7 @@ def execute(filters=None):
 	second_slot_storage_charges=0	
 	
 	custom_is_holiday_applicable_for_free_storage_days=cint(1)	
-	first_slot_from_days,first_slot_to_days,first_slot_storage_charges,second_slot_from_days,second_slot_storage_charges=get_royalty_storage_items_and_rate(type="report")
+	custom_free_storage_days,first_slot_from_days,first_slot_to_days,first_slot_storage_charges,second_slot_from_days,second_slot_storage_charges=get_royalty_storage_items_and_rate(type="report")
 
 	float_precision = cint(frappe.db.get_default("float_precision")) or 3	
 	columns = get_columns(filters)
@@ -440,6 +440,7 @@ def get_conditions(filters):
 
 def get_royalty_storage_items_and_rate(type='report'):
 	coal_settings=frappe.get_doc('Coal Settings','Coal Settings')
+	custom_free_storage_days=cint(coal_settings.free_storage_days)
 	if len(coal_settings.get("storage_charges_slab_for_royalty"))>0:
 		first_slot_from_days=cint(coal_settings.storage_charges_slab_for_royalty[0].from_days)
 		first_slot_to_days=cint(coal_settings.storage_charges_slab_for_royalty[0].to_days)
@@ -451,6 +452,6 @@ def get_royalty_storage_items_and_rate(type='report'):
 			second_slot_item=coal_settings.storage_charges_slab_for_royalty[1].item
 			second_slot_storage_charges = get_item_price(second_slot_item,coal_settings.royalty_price_list) or 0
 	if type=='report':
-		return 	first_slot_from_days,first_slot_to_days,first_slot_storage_charges,second_slot_from_days,second_slot_storage_charges
+		return 	custom_free_storage_days,first_slot_from_days,first_slot_to_days,first_slot_storage_charges,second_slot_from_days,second_slot_storage_charges
 	if type=='PI':
 		return first_slot_item,first_slot_storage_charges,second_slot_item,second_slot_storage_charges

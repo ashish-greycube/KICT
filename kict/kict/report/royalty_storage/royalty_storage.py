@@ -418,7 +418,7 @@ def get_conditions(filters):
 
 	first_line_ashore=frappe.db.get_value('Statement of Fact', filters.vessel, 'first_line_ashore')
 	if not first_line_ashore:
-		frappe.throw(_("First line ashore is required in SOF for the vessel"))
+		frappe.throw(_("First line ashore is required in SOF for the vessel {0}").format(filters.vessel))
 
 	if filters.get("from_date") and filters.get("to_date"):
 		if getdate(filters.get("to_date")) < getdate(first_line_ashore):

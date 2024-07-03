@@ -391,8 +391,8 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
             print(current_month_stay_hours,"--> ",vessel)
             custom_qty = vessel_doc.grt * current_month_stay_hours
             royalty_percentage = frappe.db.get_single_value("Coal Settings","royalty_percentage")
-            custom_amount = custom_qty * bh_rate
-            calculated_rate = custom_amount * royalty_percentage
+            # custom_amount = custom_qty * bh_rate
+            calculated_rate = bh_rate * (royalty_percentage/100)
             sof = frappe.db.get_all("Statement of Fact",
                            filters={"name":vessel},
                            fields=["vessel_stay_hours","current_month_stay_hours","next_month_stay_hours","first_line_ashore","all_line_cast_off"])
@@ -413,7 +413,7 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                     print("all line same ************************")
 
             purchase_invoice_item_bh = target.append("items",
-            {"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,
+            {"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,"qty":custom_qty,
             "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})
 
             royalty_invoice_item = frappe.db.get_single_value("Coal Settings","ch_charges")
@@ -423,11 +423,11 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                     if row.get("vessel") == vessel:
                         ch_price_list_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list)
                         qty = vessel_doc.total_tonnage_mt
-                        ch_amount = qty * ch_price_list_rate
-                        ch_rate = ch_amount * royalty_percentage
+                        # ch_amount = qty * ch_price_list_rate
+                        ch_rate = ch_price_list_rate * (royalty_percentage/100)
 
                         purchase_invoice_item_ch =target.append("items",
-                        {"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":row.get("item"),"custom_grt":vessel_doc.total_tonnage_mt,
+                        {"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":row.get("item"),"custom_grt":vessel_doc.total_tonnage_mt,"qty":row.get("qty"),
                         "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":vessel_doc.total_tonnage_mt,"rate":ch_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})
 
             royalty_charges_report_data = get_data_from_royalty_charges_report_for_vessel(posting_date)
@@ -518,6 +518,7 @@ def get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date):
                                 current_vessel_item.append(current_vessel_comodity)							
                     vessel_done.append(current_vessel)	
                     data.append({'vessel':current_vessel,'qty':current_vessel_qty,'item':",".join(current_vessel_item)})
+        print(data,"=="*50)
         return data
 
 def get_item_price_list_rate(vessel,royalty_invoice_item,price_list):
@@ -569,9 +570,6 @@ def set_query_for_item_based_on_stock_entry_type(doctype, txt, searchfield, star
 def get_data_from_royalty_charges_report_for_vessel(posting_date):
     month_start_date = get_first_day(posting_date)
     month_end_date = get_last_day(posting_date)
-    # month_port_start_date = get_port_date(month_start_date,'00:00:00')
-    # month_port_end_date = get_port_date(month_end_date,'23:59:59')
-    # print(month_port_start_date, "   month_port_start_date   ",month_port_end_date, "   month_port_end_date   ")
 
     query = frappe.db.sql(
         """SELECT
@@ -585,7 +583,6 @@ def get_data_from_royalty_charges_report_for_vessel(posting_date):
             order by manufacturing_date asc
         """.format(month_start_date,month_end_date),as_dict=1,debug=1)
 
-    print(query,"-----query")
     vessel_list = []
     for row in query:
         vessel_list.append(row.custom_vessel)
@@ -596,42 +593,7 @@ def get_data_from_royalty_charges_report_for_vessel(posting_date):
 
     vessel_set = set(vessel_list)
     non_closed_vessel_set = set(non_closed_vessel)
-
     distinct_vessel_list = list(vessel_set.union(non_closed_vessel_set))
-
-    print(distinct_vessel_list[0],"vessel")
-
-    distinct_vessel_list.remove("MV HERMES-01012024")
-    distinct_vessel_list.remove("MV MAGIC PLUTO03062024")
-    distinct_vessel_list.remove("160324MV KOYLA-16032024001")
-    distinct_vessel_list.remove("MV ZHONG XIN PEARL28052024")
-    distinct_vessel_list.remove("MV METEOR10052024")
-    distinct_vessel_list.remove("MV YASA EAGLE21052024")
-    distinct_vessel_list.remove("MV BAO EXPRESS-21062024")
-    distinct_vessel_list.remove("160324MV SARASWATI-16032024001")
-    distinct_vessel_list.remove("17052024")
-    distinct_vessel_list.remove("MV MBA FUTURE22052024")
-    distinct_vessel_list.remove("Test115052024")
-    distinct_vessel_list.remove("MV BLC SECOND12062024")
-    distinct_vessel_list.remove("vessel14052024")
-    distinct_vessel_list.remove("Vessel-003")
-    distinct_vessel_list.remove("2310743")
-    distinct_vessel_list.remove("MV SUBARNAREKHA-100324117")
-    distinct_vessel_list.remove("MV PVT DIAMOND14052024")
-    distinct_vessel_list.remove("16032416032024001")
-    distinct_vessel_list.remove("MV DORIC LIBERTY31052024")
-    distinct_vessel_list.remove("MV NEW ASCENT07062024")
-    distinct_vessel_list.remove("MV YANGZE 1231052024")
-    distinct_vessel_list.remove("MV W SAPPHIRE15052024")
-    distinct_vessel_list.remove("MV AKAKI10052024")
-    distinct_vessel_list.remove("MV BLC SECOND-218062024")
-    distinct_vessel_list.remove("MV CP TIANJIN30052024")
-    distinct_vessel_list.remove("150324")
-    distinct_vessel_list.remove("MV CP TIANJIN-21062024")
-    distinct_vessel_list.remove("MV ADRIANA ROSE28052024")
-    distinct_vessel_list.remove("MV NS HANGZHOU31052024")
-    distinct_vessel_list.remove("MV Akaki14052024")
-
     report_data=[]
     print(distinct_vessel_list,"vessel")
     for vessel in distinct_vessel_list:

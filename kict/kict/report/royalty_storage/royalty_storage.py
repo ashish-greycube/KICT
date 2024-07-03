@@ -422,9 +422,9 @@ def get_conditions(filters):
 
 	if filters.get("from_date") and filters.get("to_date"):
 		if getdate(filters.get("to_date")) < getdate(first_line_ashore):
-			frappe.throw(_("To date {0} should be greater then first line ashore {1}".format(filters.get("to_date"),getdate(first_line_ashore))))
+			frappe.throw(_("To date {0} should be greater then first line ashore {1} for {2} vessel".format(filters.get("to_date"),getdate(first_line_ashore),filters.vessel)))
 		if filters.get("to_date") < filters.get("from_date"):	
-			frappe.throw(_("To Date should be greater then From Date"))
+			frappe.throw(_("To Date should be greater then From Date for {0} vessel".format(filters.vessel)))
 
 		if filters.get("to_date") >= filters.get("from_date"):
 			conditions += " and sle.posting_date between '{0}' and '{1}'".format(filters.get("from_date"),filters.get("to_date"))

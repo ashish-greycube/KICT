@@ -514,8 +514,11 @@ def get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date):
                         if inner_row.vessel==current_vessel:
                             current_vessel_qty=current_vessel_qty+inner_row.actual_qty
                             current_vessel_comodity = frappe.db.get_value('Item', inner_row.item_code, 'custom_coal_commodity')
-                            if  current_vessel_comodity not in current_vessel_item:
-                                current_vessel_item.append(current_vessel_comodity)							
+                            if current_vessel_comodity == None:
+                                frappe.throw(_("Please set commodity in item {0}").format(inner_row.item_code))
+                            else:
+                                if current_vessel_comodity not in current_vessel_item:
+                                    current_vessel_item.append(current_vessel_comodity)							
                     vessel_done.append(current_vessel)	
                     data.append({'vessel':current_vessel,'qty':current_vessel_qty,'item':",".join(current_vessel_item)})
         print(data,"=="*50)
@@ -596,6 +599,7 @@ def get_data_from_royalty_charges_report_for_vessel(posting_date):
     distinct_vessel_list = list(vessel_set.union(non_closed_vessel_set))
     report_data=[]
     print(distinct_vessel_list,"vessel")
+    frappe.errprint(distinct_vessel_list)
     for vessel in distinct_vessel_list:
         vessel_data = get_amount_from_royalty_charges_report(vessel,month_start_date,month_end_date)
         for row in vessel_data:

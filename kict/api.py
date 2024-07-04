@@ -321,6 +321,7 @@ def get_port_date(date,time):
 def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None,supplier_name=None,supplier_invoice_no=None,posting_date=None):
     source_name = frappe.get_last_doc('Vessel').name
     first_slot_item,first_slot_storage_charges,second_slot_item,second_slot_storage_charges = get_royalty_storage_items_and_rate(type="PI")
+    distinct_vessel_list,free_vessel_list,charged_vessel = get_data_from_royalty_charges_report_for_vessel(posting_date,type="Comment")
  
     def set_missing_values(source, target):
         eligible_vessels = []
@@ -346,13 +347,13 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                                      or_filters={'first_line_ashore':['between',[filter__from_date,filter__to_date]],
                                               'all_line_cast_off':['between',[filter__from_date,filter__to_date]] },          
                                    fields=["name","first_line_ashore","all_line_cast_off","current_month_stay_hours"])
-        print(sof_list)  
+        print('sof_list',sof_list)  
         for sof in sof_list:
             if sof.first_line_ashore and sof.all_line_cast_off:
                 first_line_ashore_month,all_line_cast_off_month = (sof.first_line_ashore).month,(sof.all_line_cast_off).month
                 if posting_date_month==first_line_ashore_month or posting_date_month==all_line_cast_off_month:
                     eligible_vessels.append(sof.name)
-
+        print('sof_list2',eligible_vessels)  
         if len(eligible_vessels)==0:
             frappe.throw("No eligible vessels found for {0} month".format(posting_date_month))
         # self.bill_no = ''
@@ -378,8 +379,8 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 
             print(distinct_item_commodity,"distinct_item_commodity")
             vessel_item_list = ",".join((ele if ele!=None else '') for ele in distinct_item_commodity)
-            # print(vessel_item_list)
-
+            
+            # royalty charges for berth hire
             bh_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list)
 
             current_month_stay_hours = frappe.db.get_value("Statement of Fact",vessel,"current_month_stay_hours")
@@ -406,6 +407,7 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
             {"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,"qty":custom_qty,
             "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})
 
+            # royalty charges for cargo handling
             royalty_invoice_item = frappe.db.get_single_value("Coal Settings","ch_charges")
             cargo_handling_data = get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date)
             if len(cargo_handling_data)>0:
@@ -420,20 +422,40 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                         {"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":row.get("item"),"custom_grt":vessel_doc.total_tonnage_mt,"qty":row.get("qty"),
                         "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":vessel_doc.total_tonnage_mt,"rate":ch_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})
 
-            royalty_charges_report_data = get_data_from_royalty_charges_report_for_vessel(posting_date)
+            # royalty charges for storage
+            royalty_charges_report_data = get_data_from_royalty_charges_report_for_vessel(posting_date,type="PI")
             if len(royalty_charges_report_data)>0:
+                royalty_charges_vessel_billed=[]
                 for row in royalty_charges_report_data:
                     print(row,"-----row")
-                    if row.get("vessel") == vessel and row.get("storage_item") == first_slot_item:
+                    if row.get("vessel") == vessel:
+                        royalty_charges_vessel_billed.append(vessel)
+                        if  row.get("storage_item") == first_slot_item:
+                            item_commodity = frappe.db.get_value("Item",row.get("customer_item"),"custom_coal_commodity")
+                            purchase_invoice_item_sc = target.append("items",
+                            {"item_code":first_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,
+                            "qty":row.get("qty"),"vessel":vessel,"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
+                        elif row.get("storage_item") == second_slot_item:
+                            item_commodity = frappe.db.get_value("Item",row.get("customer_item"),"custom_coal_commodity")
+                            purchase_invoice_item_sc_2 = target.append("items",
+                            {"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,
+                            "qty":row.get("qty"),"vessel":vessel,"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
+
+        # for storage vessel which are not part of outer eligible vessels
+        if royalty_charges_report_data and len(royalty_charges_report_data)>0 and royalty_charges_vessel_billed and len(royalty_charges_vessel_billed)>0:
+            for row in royalty_charges_report_data:       
+                if row.get("vessel") not in royalty_charges_vessel_billed:
+                    if  row.get("storage_item") == first_slot_item:
                         item_commodity = frappe.db.get_value("Item",row.get("customer_item"),"custom_coal_commodity")
                         purchase_invoice_item_sc = target.append("items",
                         {"item_code":first_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,
-                         "qty":row.get("qty"),"vessel":vessel,"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
-                    elif row.get("vessel") == vessel and row.get("storage_item") == second_slot_item:
+                        "qty":row.get("qty"),"vessel":row.get("vessel"),"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
+                    elif row.get("storage_item") == second_slot_item:
                         item_commodity = frappe.db.get_value("Item",row.get("customer_item"),"custom_coal_commodity")
                         purchase_invoice_item_sc_2 = target.append("items",
                         {"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,
-                         "qty":row.get("qty"),"vessel":vessel,"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
+                        "qty":row.get("qty"),"vessel":row.get("vessel"),"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})                    
+
 
 
     
@@ -457,6 +479,7 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
     doc.run_method("calculate_taxes_and_totals")
     doc.save(ignore_permissions=True)
  
+    doc.add_comment("Comment", "<b>Eligible vessels</b> : {0} <br><b>Free vessels</b> : {1} <br><b>Charged vessels</b> : {2}".format(distinct_vessel_list,free_vessel_list,charged_vessel))
     return doc.name
 
 
@@ -556,7 +579,8 @@ def set_query_for_item_based_on_stock_entry_type(doctype, txt, searchfield, star
     else:
         return 
     
-def get_data_from_royalty_charges_report_for_vessel(posting_date):
+def get_data_from_royalty_charges_report_for_vessel(posting_date,type="PI"):
+    vessel_list = []
     month_start_date = get_first_day(posting_date)
     month_end_date = get_last_day(posting_date)
 
@@ -572,26 +596,41 @@ def get_data_from_royalty_charges_report_for_vessel(posting_date):
             order by manufacturing_date asc
         """.format(month_start_date,month_end_date),as_dict=1,debug=1)
 
-    vessel_list = []
+    
     for row in query:
         vessel_list.append(row.custom_vessel)
 
     non_closed_vessel = get_all_non_closed_vessel(posting_date)
-    print(non_closed_vessel,"--------------non closed")
-    print(vessel_list,"------------ vessel from SE")
+    print(non_closed_vessel,"case 2--------------non closed")
+    print(vessel_list,"case 1------------ vessel from SE")
 
     vessel_set = set(vessel_list)
+
     non_closed_vessel_set = set(non_closed_vessel)
     distinct_vessel_list = list(vessel_set.union(non_closed_vessel_set))
     report_data=[]
+    charged_vessel = []
+    free_vessel_list = []
     print(distinct_vessel_list,"vessel")
     frappe.errprint(distinct_vessel_list)
     for vessel in distinct_vessel_list:
-        vessel_data = get_amount_from_royalty_charges_report(vessel,month_start_date,month_end_date)
+        vessel_data,free_vessel = get_amount_from_royalty_charges_report(vessel,month_start_date,month_end_date)
         for row in vessel_data:
             report_data.append(row)
+            if row.get("vessel") not in charged_vessel:
+                charged_vessel.append(row.get("vessel"))
+        if len(free_vessel)>0:
+            free_vessel_list.append(free_vessel[0])
+
+    print(free_vessel_list,"freeeee")
+    print(charged_vessel,"chargeddddddddd")
+    frappe.errprint(free_vessel)
+    frappe.errprint(charged_vessel)
     # print(report_data,"--"*100)
-    return report_data
+    if type=="PI":
+        return report_data
+    elif type=="Comment":
+        return distinct_vessel_list,free_vessel_list,charged_vessel
 
 def get_all_non_closed_vessel(posting_date):
     non_closed_vessels = frappe.db.get_all("Vessel",
@@ -615,6 +654,7 @@ def get_amount_from_royalty_charges_report(vessel,start_date,end_date):
     first_slot_item,first_slot_storage_charges,second_slot_item,second_slot_storage_charges=get_royalty_storage_items_and_rate(type="PI")
     col,report_data = execute(filter_for_royalty)
     get_filtered_data = []
+    free_vessel = []
     slot_charges=[first_slot_storage_charges,second_slot_storage_charges]
     for item in unique_items:
         for slot_charge in slot_charges:
@@ -628,4 +668,7 @@ def get_amount_from_royalty_charges_report(vessel,start_date,end_date):
                 storage_item=second_slot_item
             if qty>0:               
                 get_filtered_data.append({"vessel":vessel,"customer_item":item.item,"qty":qty,"storage_item":storage_item})
-    return get_filtered_data
+   
+    if len(get_filtered_data)==0:
+        free_vessel.append(vessel)
+    return get_filtered_data,free_vessel

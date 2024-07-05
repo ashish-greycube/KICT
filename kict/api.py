@@ -490,7 +490,7 @@ def get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date):
         port_start_date_with_time=get_date_str(month_start_date)+' 06:00:01'
 
         next_month_start_date = add_days(get_last_day(posting_date),1)
-        port_end_date_with_time=get_date_str(next_month_start_date)+' 06:00:00'
+        port_next_month_date_as_end_date_with_time=get_date_str(next_month_start_date)+' 06:00:00'
 
         query = frappe.db.sql(
         """			select 
@@ -512,7 +512,7 @@ def get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date):
                 and sle.posting_datetime >='{0}'
                 and sle.posting_datetime <='{1}'
             group by
-                sle.vessel ,sle.item_code """.format(port_start_date_with_time,port_end_date_with_time),as_dict=1,debug=1)	
+                sle.vessel ,sle.item_code """.format(port_start_date_with_time,port_next_month_date_as_end_date_with_time),as_dict=1,debug=1)	
         data=[]
         vessel_done=[]
         if len(query)>0:
@@ -593,6 +593,7 @@ def get_data_from_royalty_charges_report_for_vessel(posting_date,type="PI"):
             disabled = 0
             and manufacturing_date >= '{0}'
             and manufacturing_date <= '{1}'
+            and custom_vessel is not NULL
             order by manufacturing_date asc
         """.format(month_start_date,month_end_date),as_dict=1,debug=1)
 
@@ -612,7 +613,6 @@ def get_data_from_royalty_charges_report_for_vessel(posting_date,type="PI"):
     charged_vessel = []
     free_vessel_list = []
     print(distinct_vessel_list,"vessel")
-    frappe.errprint(distinct_vessel_list)
     for vessel in distinct_vessel_list:
         vessel_data,free_vessel = get_amount_from_royalty_charges_report(vessel,month_start_date,month_end_date)
         for row in vessel_data:
@@ -624,9 +624,6 @@ def get_data_from_royalty_charges_report_for_vessel(posting_date,type="PI"):
 
     print(free_vessel_list,"freeeee")
     print(charged_vessel,"chargeddddddddd")
-    frappe.errprint(free_vessel)
-    frappe.errprint(charged_vessel)
-    # print(report_data,"--"*100)
     if type=="PI":
         return report_data
     elif type=="Comment":

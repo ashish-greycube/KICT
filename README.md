@@ -2,6 +2,24 @@
 
 KICT customization
 
+**1. Batch 'Manufacturing Date' is set as per port logic when auto batch is created from Stock Entry(SE) when type is 'Cargo Received'**
+
+   Ex. <br>
+   SE.posting_date = 01-06-2024 <br>
+   SE.posting_time = 04:00:00 <br>
+   Batch.Manufacturing Date is 31-05-2024 <br>
+
+**2. Royalty PI : cargo handling qty(i.e In Coal Settings when you press Create-->Create Royalty Invoice)**
+   
+   For June month, SLE posting date time to be considered between <br>
+   port_start_date_with_time : 2024-02-01 06:00:01 <br>
+   port_next_month_end_date_with_time : 2024-03-01 06:00:00 <br>
+
+**3. In all storage repots i.e Storage Charges,Royalty Storage,Basic Storage Entries** 
+   
+   'Date wise' column shows date as per port logic for Receipt qty >0 <br>
+   Ex SLE has 01-06-2024 04:00:00 then in 'Date wise' column will show 31-05-2024 <br>
+
 <hr>
 
 #### Contact Us  

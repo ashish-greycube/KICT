@@ -58,7 +58,8 @@
    "fieldname": "grt",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "GRT"
+   "label": "GRT",
+   "reqd": 1
   },
   {
    "fieldname": "dwt",
@@ -313,7 +314,7 @@
    "link_fieldname": "vessel"
   }
  ],
- "modified": "2024-06-25 17:20:26.911128",
+ "modified": "2024-07-05 13:14:38.430308",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

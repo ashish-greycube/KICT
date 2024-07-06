@@ -217,7 +217,7 @@
   {
    "fieldname": "pilot_on_board_for_berthing",
    "fieldtype": "Datetime",
-   "label": "Pilot On Board For Berthing "
+   "label": "Pilot On Board For Berthing"
   },
   {
    "fieldname": "first_line_ashore",
@@ -380,7 +380,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-06-20 12:31:02.763054",
+ "modified": "2024-07-05 16:56:03.819209",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

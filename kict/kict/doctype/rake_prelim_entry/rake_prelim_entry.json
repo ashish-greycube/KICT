@@ -22,7 +22,6 @@
   "no_of_wagon_rejected_by_railway",
   "no_of_wagon_rejected_due_to_foreign_material",
   "no_of_wagons_reject",
-  "incoming_rake_no",
   "rake_prelim_entry_remark"
  ],
  "fields": [
@@ -95,11 +94,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "incoming_rake_no",
-   "fieldtype": "Data",
-   "label": "Incoming Rake No"
-  },
-  {
    "fieldname": "rake_prelim_entry_remark",
    "fieldtype": "Data",
    "label": "Rake Prelim Entry Remark"
@@ -143,7 +137,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-07-04 08:49:40.145191",
+ "modified": "2024-07-06 10:32:22.664285",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Prelim Entry",

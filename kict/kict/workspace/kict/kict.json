@@ -330,9 +330,9 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "Commercial Stock Balance",
+   "label": "Royalty Storage",
    "link_count": 0,
-   "link_to": "Commercial Stock Balance",
+   "link_to": "Royalty Storage",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
@@ -340,15 +340,15 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "Royalty Storage",
+   "label": "Destination Dispatch Qty",
    "link_count": 0,
-   "link_to": "Royalty Storage",
+   "link_to": "Destination Dispatch Qty",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2024-07-01 16:09:11.101365",
+ "modified": "2024-07-08 15:43:22.700680",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "KICT",

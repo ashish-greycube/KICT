@@ -53,5 +53,22 @@ frappe.ui.form.on("Rake Prelim Entry", {
             console.log("worked")
             frappe.model.set_value(cdt, cdn, 'commercial_destination_item', row.item);
         }
+    },
+    no_of_wagons_loaded(frm, cdt, cdn){
+        set_no_of_wagons_reject(frm, cdt, cdn)
+    },
+    no_of_wagons_placed(frm, cdt, cdn){
+        set_no_of_wagons_reject(frm, cdt, cdn)
     }
+
 })
+
+let set_no_of_wagons_reject = function (frm, cdt, cdn) {
+    let row = locals[cdt][cdn]
+    let reject_wagons = row.no_of_wagons_placed - row.no_of_wagons_loaded
+    if (reject_wagons < 0){
+        frappe.throw(__("Row {0}: No of wagons reject cannot be negative",[row.idx]))
+    }
+    frappe.model.set_value(cdt, cdn, 'no_of_wagons_reject', reject_wagons);
+
+}

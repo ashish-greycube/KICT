@@ -37,6 +37,7 @@ class RailwayReceipt(Document):
 
 	def validate(self):
 		self.set_rr_weight()
+		self.set_item_cw_and_pcc()
 	
 	def set_rr_weight(self):
 		railway_item_detail = self.get("railway_receipt_item_details")
@@ -47,6 +48,18 @@ class RailwayReceipt(Document):
 					total_weight = total_weight + row.rr_item_weight_mt
 
 		self.rr_weight = total_weight
+	
+	def set_item_cw_and_pcc(self):
+		railway_receipt_item = self.get("railway_receipt_item_details")
+		for row in railway_receipt_item:
+			if self.chargable_weight == 0 or self.chargable_weight == None :
+				frappe.throw(_("Please set chargable weight"))
+			elif self.permisible_carrying_capacity == 0 or self.permisible_carrying_capacity == None:
+				frappe.throw(_("Please set permisible carrying capacity"))
+			item_cw = (self.rr_weight / row.rr_item_weight_mt) * self.chargable_weight
+			item_pcc = (self.rr_weight / row.rr_item_weight_mt) * self.permisible_carrying_capacity
+			row.item_cw = item_cw
+			row.item_pcc = item_pcc
 
 	def on_submit(self):
 		create_delivery_note_from_railway_receipt(self.name)

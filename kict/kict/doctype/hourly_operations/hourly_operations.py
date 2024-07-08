@@ -4,12 +4,14 @@
 import frappe
 import json
 from frappe.model.document import Document
+from frappe import _
 
 
 class HourlyOperations(Document):
 	def validate(self):
 		self.set_day_tonnage_and_running_total()
 		self.set_balance()
+		self.set_discharged_commenced_and_completed_date_time()
 	
 	def set_day_tonnage_and_running_total(self):
 		ho_details = self.get("hourly_operation_details")
@@ -30,3 +32,9 @@ class HourlyOperations(Document):
 			if ho_details[length-1].period_tonnage_running_total:
 				balance = self.total_tonnage_mt - ho_details[length-1].period_tonnage_running_total
 				self.balance = balance
+
+	def set_discharged_commenced_and_completed_date_time(self):
+		if self.discharge_commenced_date_time == None:
+			frappe.throw(_("Please set discharge commenced in SOF"))
+		if self.discharge_completed_date_time == None:
+			frappe.throw(_("Please set discharge completed in SOF"))

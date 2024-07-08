@@ -1,11 +1,23 @@
 // Copyright (c) 2024, GreyCube Technologies and contributors
 // For license information, please see license.txt
 
-// frappe.ui.form.on("Hourly Operations", {
-// 	refresh(frm) {
-
-// 	},
-// });
+frappe.ui.form.on("Hourly Operations", {
+	vessel(frm){
+        frappe.db.get_list("Statement of Fact", {
+            filters: {
+                name: frm.doc.vessel
+            },
+            fields: ["discharge_commenced","discharge_completed"]
+        }).then(records => {
+            if (records.length > 0) {
+                frm.set_value("discharge_commenced_date_time", records[0].discharge_commenced)
+                frm.set_value("discharge_completed_date_time", records[0].discharge_completed)
+            }else{
+                frappe.throw(__("Please set discharge commenced and discharge completed in SOF"))
+            }
+        })
+    }
+});
 
 frappe.ui.form.on("Hourly Operation Details", {
     hourly_receipt_qty(frm, cdt, cdn) {

@@ -125,7 +125,7 @@
   {
    "fieldname": "item_cw",
    "fieldtype": "Float",
-   "label": "Item CW1",
+   "label": "Item CW",
    "read_only": 1
   },
   {
@@ -138,7 +138,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-07-08 09:32:35.852809",
+ "modified": "2024-07-08 09:46:17.421289",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt Item Details",

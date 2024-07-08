@@ -19,9 +19,9 @@
   "column_break_kuys",
   "no_of_wagons_placed",
   "no_of_wagons_loaded",
+  "no_of_wagons_reject",
   "no_of_wagon_rejected_by_railway",
   "no_of_wagon_rejected_due_to_foreign_material",
-  "no_of_wagons_reject",
   "rake_prelim_entry_remark"
  ],
  "fields": [
@@ -71,7 +71,8 @@
   {
    "fieldname": "no_of_wagons_reject",
    "fieldtype": "Int",
-   "label": "No of Wagons Reject"
+   "label": "No of Wagons Reject",
+   "read_only": 1
   },
   {
    "fieldname": "silo_loading_weight",
@@ -137,7 +138,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-07-06 10:32:22.664285",
+ "modified": "2024-07-06 10:40:03.481645",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Prelim Entry",

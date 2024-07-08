@@ -24,7 +24,9 @@
   "fds",
   "customer_specific_grt",
   "remarks",
-  "cargo_closure"
+  "cargo_closure",
+  "discharge_commenced",
+  "discharge_completed"
  ],
  "fields": [
   {
@@ -151,12 +153,22 @@
    "fieldname": "storage_qty_billed",
    "fieldtype": "Float",
    "label": "Storage Qty Billed"
+  },
+  {
+   "fieldname": "discharge_commenced",
+   "fieldtype": "Datetime",
+   "label": "Discharge Commenced"
+  },
+  {
+   "fieldname": "discharge_completed",
+   "fieldtype": "Datetime",
+   "label": "Discharge Completed"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-06-19 11:02:56.697144",
+ "modified": "2024-07-08 13:00:57.054288",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel Details",

@@ -433,12 +433,12 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                         if  row.get("storage_item") == first_slot_item:
                             item_commodity = frappe.db.get_value("Item",row.get("customer_item"),"custom_coal_commodity")
                             purchase_invoice_item_sc = target.append("items",
-                            {"item_code":first_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,
+                            {"item_code":first_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,"rate":first_slot_storage_charges*(royalty_percentage/100),
                             "qty":row.get("qty"),"vessel":vessel,"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
                         elif row.get("storage_item") == second_slot_item:
                             item_commodity = frappe.db.get_value("Item",row.get("customer_item"),"custom_coal_commodity")
                             purchase_invoice_item_sc_2 = target.append("items",
-                            {"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,
+                            {"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,"rate":second_slot_storage_charges*(royalty_percentage/100),
                             "qty":row.get("qty"),"vessel":vessel,"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
 
         # for storage vessel which are not part of outer eligible vessels
@@ -448,12 +448,12 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                     if  row.get("storage_item") == first_slot_item:
                         item_commodity = frappe.db.get_value("Item",row.get("customer_item"),"custom_coal_commodity")
                         purchase_invoice_item_sc = target.append("items",
-                        {"item_code":first_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,
+                        {"item_code":first_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,"rate":first_slot_storage_charges*(royalty_percentage/100),
                         "qty":row.get("qty"),"vessel":row.get("vessel"),"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
                     elif row.get("storage_item") == second_slot_item:
                         item_commodity = frappe.db.get_value("Item",row.get("customer_item"),"custom_coal_commodity")
                         purchase_invoice_item_sc_2 = target.append("items",
-                        {"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,
+                        {"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,"rate":second_slot_storage_charges*(royalty_percentage/100),
                         "qty":row.get("qty"),"vessel":row.get("vessel"),"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})                    
 
 

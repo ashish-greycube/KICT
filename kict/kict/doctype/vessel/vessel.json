@@ -35,6 +35,9 @@
   "costal_foreign_vessle",
   "flag",
   "bh_bill_to",
+  "demurrage_rate",
+  "gdr",
+  "exchange_rate",
   "company",
   "vessel_closure",
   "vessel_closed_on",
@@ -253,6 +256,21 @@
    "fieldname": "percent_storage_charges_si",
    "fieldtype": "Percent",
    "label": "% Storage Charges SI"
+  },
+  {
+   "fieldname": "demurrage_rate",
+   "fieldtype": "Float",
+   "label": "Demurrage Rate"
+  },
+  {
+   "fieldname": "gdr",
+   "fieldtype": "Float",
+   "label": "GDR"
+  },
+  {
+   "fieldname": "exchange_rate",
+   "fieldtype": "Float",
+   "label": "Exchange Rate"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -314,7 +332,7 @@
    "link_fieldname": "vessel"
   }
  ],
- "modified": "2024-07-05 13:14:38.430308",
+ "modified": "2024-07-10 12:37:51.282485",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

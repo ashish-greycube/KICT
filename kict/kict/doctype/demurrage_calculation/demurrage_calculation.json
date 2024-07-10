@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:vessel",
+ "creation": "2024-07-10 10:42:35.968554",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vessel",
+  "demurrage_rate",
+  "gdr",
+  "exchange_rate"
+ ],
+ "fields": [
+  {
+   "fetch_from": "vessel.demurrage_rate",
+   "fieldname": "demurrage_rate",
+   "fieldtype": "Float",
+   "label": "Demurrage Rate"
+  },
+  {
+   "fetch_from": "vessel.gdr",
+   "fieldname": "gdr",
+   "fieldtype": "Float",
+   "label": "GDR"
+  },
+  {
+   "fetch_from": "vessel.exchange_rate",
+   "fieldname": "exchange_rate",
+   "fieldtype": "Float",
+   "label": "Exchange Rate"
+  },
+  {
+   "fieldname": "vessel",
+   "fieldtype": "Link",
+   "label": "VCN No",
+   "options": "Vessel",
+   "unique": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-10 12:49:45.633012",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Demurrage Calculation",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

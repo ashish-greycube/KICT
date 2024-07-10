@@ -987,6 +987,12 @@ function create_sales_invoice_for_storage_charges_from_vessel(frm){
             dialog_field.push(customer_name_field)
             dialog_field.push(total_tonnage_field)
             dialog_field.push(customer_po_no_field)
+            dialog_field.push({
+                label: 'Message',
+				fieldname: 'msg',
+				fieldtype: 'HTML',
+				options: '<p class="alert alert-warning">You can create tax invoice of storage charges <b>ONLY IF</b>, there are stock entry/s such that stock balance is zero </p>',
+            })
 
             dialog = new frappe.ui.Dialog({
                 title: __("Enter Details for Storage Charges"),

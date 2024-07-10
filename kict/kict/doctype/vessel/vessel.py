@@ -372,7 +372,7 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 	data = execute(filter_for_lv)
 
 	if len(data[1])==0:
-		frappe.throw(_("There is no stock entry for {0}. <br>  invoice of storage charges.").format(cargo_item_field))
+		frappe.throw(_("There is no stock entry for {0}. <br> You can not create tax invoice of storage charges.").format(cargo_item_field))
 	else:
 		total_bal_val = 0
 		for record in data[1]:

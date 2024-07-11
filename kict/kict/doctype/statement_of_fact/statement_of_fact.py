@@ -19,8 +19,8 @@ class StatementofFact(Document):
 			if self.vessel_given_readiness__for_sailing:
 				if self.first_line_ashore > self.vessel_given_readiness__for_sailing:
 					frappe.throw(_("First line ashore can not be greater than vessel given readiness for sailing"))
-				if self.vessel_given_readiness__for_sailing > self.all_line_cast_off:
-					frappe.throw(_("Vessel given readiness for sailing can not be greater than all line cast off"))
+				# if self.vessel_given_readiness__for_sailing > self.all_line_cast_off:
+				# 	frappe.throw(_("Vessel given readiness for sailing can not be greater than all line cast off"))
 
 	def set_berth_stay_hours(self):
 			if not self.vessel_given_readiness__for_sailing:

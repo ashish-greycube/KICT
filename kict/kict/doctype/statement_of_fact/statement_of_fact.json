@@ -111,7 +111,7 @@
    "fieldname": "loa",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": " LOA",
+   "label": "LOA",
    "read_only": 1
   },
   {
@@ -154,7 +154,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Agent Name ",
+   "label": "Agent Name",
    "options": "Customer",
    "read_only": 1
   },
@@ -380,7 +380,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-07-05 16:56:03.819209",
+ "modified": "2024-07-11 10:29:47.606542",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

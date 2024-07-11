@@ -1,0 +1,136 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:KICT-EF-{#}",
+ "creation": "2024-07-11 10:58:21.159843",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_name",
+  "borne_by_company",
+  "borne_by_employee",
+  "column_break_rzca",
+  "meal_date",
+  "meal_type",
+  "meal_price",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "description": "calculate based on percent in settings",
+   "fieldname": "borne_by_company",
+   "fieldtype": "Currency",
+   "label": "Borne By Company"
+  },
+  {
+   "fieldname": "column_break_rzca",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "meal_date",
+   "fieldtype": "Date",
+   "label": "Meal Date"
+  },
+  {
+   "description": "fetch from price list",
+   "fieldname": "meal_price",
+   "fieldtype": "Currency",
+   "label": "Meal Price"
+  },
+  {
+   "description": "meal price -  borne by company",
+   "fieldname": "borne_by_employee",
+   "fieldtype": "Currency",
+   "label": "Borne By Employee"
+  },
+  {
+   "description": "filter on food meal item group",
+   "fieldname": "meal_type",
+   "fieldtype": "Link",
+   "label": "Meal Type",
+   "options": "Item"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Fooding",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-07-11 11:20:03.672630",
+ "modified_by": "Administrator",
+ "module": "Kict",
+ "name": "Employee Fooding",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

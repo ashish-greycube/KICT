@@ -60,13 +60,6 @@
    "label": "Borne By Employee"
   },
   {
-   "description": "filter on food meal item group",
-   "fieldname": "meal_type",
-   "fieldtype": "Link",
-   "label": "Meal Type",
-   "options": "Item"
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -75,12 +68,19 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "description": "filter on food meal item group",
+   "fieldname": "meal_type",
+   "fieldtype": "Link",
+   "label": "Meal Type",
+   "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-11 11:20:03.672630",
+ "modified": "2024-07-11 15:29:23.612997",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Employee Fooding",

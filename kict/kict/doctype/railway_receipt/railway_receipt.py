@@ -56,10 +56,13 @@ class RailwayReceipt(Document):
 				frappe.throw(_("Please set chargable weight"))
 			elif self.permisible_carrying_capacity == 0 or self.permisible_carrying_capacity == None:
 				frappe.throw(_("Please set permisible carrying capacity"))
-			item_cw = (row.rr_item_weight_mt / self.rr_weight) * self.chargable_weight
-			item_pcc = (row.rr_item_weight_mt / self.rr_weight) * self.permisible_carrying_capacity
-			row.item_cw = item_cw
-			row.item_pcc = item_pcc
+			if row.rr_item_weight_mt and self.rr_weight and self.chargable_weight:
+				item_cw = (row.rr_item_weight_mt / self.rr_weight) * self.chargable_weight
+			if row.rr_item_weight_mt and self.rr_weight and self.permisible_carrying_capacity:
+				item_pcc = (row.rr_item_weight_mt / self.rr_weight) * self.permisible_carrying_capacity
+			
+			row.item_cw = item_cw or 0
+			row.item_pcc = item_pcc or 0
 
 	def on_submit(self):
 		create_delivery_note_from_railway_receipt(self.name)

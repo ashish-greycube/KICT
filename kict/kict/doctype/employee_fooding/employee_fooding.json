@@ -10,6 +10,7 @@
   "employee_name",
   "borne_by_company",
   "borne_by_employee",
+  "employee_email",
   "column_break_rzca",
   "meal_date",
   "meal_type",
@@ -75,12 +76,19 @@
    "fieldtype": "Link",
    "label": "Meal Type",
    "options": "Item"
+  },
+  {
+   "fetch_from": "employee.user_id",
+   "fieldname": "employee_email",
+   "fieldtype": "Link",
+   "label": "Employee Email",
+   "options": "User"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-11 15:29:23.612997",
+ "modified": "2024-07-11 17:26:46.055899",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Employee Fooding",

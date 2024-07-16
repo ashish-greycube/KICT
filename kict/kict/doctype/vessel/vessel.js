@@ -664,9 +664,17 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                         callback: function (r) {
                             billing_option_list = r.message
                             let billing_option = []
-                            billing_option_list.forEach(ele=>{
-                                billing_option.push(ele.cargo_handling_option_name)
-                            })
+                            if (billing_option_list.length > 0){
+                                billing_option_list.forEach(ele=>{
+                                    billing_option.push(ele.cargo_handling_option_name)
+                                })
+                            }
+                            else {
+                                let customer_url = '<a href="/app/customer/' + customer_name.value + '" target="_blank">' + customer_name.value + '</a><br>'
+                                dialog.hide()
+                                frappe.throw(__("Cargo charges configuration not found in customer {0}",[customer_url]))
+                                
+                            }
                             dialog.set_df_property('type_of_billing_field','options',billing_option)
                         }
                     })

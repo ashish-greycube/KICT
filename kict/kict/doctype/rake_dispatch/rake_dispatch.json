@@ -16,6 +16,7 @@
   "loading_start",
   "loading_complete",
   "release_time",
+  "release_date",
   "column_break_vjav",
   "priority",
   "commodity",
@@ -243,6 +244,12 @@
    "hidden": 1,
    "label": "Plotwise SILO Qty Detail",
    "options": "Plotwise SILO Qty Detail"
+  },
+  {
+   "fieldname": "release_date",
+   "fieldtype": "Data",
+   "label": "Release Date",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -260,7 +267,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-06-20 13:16:58.214897",
+ "modified": "2024-07-16 12:34:32.306921",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

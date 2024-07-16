@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe import _ 
+from frappe.utils import getdate,format_date
 
 
 class RakeDispatch(Document):
@@ -40,6 +41,8 @@ class RakeDispatch(Document):
 					if row.no_of_wagons_reject < 0:
 						frappe.throw(_("Row {0}: No of reject wagons cannot be negative").format(row.idx))
 
+	def before_naming(self):
+		self.release_date=format_date(getdate(self.release_time))
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs

@@ -12,6 +12,8 @@ class HourlyOperations(Document):
 		self.set_day_tonnage_and_running_total()
 		self.set_balance()
 		self.set_discharged_commenced_and_completed_date_time()
+		self.set_total_belt_weigher()
+		self.set_total_grab_cycle()
 	
 	def set_day_tonnage_and_running_total(self):
 		ho_details = self.get("hourly_operation_details")
@@ -38,3 +40,19 @@ class HourlyOperations(Document):
 			frappe.throw(_("Please set discharge commenced in SOF"))
 		if self.discharge_completed_date_time == None:
 			frappe.throw(_("Please set discharge completed in SOF"))
+
+	def set_total_belt_weigher(self):
+		ho_details = self.get("hourly_operation_details")
+		if len(ho_details) > 0:
+			for row in ho_details:
+				total_weigher = (row.a1_belt_weigher or 0) + (row.b1_belt_weigher or 0)
+				print(total_weigher,"total belt",row.a1_belt_weigher,row.b1_belt_weigher)
+				row.total_1a_1b = total_weigher
+
+	def set_total_grab_cycle(self):
+		ho_details = self.get("hourly_operation_details")
+		if len(ho_details) > 0:
+			for row in ho_details:
+				total_grab_cycle = (row.sul_1_grab_cycle or 0) + (row.sul_2_grab_cycle or 0)
+				print(total_grab_cycle,"total cycle",row.sul_1_grab_cycle,row.sul_2_grab_cycle)
+				row.total_grab_cycle = total_grab_cycle

@@ -57,7 +57,8 @@
    "description": "Sum of 1A Belt Weigher & 1B Belt Weigher",
    "fieldname": "total_1a_1b",
    "fieldtype": "Float",
-   "label": "Total (1A+1B)"
+   "label": "Total (1A+1B)",
+   "read_only": 1
   },
   {
    "fieldname": "sul_1_grab_cycle",
@@ -73,7 +74,8 @@
    "description": "Sum of SUL-1 Grab Cycle & SUL-2 Grab Cycle",
    "fieldname": "total_grab_cycle",
    "fieldtype": "Float",
-   "label": "Total Grab Cycle"
+   "label": "Total Grab Cycle",
+   "read_only": 1
   },
   {
    "fieldname": "a1_belt_weigher",
@@ -89,7 +91,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-07-17 09:31:06.930266",
+ "modified": "2024-07-17 10:17:51.187842",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hourly Operation Details",

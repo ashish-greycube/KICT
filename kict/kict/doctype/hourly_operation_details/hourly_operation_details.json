@@ -9,8 +9,8 @@
   "hourly_receipt_qty",
   "period_tonnage_running_total",
   "day_tonnage",
-  "1a_belt_weigher",
-  "1b_belt_weigher",
+  "a1_belt_weigher",
+  "b1_belt_weigher",
   "total_1a_1b",
   "column_break_vduk",
   "sul_1_grab_cycle",
@@ -54,16 +54,6 @@
    "label": "Balance Quantity"
   },
   {
-   "fieldname": "1a_belt_weigher",
-   "fieldtype": "Float",
-   "label": "1A Belt Weigher"
-  },
-  {
-   "fieldname": "1b_belt_weigher",
-   "fieldtype": "Float",
-   "label": "1B Belt Weigher"
-  },
-  {
    "description": "Sum of 1A Belt Weigher & 1B Belt Weigher",
    "fieldname": "total_1a_1b",
    "fieldtype": "Float",
@@ -84,12 +74,22 @@
    "fieldname": "total_grab_cycle",
    "fieldtype": "Float",
    "label": "Total Grab Cycle"
+  },
+  {
+   "fieldname": "a1_belt_weigher",
+   "fieldtype": "Float",
+   "label": "1A Belt Weigher"
+  },
+  {
+   "fieldname": "b1_belt_weigher",
+   "fieldtype": "Float",
+   "label": "1B Belt Weigher"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-07-16 17:55:05.864000",
+ "modified": "2024-07-17 09:31:06.930266",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hourly Operation Details",

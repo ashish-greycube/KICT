@@ -9,20 +9,14 @@
   "hourly_receipt_qty",
   "period_tonnage_running_total",
   "day_tonnage",
-  "sul1_1a",
-  "sul1_1b",
-  "sul1_total",
-  "no_of_grab_cycle_sul1a",
-  "no_of_grab_cycle_sul1b",
-  "sul1_total_grab_cycle",
+  "1a_belt_weigher",
+  "1b_belt_weigher",
+  "total_1a_1b",
   "column_break_vduk",
-  "remarks",
-  "sul2_1a",
-  "sul2_1b",
-  "sul2_total",
-  "sul1a_no_of_grab_cycle",
-  "sul1b_no_of_grab_cycle",
-  "sul2_total_grab_cycle"
+  "sul_1_grab_cycle",
+  "sul_2_grab_cycle",
+  "total_grab_cycle",
+  "remarks"
  ],
  "fields": [
   {
@@ -54,76 +48,48 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "no_of_grab_cycle_sul1a",
-   "fieldtype": "Float",
-   "label": "No of grab cycle SUL1A"
-  },
-  {
-   "fieldname": "no_of_grab_cycle_sul1b",
-   "fieldtype": "Float",
-   "label": "No of grab cycle SUL1B"
-  },
-  {
-   "fieldname": "sul2_1a",
-   "fieldtype": "Float",
-   "label": "SUL2 1A"
-  },
-  {
-   "fieldname": "sul1_1a",
-   "fieldtype": "Float",
-   "label": "SUL1-1A"
-  },
-  {
-   "fieldname": "sul1_1b",
-   "fieldtype": "Float",
-   "label": "SUL1-1B"
-  },
-  {
-   "fieldname": "sul1_total",
-   "fieldtype": "Float",
-   "label": "SUL1 TOTAL"
-  },
-  {
-   "fieldname": "sul2_1b",
-   "fieldtype": "Float",
-   "label": "SUL2-1B"
-  },
-  {
-   "fieldname": "sul2_total",
-   "fieldtype": "Float",
-   "label": "SUL2 TOTAL"
-  },
-  {
-   "fieldname": "sul1a_no_of_grab_cycle",
-   "fieldtype": "Float",
-   "label": "SUL1A no of grab cycle"
-  },
-  {
-   "fieldname": "sul1b_no_of_grab_cycle",
-   "fieldtype": "Float",
-   "label": "SUL1B no of grab cycle"
-  },
-  {
-   "fieldname": "sul1_total_grab_cycle",
-   "fieldtype": "Float",
-   "label": "SUL1 Total Grab Cycle"
-  },
-  {
-   "fieldname": "sul2_total_grab_cycle",
-   "fieldtype": "Float",
-   "label": "SUL2 Total Grab Cycle"
-  },
-  {
    "fieldname": "day_tonnage",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Balance Quantity"
+  },
+  {
+   "fieldname": "1a_belt_weigher",
+   "fieldtype": "Float",
+   "label": "1A Belt Weigher"
+  },
+  {
+   "fieldname": "1b_belt_weigher",
+   "fieldtype": "Float",
+   "label": "1B Belt Weigher"
+  },
+  {
+   "description": "Sum of 1A Belt Weigher & 1B Belt Weigher",
+   "fieldname": "total_1a_1b",
+   "fieldtype": "Float",
+   "label": "Total (1A+1B)"
+  },
+  {
+   "fieldname": "sul_1_grab_cycle",
+   "fieldtype": "Float",
+   "label": "SUL-1 Grab Cycle"
+  },
+  {
+   "fieldname": "sul_2_grab_cycle",
+   "fieldtype": "Float",
+   "label": "SUL-2 Grab Cycle"
+  },
+  {
+   "description": "Sum of SUL-1 Grab Cycle & SUL-2 Grab Cycle",
+   "fieldname": "total_grab_cycle",
+   "fieldtype": "Float",
+   "label": "Total Grab Cycle"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-05-28 15:40:03.930713",
+ "modified": "2024-07-16 17:55:05.864000",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Hourly Operation Details",

@@ -563,21 +563,6 @@ def validate_vessel_is_present_in_items(self,method):
                 if (not row.vessel) or (row.vessel==''):
                     frappe.throw(_("Source vessel is missing for row {0}.".format(frappe.bold(row.idx))))				
 
-@frappe.whitelist()
-@frappe.validate_and_sanitize_search_inputs
-def set_query_for_item_based_on_stock_entry_type(doctype, txt, searchfield, start, page_len, filters):
-    cargo_received,handling_loss,audit_shortage = frappe.db.get_value("Coal Settings","Coal Settings",["cargo_received","handling_loss","audit_shortage"])
-    stock_entry_type = filters.get("stock_entry_type")
-    # print(stock_entry_type,cargo_received,handling_loss,audit_shortage)
-    if stock_entry_type ==cargo_received or stock_entry_type ==handling_loss or stock_entry_type ==audit_shortage:
-        return frappe.get_all(
-            "Item",
-            filters={"is_stock_item": 1,"is_customer_provided_item": 1},
-            fields=["item_code"],
-            as_list=1,
-        )	
-    else:
-        return 
     
 def get_data_from_royalty_charges_report_for_vessel(posting_date,type="PI"):
     vessel_list = []

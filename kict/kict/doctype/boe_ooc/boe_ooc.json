@@ -44,7 +44,6 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "IMPORTER NAME",
-   "link_filters": "[[\"Customer\",\"custom_customer_abbreviation\",\"is\",\"set\"]]",
    "options": "Customer"
   },
   {
@@ -83,7 +82,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-06-20 12:33:32.775826",
+ "modified": "2024-07-18 13:49:12.729978",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "BOE OOC",

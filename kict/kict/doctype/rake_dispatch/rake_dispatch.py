@@ -64,6 +64,6 @@ def get_unique_customer_item_list(doctype, txt, searchfield, start, page_len, fi
 		"Vessel Details",
 		parent_doctype="Vessel",
 		filters={"parent": vcn_no},
-		fields=["item"],
+		fields=["distinct item"],
 		as_list=1,
 	)

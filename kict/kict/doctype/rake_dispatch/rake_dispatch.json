@@ -2,7 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "format:{RC}-{release_date}.{#}",
+ "autoname": "format:{RC}-{release_date}.{rake_no}",
  "creation": "2024-05-02 17:53:21.671175",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -114,7 +114,8 @@
   {
    "fieldname": "rake_no",
    "fieldtype": "Data",
-   "label": "Rake No"
+   "label": "Rake No",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_xqur",
@@ -267,7 +268,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-07-16 12:59:35.234901",
+ "modified": "2024-07-18 17:26:05.271919",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

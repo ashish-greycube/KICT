@@ -368,9 +368,20 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 	
 	company_name=frappe.get_value(doctype,source_name,"company")
 	first_line_ashore = frappe.db.get_value('Statement of Fact', source_name, 'first_line_ashore')
-	filter_for_lv =frappe._dict({"company":company_name,"from_date":first_line_ashore,"to_date":today(),"item_code":cargo_item_field,"valuation_field_type":"Currency","vessel":[source_name]})
+	filter_for_lv =frappe._dict({"company":company_name,"from_date":first_line_ashore,"to_date":today(),
+							  "item_code":cargo_item_field,"valuation_field_type":"Currency","vessel":[source_name],"include_zero_stock_items":1})
+	# sle_count=frappe.db.count('Stock Ledger Entry',filters={
+	# 	'item_code':cargo_item_field,
+    #      'posting_date':['between', [first_line_ashore, today()]],
+    #      'vessel':source_name,
+    #      'company':company_name})
+	# if sle_count==0:
+	# 	frappe.throw(_("1There is no stock entry for {0}. <br> You can not create tax invoice of storage charges.").format(cargo_item_field))
 	data = execute(filter_for_lv)
-
+	print('++'*10)
+	print(filter_for_lv)
+	print(data)
+	print(data[1])
 	if len(data[1])==0:
 		frappe.throw(_("There is no stock entry for {0}. <br> You can not create tax invoice of storage charges.").format(cargo_item_field))
 	else:

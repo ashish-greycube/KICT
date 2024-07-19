@@ -31,28 +31,28 @@ def get_columns(filters):
 			"fieldname": "received_qty",
 			"label":_("Received Qty"),
 			"fieldtype": "Float",
-			"precision":1,
+			"precision":3,
 			"width":"150"
 		},
 		{
 			"fieldname": "dispatch_qty",
 			"label":_("Dispatch Qty"),
 			"fieldtype": "Float",
-			"precision":1,
+			"precision":3,
 			"width":"150"
 		},
 		{
 			"fieldname": "handling_loss_audit_shortage",
 			"label":_("Loss/Short Qty"),
 			"fieldtype": "Float",
-			"precision":1,
+			"precision":3,
 			"width":"150"
 		},
 		{
 			"fieldname": "balance",
 			"label":_("Balance"),
 			"fieldtype": "Float",
-			"precision":1,
+			"precision":3,
 			"width":"150"
 		},
 		

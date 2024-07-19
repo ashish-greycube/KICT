@@ -214,7 +214,7 @@ def execute(filters=None):
 				sc_row.opening_qty=previous_balance_qty
 				sc_row.in_qty=flt(d.actual_qty, float_precision) if flt(d.actual_qty) > 0 else 0
 				sc_row.out_qty=abs(flt(d.actual_qty, float_precision))	 if flt(d.actual_qty) < 0 else 0
-				sc_row.bal_qty=sc_row.opening_qty+flt(d.actual_qty, float_precision)
+				sc_row.bal_qty=flt(sc_row.opening_qty+flt(d.actual_qty, float_precision),float_precision)
 				sc_row.rate=0
 				sc_row.amount=0
 				if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
@@ -284,7 +284,7 @@ def execute(filters=None):
 			sc_row.opening_qty=0
 			sc_row.in_qty=flt(d.actual_qty, float_precision) if flt(d.actual_qty) > 0 else 0
 			sc_row.out_qty=abs(flt(d.actual_qty, float_precision))	 if flt(d.actual_qty) < 0 else 0
-			sc_row.bal_qty=sc_row.opening_qty+flt(d.actual_qty, float_precision)
+			sc_row.bal_qty=flt(sc_row.opening_qty+flt(d.actual_qty, float_precision),float_precision)
 			sc_row.rate=0
 			sc_row.amount=0
 			if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:

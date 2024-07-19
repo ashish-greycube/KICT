@@ -74,9 +74,10 @@ def get_data(filters):
 					vd.parent = rrd.vessel
 				and vd.item = rrd.commercial_destination_item
 				and rrd.docstatus < 2
-			group by
-				rrd.commercial_destination_item
 				{0}
+			group by
+				rrd.vessel,rrd.commercial_destination_item
+				
 """.format(conditions),filters,as_dict=1,debug=1)
 
 	from kict.kict.doctype.vessel.vessel import get_qty_for_handling_loss_and_audit_shortage

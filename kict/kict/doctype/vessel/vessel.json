@@ -337,7 +337,7 @@
    "link_fieldname": "vessel"
   }
  ],
- "modified": "2024-07-19 10:34:05.468837",
+ "modified": "2024-07-20 10:43:31.068043",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",
@@ -382,7 +382,7 @@
    "write": 1
   }
  ],
- "search_fields": "type_of_vessel,costal_foreign_vessle,flag",
+ "search_fields": "type_of_vessel,costal_foreign_vessle,flag,rot_number",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

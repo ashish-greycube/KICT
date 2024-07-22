@@ -222,7 +222,8 @@
   {
    "fieldname": "first_line_ashore",
    "fieldtype": "Datetime",
-   "label": "First Line Ashore"
+   "label": "First Line Ashore",
+   "reqd": 1
   },
   {
    "fieldname": "vessel_made_all_fast",
@@ -336,7 +337,8 @@
   {
    "fieldname": "all_line_cast_off",
    "fieldtype": "Datetime",
-   "label": "All Line Cast Off"
+   "label": "All Line Cast Off",
+   "reqd": 1
   },
   {
    "fieldname": "vessel_sailedpilot_disembarked",
@@ -380,7 +382,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-07-11 10:29:47.606542",
+ "modified": "2024-07-22 17:57:28.003039",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

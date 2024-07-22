@@ -73,6 +73,7 @@ function create_purchase_invoice_for_royalty_charges(frm) {
                     "posting_date":values.posting_date_field,
                 },
                 freeze: true,
+                freeze_message: "Processing...",
                 callback: function (response) {
                     if (response.message) {
                         let url_list = '<a href="/app/purchase-invoice/' + response.message + '" target="_blank">' + response.message + '</a><br>'

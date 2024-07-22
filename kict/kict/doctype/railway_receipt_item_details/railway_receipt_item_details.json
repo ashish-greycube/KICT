@@ -112,7 +112,8 @@
    "fieldtype": "Link",
    "label": "Destination Customer",
    "options": "Customer",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "commercial_destination_item",
@@ -120,7 +121,8 @@
    "label": "Destination Item",
    "link_filters": "[[\"Item\",\"is_customer_provided_item\",\"=\",1]]",
    "options": "Item",
-   "read_only": 1
+   "read_only": 1,
+   "reqd": 1
   },
   {
    "fieldname": "item_cw",
@@ -138,7 +140,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-07-08 09:46:17.421289",
+ "modified": "2024-07-22 15:00:59.664029",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt Item Details",

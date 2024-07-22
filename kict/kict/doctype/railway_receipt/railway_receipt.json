@@ -87,7 +87,8 @@
   {
    "fieldname": "chargable_weight",
    "fieldtype": "Float",
-   "label": "Chargable Weight"
+   "label": "Chargable Weight",
+   "reqd": 1
   },
   {
    "fieldname": "over_weight_qty",
@@ -171,7 +172,8 @@
   {
    "fieldname": "permisible_carrying_capacity",
    "fieldtype": "Float",
-   "label": "Permisible Carrying Capacity"
+   "label": "Permisible Carrying Capacity",
+   "reqd": 1
   },
   {
    "fieldname": "owing_railway_if_gpwis_no",
@@ -252,7 +254,7 @@
    "link_fieldname": "custom_rcn"
   }
  ],
- "modified": "2024-06-06 10:27:12.086431",
+ "modified": "2024-07-22 15:04:32.125471",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe import _
-from frappe.utils import get_link_to_form,today,nowtime,flt,cstr,get_timestamp,getdate,get_time
+from frappe.utils import get_link_to_form,today,nowtime,flt,cstr,get_timestamp,getdate,get_time,cint
 from frappe.query_builder.functions import CombineDatetime, Sum  
 from erpnext.stock.doctype.serial_and_batch_bundle.serial_and_batch_bundle	import get_qty_based_available_batches
 
@@ -13,6 +13,7 @@ class RailwayReceipt(Document):
 	def before_insert(self):
 		rcn_no = self.rcn_unique_no
 		rake_dispatch_doc = frappe.get_doc("Rake Dispatch",rcn_no)
+		self.railway_receipt_item_details=[]
 		for row in rake_dispatch_doc.get("rake_prelim_entry"):
 			railway_receipt_item_row = self.append("railway_receipt_item_details",{})
 			if row.customer_name:
@@ -122,10 +123,10 @@ def create_delivery_note_from_railway_receipt(docname):
 			available_batches=get_available_batches(args)
 			
 			# check if batch total qty is less than required qty
+			float_precision = cint(frappe.db.get_default("float_precision")) or 3
 			qty_from_batches=0
 			for batch in available_batches:
-				qty_from_batches=qty_from_batches+batch.qty
-			print('qty_from_batches',qty_from_batches,row.rr_item_weight_mt)
+				qty_from_batches=flt((qty_from_batches+batch.qty),float_precision)
 			if len(available_batches) < 1:
 				table_html = frappe.bold("No batches found.")
 				msg="The qty available from batches is {0}, whereas required qty is {1}. Hence cannot proceed.".format(frappe.bold(qty_from_batches),frappe.bold(row.rr_item_weight_mt))	

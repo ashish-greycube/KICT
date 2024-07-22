@@ -10,7 +10,8 @@ from frappe.utils.data import get_date_str
 class StatementofFact(Document):
 	def validate(self):
 		self.validate_dates()
-		self.set_berth_stay_hours()
+		if self.first_line_ashore and self.all_line_cast_off:
+			self.set_berth_stay_hours()
 
 	def validate_dates(self):
 		if self.first_line_ashore and self.all_line_cast_off:
@@ -23,65 +24,53 @@ class StatementofFact(Document):
 				# 	frappe.throw(_("Vessel given readiness for sailing can not be greater than all line cast off"))
 
 	def set_berth_stay_hours(self):
+			# vessel given readiness related logic
+			# 1) if no value is given
+			# 2) if vessel given readiness is greater than the All line Cast off
+			# 3)  diff_of_all_line_and_readiness  < 4
+			# 4)  diff_of_all_line_and_readiness  > 4 and vessel_delay_account_row is NOT present
+			# for the above four cases
+			# stay hours = all line cast off - first line ashore			
 			if not self.vessel_given_readiness__for_sailing:
-				self.vessel_stay_hours=0
-				return
-
-
-
-			
+				c_all_line_cast_off=self.all_line_cast_off
 			#  Round Up [ First Line Ashore - ( All Line Cast Off - Vessel given readiness - vessel delay due to terminal account ) ]
-			if self.vessel_given_readiness__for_sailing:
-				diff_of_all_line_and_readiness = frappe.utils.time_diff_in_hours(self.all_line_cast_off,self.vessel_given_readiness__for_sailing)
-				
-				if diff_of_all_line_and_readiness > 4 :
-					vessel_delay_account_for_terminal = frappe.db.get_single_value('Coal Settings', 'vessel_delay_account_for_terminal')
-					if vessel_delay_account_for_terminal:
-						vessel_delay_account_row=frappe.db.get_list('Vessel Delay Details',parent_doctype='Vessel Delay', 
-												  filters={'parent':self.vessel,'account_delays':vessel_delay_account_for_terminal},
-												  fields=['total_hours'])
-						print(vessel_delay_account_row)
-						if len(vessel_delay_account_row)>0:
-							print("condition 1")
-							vessel_delay_time=vessel_delay_account_row[0].total_hours/3600
-							int_delay_hours, delay_dec_sec = divmod(vessel_delay_time, 1)
-							print(int_delay_hours,"-->int_delay_hours",delay_dec_sec,"-->delay_dec_sec")
-							if delay_dec_sec>0:
-								int_delay_hours = int_delay_hours + 1
-							print(vessel_delay_time,"vessel_delay_time")
-							print(self.all_line_cast_off)
-							c_all_line_cast_off=add_to_date(self.all_line_cast_off, hours=-int_delay_hours)
-							print(c_all_line_cast_off,"-------c_all_line_cast_off	")
-
-						else:
-							print("condition 2")
-							c_all_line_cast_off	= self.all_line_cast_off
-
-					
-					all_line_cast_off = add_to_date(self.vessel_given_readiness__for_sailing, hours=4)
-
+			elif self.vessel_given_readiness__for_sailing:
+				if self.vessel_given_readiness__for_sailing > self.all_line_cast_off :
+					c_all_line_cast_off=self.all_line_cast_off
 				else:
-					print("condition 3")
-					c_all_line_cast_off = self.all_line_cast_off
-			
-			
-			
-			
+					diff_of_all_line_and_readiness = frappe.utils.time_diff_in_hours(self.all_line_cast_off,self.vessel_given_readiness__for_sailing)
+					if diff_of_all_line_and_readiness > 4 :
+						vessel_delay_account_for_terminal = frappe.db.get_single_value('Coal Settings', 'vessel_delay_account_for_terminal')
+						if vessel_delay_account_for_terminal:
+							vessel_delay_account_row=frappe.db.get_list('Vessel Delay Details',parent_doctype='Vessel Delay', 
+													filters={'parent':self.vessel,'account_delays':vessel_delay_account_for_terminal},
+													fields=['total_hours'])
+							print(vessel_delay_account_row)
+							if len(vessel_delay_account_row)>0:
+								vessel_delay_time=vessel_delay_account_row[0].total_hours/3600
+								int_delay_hours, delay_dec_sec = divmod(vessel_delay_time, 1)
+								print(int_delay_hours,"-->int_delay_hours",delay_dec_sec,"-->delay_dec_sec")
+								if delay_dec_sec>0:
+									int_delay_hours = int_delay_hours + 1
+								c_all_line_cast_off=add_to_date(self.all_line_cast_off, hours=-int_delay_hours)
+							else:
+								c_all_line_cast_off	= self.all_line_cast_off
+					else:
+						print("condition 3")
+						c_all_line_cast_off = self.all_line_cast_off
+
+			# common logic 
 			berth_stay_seconds=frappe.utils.time_diff_in_seconds(c_all_line_cast_off,self.first_line_ashore)
 			print('berth_stay_seconds',berth_stay_seconds)
 			berth_stay_hours_in_decimal=(berth_stay_seconds/3600)
 			int_hours, dec_sec = divmod(berth_stay_hours_in_decimal, 1)
-			print('dec_sec',dec_sec,"int_hours",int_hours)
 			if dec_sec>0:
 				int_hours=int_hours+1
 			berth_stay_hours=int_hours
 			self.vessel_stay_hours = berth_stay_hours
-
 			month_end_date = get_last_day(self.first_line_ashore)
 			month_end_date_with_time=get_datetime(get_date_str(month_end_date)+' 23:59:59')
-			
 			if get_datetime(self.all_line_cast_off) > month_end_date_with_time:
-				print('go next')
 				current_month_stay_seconds=frappe.utils.time_diff_in_seconds(month_end_date_with_time,self.first_line_ashore)
 				current_month_stay_hours_in_decimal=(current_month_stay_seconds/3600)
 				current_month_int_hours, current_month_dec_sec = divmod(current_month_stay_hours_in_decimal, 1)

@@ -176,7 +176,7 @@ def execute(filters=None):
 	sc_data = []
 	starting_opening_balance = 0
 	previous_row_item = None
-
+	float_precision = cint(frappe.db.get_default("float_precision")) or 3
 	for d in data:
 		if d.voucher_type == "Delivery Note":
 			rake_dispatch_name = frappe.db.get_value("Delivery Note",d.voucher_no,"custom_rcn")
@@ -186,14 +186,14 @@ def execute(filters=None):
 			d.voucher_type = stock_entry_type
 		if previous_row_item == None or previous_row_item == d.item_code:
 			d["opening_qty"] = starting_opening_balance
-			starting_opening_balance = starting_opening_balance + d.in_qty + d.out_qty
+			starting_opening_balance =flt(( starting_opening_balance + d.in_qty + d.out_qty),float_precision)
 			d["bal_qty"] = starting_opening_balance
 			previous_row_item = d.item_code
 			print(d)
 		else :
 			starting_opening_balance = 0
 			d["opening_qty"] = starting_opening_balance
-			starting_opening_balance = starting_opening_balance + d.in_qty + d.out_qty
+			starting_opening_balance = flt(( starting_opening_balance + d.in_qty + d.out_qty),float_precision)
 			d["bal_qty"] = starting_opening_balance
 			previous_row_item = d.item_code
 			print(d,"---d")

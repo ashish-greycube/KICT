@@ -153,10 +153,12 @@ def generate_and_set_batch_no(self,method):
             if item.batch_no==None:
                 batch_name=check_batch_no_exist(item.to_vessel,item.item_code,self.posting_date,self.posting_time)
                 if batch_name!=None:
+                    item.use_serial_batch_fields=1
                     item.batch_no=batch_name
                     frappe.msgprint(_('Item {0} existing  batch {1} is added').format(item.item_code,item.batch_no),alert=True)
                 else:
                     batch_name=generate_batch_no(item.to_vessel,item.item_code,self.posting_date,self.posting_time)
+                    item.use_serial_batch_fields=1
                     item.batch_no=batch_name
                     frappe.msgprint(_('Item {0} new batch {1} is added').format(item.item_code,item.batch_no),alert=True)
 

@@ -136,7 +136,7 @@ def set_batch_no_and_warehouse_for_handling_loss_audit_sortage(self,method):
                                      'batch_no':batch.batch_no,
                                      's_warehouse':batch.warehouse,
                                      'vessel':self.custom_vessel,
-                                     'item.use_serial_batch_fields':1}
+                                     'use_serial_batch_fields':1}
                     item_table_with_batches.append(item_with_batch)
                 
                 item_rows_to_be_removed.append(item)

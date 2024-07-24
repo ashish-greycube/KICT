@@ -69,8 +69,6 @@
    "fetch_from": "railway_indent.demand_datetime",
    "fieldname": "demand_datetime",
    "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Demand Date/Time"
   },
   {
@@ -114,6 +112,8 @@
   {
    "fieldname": "rake_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Rake No",
    "reqd": 1
   },
@@ -153,6 +153,8 @@
   {
    "fieldname": "release_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Release Time",
    "reqd": 1
   },
@@ -268,7 +270,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-07-18 17:26:05.271919",
+ "modified": "2024-07-24 09:17:44.009140",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

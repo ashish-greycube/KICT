@@ -305,10 +305,6 @@
    "link_fieldname": "vessel"
   },
   {
-   "link_doctype": "Demurrage Calculation",
-   "link_fieldname": "vessel"
-  },
-  {
    "link_doctype": "Rake Dispatch",
    "link_fieldname": "vcn_no"
   },
@@ -337,7 +333,7 @@
    "link_fieldname": "vessel"
   }
  ],
- "modified": "2024-07-20 10:43:31.068043",
+ "modified": "2024-07-24 09:04:55.610945",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

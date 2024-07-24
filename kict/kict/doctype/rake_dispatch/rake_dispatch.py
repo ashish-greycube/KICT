@@ -11,7 +11,8 @@ class RakeDispatch(Document):
 	def validate(self):
 		# self.validate_silo_qty()
 		self.validate_no_of_reject_wagons()
-
+		self.set_total_rejected_wagons()
+		
 	def validate_silo_qty(self):
 		railway_item_detail = self.get("plotwise_silo_qty_detail")
 		if len(railway_item_detail) > 0:
@@ -43,6 +44,12 @@ class RakeDispatch(Document):
 
 	def before_naming(self):
 		self.release_date=format_date(getdate(self.release_time))
+
+	def set_total_rejected_wagons(self):
+		rake_dispatch_item = self.get("rake_prelim_entry")
+		if len(rake_dispatch_item) > 0 :
+			for row in rake_dispatch_item:
+				row.total_reject_wagon = (row.no_of_wagon_rejected_by_railway or 0) + (row.no_of_wagon_rejected_due_to_foreign_material or 0)
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs

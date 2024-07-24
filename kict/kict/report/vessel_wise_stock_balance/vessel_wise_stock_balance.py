@@ -21,6 +21,12 @@ def get_columns(filters):
 			"width":"230"
 		},		
 		{
+			"fieldname": "customer_material_no",
+			"label":_("Material No"),
+			"fieldtype": "Data",
+			"width":"150",
+		},			
+		{
 			"fieldname": "item_code",
 			"label":_("Item"),
 			"fieldtype": "Link",
@@ -52,15 +58,18 @@ def get_columns(filters):
 
 def get_stock_ledger_entries(filters):
 	query = frappe.db.sql(
-		"""SELECT a.vessel,a.item_code,a.customer,a.in_qty,a.out_qty,a.in_qty+a.out_qty as balance from 
+		"""SELECT a.vessel,a.customer_material_no,a.item_code,a.customer,a.in_qty,a.out_qty,a.in_qty+a.out_qty as balance from 
 (select 
                 sle.vessel,
+				vdl.customer_material_no,
                 sle.item_code,
                 item.customer,
     sum(case when sle.actual_qty>0 then sle.actual_qty else 0 end) as in_qty, 
     sum(case when sle.actual_qty<0 then sle.actual_qty else 0 end) as out_qty
     from
                 `tabStock Ledger Entry` sle 
+	inner join `tabVessel Details` vdl
+	on vdl.parent=sle.vessel and vdl.item=sle.item_code
     inner join `tabItem` item
     on sle.item_code=item.item_code
             where

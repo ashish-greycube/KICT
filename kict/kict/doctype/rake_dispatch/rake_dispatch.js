@@ -60,12 +60,6 @@ frappe.ui.form.on("Rake Prelim Entry", {
     no_of_wagons_placed(frm, cdt, cdn){
         set_no_of_wagons_reject(frm, cdt, cdn)
     },
-    no_of_wagon_rejected_by_railway(frm, cdt, cdn){
-        set_total_rejected_wagons(frm, cdt, cdn)
-    },
-    no_of_wagon_rejected_due_to_foreign_material(frm, cdt, cdn){
-        set_total_rejected_wagons(frm, cdt, cdn)
-    },
 
 })
 
@@ -77,13 +71,4 @@ let set_no_of_wagons_reject = function (frm, cdt, cdn) {
     }
     frappe.model.set_value(cdt, cdn, 'no_of_wagons_reject', reject_wagons);
 
-}
-
-let set_total_rejected_wagons = function(frm, cdt, cdn) {
-    let row = locals[cdt][cdn]
-    let total_rejected_wagons = row.no_of_wagon_rejected_by_railway + row.no_of_wagon_rejected_due_to_foreign_material
-    if (total_rejected_wagons < 0){
-        frappe.throw(__("Row {0}: No of wagons reject cannot be negative",[row.idx]))
-    }
-    frappe.model.set_value(cdt, cdn, 'total_reject_wagon', total_rejected_wagons);
 }

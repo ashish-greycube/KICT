@@ -10,9 +10,9 @@ from frappe.utils import getdate,format_date
 class RakeDispatch(Document):
 	def validate(self):
 		# self.validate_silo_qty()
+		self.set_no_of_wagons_reject()
 		self.validate_no_of_reject_wagons()
-		self.set_total_rejected_wagons()
-		
+
 	def validate_silo_qty(self):
 		railway_item_detail = self.get("plotwise_silo_qty_detail")
 		if len(railway_item_detail) > 0:
@@ -37,19 +37,21 @@ class RakeDispatch(Document):
 		rake_dispatch_item = self.get("rake_prelim_entry")
 		if len(rake_dispatch_item) > 0 :
 			for row in rake_dispatch_item:
-				if row.no_of_wagon_rejected_by_railway and row.no_of_wagon_rejected_due_to_foreign_material:
-					row.no_of_wagons_reject = row.no_of_wagon_rejected_by_railway + row.no_of_wagon_rejected_due_to_foreign_material
-					if row.no_of_wagons_reject < 0:
-						frappe.throw(_("Row {0}: No of reject wagons cannot be negative").format(row.idx))
+				rejected_wagons = row.no_of_wagons_reject
+				calculated_rejected_wagons = (row.no_of_wagon_rejected_by_railway or 0) + (row.no_of_wagon_rejected_due_to_foreign_material or 0) + (row.no_of_wagon_rejected_due_to_others or 0)
+				if rejected_wagons != calculated_rejected_wagons:
+					frappe.throw(_("Row {0}: bifurcation of rejected wagons are not correct").format(row.idx))
 
 	def before_naming(self):
 		self.release_date=format_date(getdate(self.release_time))
 
-	def set_total_rejected_wagons(self):
+	def set_no_of_wagons_reject(self):
 		rake_dispatch_item = self.get("rake_prelim_entry")
 		if len(rake_dispatch_item) > 0 :
 			for row in rake_dispatch_item:
-				row.total_reject_wagon = (row.no_of_wagon_rejected_by_railway or 0) + (row.no_of_wagon_rejected_due_to_foreign_material or 0)
+				row.no_of_wagons_reject = (row.no_of_wagons_placed or 0) - (row.no_of_wagons_loaded or 0)
+				if (row.no_of_wagons_reject < 0):
+					frappe.throw(_("Row {0}: No of wagons reject cannot be negative".format(row.idx)))
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs

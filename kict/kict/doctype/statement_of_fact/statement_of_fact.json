@@ -30,6 +30,7 @@
   "free_pratique_granted",
   "vessel_arrived_at_paradip_roads",
   "notice_of_readiness_tendered",
+  "notice_of_readiness_retendered",
   "notice_of_readiness_accepted",
   "pilot_on_board_for_berthing",
   "first_line_ashore",
@@ -57,8 +58,7 @@
   "vessel_given_readiness__for_sailing",
   "pilot_on_board_for_sailing_shifting",
   "all_line_cast_off",
-  "vessel_sailedpilot_disembarked",
-  "dlosl"
+  "vessel_sailedpilot_disembarked"
  ],
  "fields": [
   {
@@ -345,11 +345,6 @@
    "label": "Vessel sailed/Pilot Disembarked"
   },
   {
-   "fieldname": "dlosl",
-   "fieldtype": "Datetime",
-   "label": "DLOSL"
-  },
-  {
    "fieldname": "vessel_stay_hours",
    "fieldtype": "Int",
    "label": "Vessel Total Stay Hours",
@@ -372,6 +367,11 @@
    "fieldname": "vessel_converted_to_coastal_run",
    "fieldtype": "Datetime",
    "label": "Vessel Converted to Coastal Run"
+  },
+  {
+   "fieldname": "notice_of_readiness_retendered",
+   "fieldtype": "Datetime",
+   "label": "Notice of Readiness Re-tendered"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -381,7 +381,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-07-22 18:03:28.472432",
+ "modified": "2024-07-24 12:03:55.883805",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

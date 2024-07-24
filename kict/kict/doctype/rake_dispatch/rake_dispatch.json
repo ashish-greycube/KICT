@@ -12,7 +12,11 @@
   "e_demand_reference_id",
   "demand_datetime",
   "railyway_indent_no",
-  "loading_date",
+  "carriage_arrival",
+  "carriage_complete",
+  "cleaning_start",
+  "cleaning_complete",
+  "placement_time",
   "loading_start",
   "loading_complete",
   "release_time",
@@ -24,19 +28,15 @@
   "select_flor",
   "covering_start",
   "covering_complete",
-  "cleaning_start",
-  "placement_time",
-  "cleaning_complete",
+  "drawn_out_time",
   "column_break_phbk",
   "rake_no",
   "wagon_type",
   "silo",
   "indent_rake_type",
-  "carriage_arrival",
-  "carriage_complete",
   "nos_of_box_repair",
   "loading_type",
-  "drawn_out_time",
+  "loading_date",
   "incoming_rake_no",
   "section_break_xqur",
   "rake_prelim_entry",
@@ -51,6 +51,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "FNR NO",
+   "reqd": 1,
    "unique": 1
   },
   {
@@ -69,6 +70,7 @@
    "fetch_from": "railway_indent.demand_datetime",
    "fieldname": "demand_datetime",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Demand Date/Time"
   },
   {
@@ -87,16 +89,12 @@
    "fetch_from": "railway_indent.priority",
    "fieldname": "priority",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Priority"
   },
   {
-   "fetch_from": "railway_indent.commodity",
    "fieldname": "commodity",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Commodity",
    "options": "Coal Commodity"
   },
@@ -104,7 +102,6 @@
    "fetch_from": "railway_indent.scheme_code",
    "fieldname": "scheme_code",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Scheme code",
    "options": "\nGPWIS\nIR\nPREMIUM"
@@ -136,7 +133,6 @@
   {
    "fieldname": "silo",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "label": "Silo",
    "options": "\nRLS-1\nRLS-2"
   },
@@ -215,7 +211,6 @@
   {
    "fieldname": "incoming_rake_no",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Incoming Rake No"
   },
   {
@@ -270,7 +265,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-07-24 09:17:44.009140",
+ "modified": "2024-07-24 12:32:57.051388",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Dispatch",

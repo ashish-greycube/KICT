@@ -29,7 +29,10 @@
   "moisture_percentage",
   "misc_amount_in_rpc",
   "rake_performance_calculations_remark",
-  "total_rake_penalty"
+  "total_rake_penalty",
+  "fauc_charges",
+  "under_charges",
+  "punitive_charges"
  ],
  "fields": [
   {
@@ -59,7 +62,7 @@
   {
    "fieldname": "dc_for_terminal",
    "fieldtype": "Currency",
-   "label": "DC for Terminal"
+   "label": "Detention Charge"
   },
   {
    "fieldname": "dc_for_customer",
@@ -69,7 +72,7 @@
   {
    "fieldname": "enhc_for_terminal",
    "fieldtype": "Currency",
-   "label": "ENHC for Terminal"
+   "label": "Engine Hiring Charges"
   },
   {
    "fieldname": "enhc_for_customer",
@@ -151,6 +154,22 @@
    "fieldname": "total_rake_penalty",
    "fieldtype": "Currency",
    "label": "Total Rake Penalty"
+  },
+  {
+   "fieldname": "fauc_charges",
+   "fieldtype": "Currency",
+   "label": "FAUC Charges"
+  },
+  {
+   "fieldname": "under_charges",
+   "fieldtype": "Currency",
+   "label": "Under Charges"
+  },
+  {
+   "description": "fetch from Railway Receipt",
+   "fieldname": "punitive_charges",
+   "fieldtype": "Currency",
+   "label": "Punitive Charges"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -160,7 +179,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-07-11 11:04:20.696083",
+ "modified": "2024-07-24 12:06:37.657382",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Performance Calculation",

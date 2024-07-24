@@ -22,7 +22,7 @@
   "no_of_wagons_reject",
   "no_of_wagon_rejected_by_railway",
   "no_of_wagon_rejected_due_to_foreign_material",
-  "total_reject_wagon",
+  "no_of_wagon_rejected_due_to_others",
   "rake_prelim_entry_remark"
  ],
  "fields": [
@@ -136,17 +136,15 @@
    "reqd": 1
   },
   {
-   "description": "No of wagon rejected by Railway + No of Wagon Rejected due to foreign materials",
-   "fieldname": "total_reject_wagon",
+   "fieldname": "no_of_wagon_rejected_due_to_others",
    "fieldtype": "Int",
-   "label": "Total Reject Wagon",
-   "read_only": 1
+   "label": "No of Wagon Rejected due to Others"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-07-24 12:10:31.804621",
+ "modified": "2024-07-24 16:50:37.370531",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Prelim Entry",

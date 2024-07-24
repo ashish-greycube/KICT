@@ -9,6 +9,7 @@
  "field_order": [
   "vessel",
   "vessel_name",
+  "rot_number",
   "nrt",
   "grt",
   "dwt",
@@ -18,7 +19,6 @@
   "column_break_bkwa",
   "igmjob_number",
   "total_tonnage_mt",
-  "rot_number",
   "agent_name",
   "opa",
   "flag_country",
@@ -42,8 +42,8 @@
   "interim_1_commenced",
   "interim_1_completed",
   "interim_2_commenced",
-  "interim_2_completed",
   "column_break_jpnj",
+  "interim_2_completed",
   "interim_3_commenced",
   "interim_3_completed",
   "interim_4_commenced",
@@ -381,7 +381,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-07-24 12:03:55.883805",
+ "modified": "2024-07-24 15:14:24.114636",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

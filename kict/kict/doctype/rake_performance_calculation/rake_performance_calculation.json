@@ -169,7 +169,8 @@
    "description": "fetch from Railway Receipt",
    "fieldname": "punitive_charges",
    "fieldtype": "Currency",
-   "label": "Punitive Charges"
+   "label": "Punitive Charges",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -179,7 +180,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-07-24 12:06:37.657382",
+ "modified": "2024-07-24 14:08:21.706922",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Performance Calculation",

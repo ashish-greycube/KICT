@@ -108,7 +108,7 @@
    "fieldname": "vessel_closure",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "Vessel Closure "
+   "label": "Vessel Closure"
   },
   {
    "depends_on": "eval:doc.vessel_closure == \"1\"",
@@ -241,12 +241,12 @@
   {
    "fieldname": "percent_berth_hire_pi",
    "fieldtype": "Percent",
-   "label": "% Berth Hire PI "
+   "label": "% Berth Hire PI"
   },
   {
    "fieldname": "percent_berth_hire_si",
    "fieldtype": "Percent",
-   "label": "% Berth Hire SI "
+   "label": "% Berth Hire SI"
   },
   {
    "fieldname": "percent_cargo_handling_si",
@@ -333,7 +333,7 @@
    "link_fieldname": "vessel"
   }
  ],
- "modified": "2024-07-24 09:04:55.610945",
+ "modified": "2024-07-30 10:09:02.763251",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Vessel",

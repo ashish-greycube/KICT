@@ -8,6 +8,7 @@ from frappe import _
 from frappe.utils import get_link_to_form,today,nowtime,flt,cstr,get_timestamp,getdate,get_time,cint
 from frappe.query_builder.functions import CombineDatetime, Sum  
 from erpnext.stock.doctype.serial_and_batch_bundle.serial_and_batch_bundle	import get_qty_based_available_batches
+import json
 
 class RailwayReceipt(Document):
 	def before_insert(self):
@@ -239,3 +240,19 @@ def get_available_batches(kwargs):
 	print(get_qty_based_available_batches(data, qty),"get_qty_based_available_batches(data, qty)")	
 	return get_qty_based_available_batches(data, qty)
 	
+@frappe.whitelist()
+def submit_bulk_railway_receipts(rr_list):
+	rr_list=json.loads(rr_list)
+	for rr in rr_list:
+		docstatus = frappe.db.get_value('Railway Receipt',rr, 'docstatus')
+		if docstatus!=0:
+			frappe.throw(_("You cannot select sbumitted railway receipt {0}".format(frappe.bold(rr))))
+	rr_ordered_list=frappe.db.get_all('Rake Dispatch', filters={'name': ['in', rr_list]},order_by='release_time asc',)	
+	submitted_rr=[]
+	for rr in rr_ordered_list:
+		doc = frappe.get_doc('Railway Receipt', rr)
+		doc.submit()
+		submitted_rr.append(doc.name)
+	submitted_rr=" ,".join(submitted_rr)
+	frappe.msgprint(_("Railway Receipts {0} are submitted".format(frappe.bold(submitted_rr))))
+

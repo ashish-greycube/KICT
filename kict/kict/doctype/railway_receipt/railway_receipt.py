@@ -32,6 +32,8 @@ class RailwayReceipt(Document):
 			if row.silo_loading_weight:
 				if donot_set_rr_weight_from_silo_weight_in_rr==0:
 					railway_receipt_item_row.rr_item_weight_mt = row.silo_loading_weight
+				elif donot_set_rr_weight_from_silo_weight_in_rr==1:
+					railway_receipt_item_row.rr_item_weight_mt = row.rr_item_weight_mt
 			if row.commercial_destination_customer:
 				railway_receipt_item_row.commercial_destination_customer = row.commercial_destination_customer
 			if row.commercial_destination_item:

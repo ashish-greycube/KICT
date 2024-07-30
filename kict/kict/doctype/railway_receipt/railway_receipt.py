@@ -12,6 +12,8 @@ import json
 
 class RailwayReceipt(Document):
 	def before_insert(self):
+		donot_set_rr_weight_from_silo_weight_in_rr = frappe.db.get_single_value('Coal Settings', 'donot_set_rr_weight_from_silo_weight_in_rr')
+
 		rcn_no = self.rcn_unique_no
 		rake_dispatch_doc = frappe.get_doc("Rake Dispatch",rcn_no)
 		self.railway_receipt_item_details=[]
@@ -28,7 +30,8 @@ class RailwayReceipt(Document):
 			if row.coal_commodity:
 				railway_receipt_item_row.coal_commodity = row.coal_commodity
 			if row.silo_loading_weight:
-				railway_receipt_item_row.rr_item_weight_mt = row.silo_loading_weight
+				if donot_set_rr_weight_from_silo_weight_in_rr==0:
+					railway_receipt_item_row.rr_item_weight_mt = row.silo_loading_weight
 			if row.commercial_destination_customer:
 				railway_receipt_item_row.commercial_destination_customer = row.commercial_destination_customer
 			if row.commercial_destination_item:
@@ -71,7 +74,7 @@ class RailwayReceipt(Document):
 
 @frappe.whitelist()
 def create_delivery_note_from_railway_receipt(docname):
-	
+	float_precision = cint(frappe.db.get_default("float_precision")) or 3
 	def dn_append_child_item_based_on_batchs(dn,item_code,qty,vessel,batch_no,warehouse):
 		# add row in dn child table
 		dn_item_row = dn.append("items",{})
@@ -93,6 +96,7 @@ def create_delivery_note_from_railway_receipt(docname):
 	
 	railway_receipt_item = doc.get("railway_receipt_item_details")
 	for row in railway_receipt_item:
+		# row.rr_item_weight_mt=flt((row.rr_item_weight_mt),float_precision)
 		if row.is_dn_created != 'Yes':
 			dn = frappe.new_doc("Delivery Note")
 			dn.customer = row.commercial_destination_customer
@@ -124,7 +128,7 @@ def create_delivery_note_from_railway_receipt(docname):
 			available_batches=get_available_batches(args)
 			
 			# check if batch total qty is less than required qty
-			float_precision = cint(frappe.db.get_default("float_precision")) or 3
+			
 			qty_from_batches=0
 			for batch in available_batches:
 				qty_from_batches=flt((qty_from_batches+batch.qty),float_precision)

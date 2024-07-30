@@ -13,34 +13,31 @@ import json
 class RailwayReceipt(Document):
 	def before_insert(self):
 		donot_set_rr_weight_from_silo_weight_in_rr = frappe.db.get_single_value('Coal Settings', 'donot_set_rr_weight_from_silo_weight_in_rr')
-
-		rcn_no = self.rcn_unique_no
-		rake_dispatch_doc = frappe.get_doc("Rake Dispatch",rcn_no)
-		self.railway_receipt_item_details=[]
-		for row in rake_dispatch_doc.get("rake_prelim_entry"):
-			railway_receipt_item_row = self.append("railway_receipt_item_details",{})
-			if row.customer_name:
-				railway_receipt_item_row.customer_name = row.customer_name
-			if row.vcn_no:
-				railway_receipt_item_row.vessel = row.vcn_no
-			if row.item:
-				railway_receipt_item_row.item = row.item
-			if row.grade:
-				railway_receipt_item_row.grade = row.grade
-			if row.coal_commodity:
-				railway_receipt_item_row.coal_commodity = row.coal_commodity
-			if row.silo_loading_weight:
-				if donot_set_rr_weight_from_silo_weight_in_rr==0:
+		if donot_set_rr_weight_from_silo_weight_in_rr==0:
+			rcn_no = self.rcn_unique_no
+			rake_dispatch_doc = frappe.get_doc("Rake Dispatch",rcn_no)
+			self.railway_receipt_item_details=[]
+			for row in rake_dispatch_doc.get("rake_prelim_entry"):
+				railway_receipt_item_row = self.append("railway_receipt_item_details",{})
+				if row.customer_name:
+					railway_receipt_item_row.customer_name = row.customer_name
+				if row.vcn_no:
+					railway_receipt_item_row.vessel = row.vcn_no
+				if row.item:
+					railway_receipt_item_row.item = row.item
+				if row.grade:
+					railway_receipt_item_row.grade = row.grade
+				if row.coal_commodity:
+					railway_receipt_item_row.coal_commodity = row.coal_commodity
+				if row.silo_loading_weight:
 					railway_receipt_item_row.rr_item_weight_mt = row.silo_loading_weight
-				elif donot_set_rr_weight_from_silo_weight_in_rr==1:
-					railway_receipt_item_row.rr_item_weight_mt = row.rr_item_weight_mt
-			if row.commercial_destination_customer:
-				railway_receipt_item_row.commercial_destination_customer = row.commercial_destination_customer
-			if row.commercial_destination_item:
-				railway_receipt_item_row.commercial_destination_item = row.commercial_destination_item
-			
-			railway_receipt_item_row.is_billed = "No"
-			railway_receipt_item_row.is_dn_created = "No"
+				if row.commercial_destination_customer:
+					railway_receipt_item_row.commercial_destination_customer = row.commercial_destination_customer
+				if row.commercial_destination_item:
+					railway_receipt_item_row.commercial_destination_item = row.commercial_destination_item
+				
+				railway_receipt_item_row.is_billed = "No"
+				railway_receipt_item_row.is_dn_created = "No"
 
 	def validate(self):
 		self.set_rr_weight()

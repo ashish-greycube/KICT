@@ -14,6 +14,7 @@
   "cargo_received",
   "handling_loss",
   "audit_shortage",
+  "donot_set_rr_weight_from_silo_weight_in_rr",
   "column_break_fars",
   "default_uom_for_cargo",
   "default_item_group_for_cargo",
@@ -210,12 +211,18 @@
    "fieldtype": "Percent",
    "label": "Food Borne By Company",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "donot_set_rr_weight_from_silo_weight_in_rr",
+   "fieldtype": "Check",
+   "label": "Don't set RR Weight from Silo Weight in RR"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-07-11 10:52:03.604056",
+ "modified": "2024-07-30 10:28:45.825280",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

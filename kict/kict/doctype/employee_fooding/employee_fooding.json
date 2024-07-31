@@ -12,6 +12,7 @@
   "borne_by_company",
   "borne_by_employee",
   "employee_email",
+  "is_subsidised",
   "column_break_rzca",
   "meal_date",
   "meal_type",
@@ -87,12 +88,19 @@
    "fieldtype": "Link",
    "label": "Employee Email",
    "options": "User"
+  },
+  {
+   "default": "1",
+   "fetch_from": "meal_type.custom_is_subsidised",
+   "fieldname": "is_subsidised",
+   "fieldtype": "Check",
+   "label": "Is Subsidised?"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-15 16:50:21.343455",
+ "modified": "2024-07-31 13:48:47.683381",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Employee Fooding",

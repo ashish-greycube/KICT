@@ -17,11 +17,16 @@ class EmployeeFooding(Document):
 	def calculate_borne_by_company_and_employee(self):
 		if self.meal_price:
 			meal_price = self.meal_price
-			percentage_borne_by_company = frappe.db.get_single_value("Coal Settings","food_borne_by_company")
-			borne_by_company = meal_price * (percentage_borne_by_company / 100)
-			borne_by_employee = meal_price - borne_by_company
-			self.borne_by_company = borne_by_company
-			self.borne_by_employee = borne_by_employee
+			is_meal_subsidised = frappe.db.get_value("Item",self.meal_type,"custom_is_subsidised")
+			if is_meal_subsidised == 1:
+				percentage_borne_by_company = frappe.db.get_single_value("Coal Settings","food_borne_by_company")
+				borne_by_company = meal_price * (percentage_borne_by_company / 100)
+				borne_by_employee = meal_price - borne_by_company
+				self.borne_by_company = borne_by_company
+				self.borne_by_employee = borne_by_employee
+			elif is_meal_subsidised == 0:
+				self.borne_by_employee = meal_price
+				self.borne_by_company = 0
 
 @frappe.whitelist()
 def get_meal_price(meal_type):

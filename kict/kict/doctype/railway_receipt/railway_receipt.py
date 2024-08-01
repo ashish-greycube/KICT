@@ -244,12 +244,12 @@ def get_available_batches(kwargs):
 	return get_qty_based_available_batches(data, qty)
 	
 @frappe.whitelist()
-def submit_bulk_railway_receipts(rr_list):
-	rr_list=json.loads(rr_list)
-	for rr in rr_list:
-		docstatus = frappe.db.get_value('Railway Receipt',rr, 'docstatus')
-		if docstatus!=0:
-			frappe.throw(_("You cannot select sbumitted railway receipt {0}".format(frappe.bold(rr))))
+def submit_bulk_railway_receipts(rr_list=None):
+	rr_list=frappe.db.get_all('Railway Receipt', filters={'docstatus': 0},pluck='name')
+	# for rr in rr_list:
+	# 	docstatus = frappe.db.get_value('Railway Receipt',rr, 'docstatus')
+	# 	if docstatus!=0:
+	# 		frappe.throw(_("You cannot select sbumitted railway receipt {0}".format(frappe.bold(rr))))
 	rr_ordered_list=frappe.db.get_all('Rake Dispatch', filters={'name': ['in', rr_list]},order_by='release_time asc',)	
 	submitted_rr=[]
 	for rr in rr_ordered_list:

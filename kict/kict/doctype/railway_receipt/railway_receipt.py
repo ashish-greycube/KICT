@@ -120,8 +120,8 @@ def create_delivery_note_from_railway_receipt(docname):
 			'qty':row.rr_item_weight_mt, 
 			'based_on': 'FIFO', 
 			'vessel':row.vessel,
-			# 'posting_date': loading_complete_date or None,
-			# 'posting_time': loading_complete_time or None,
+			'posting_date': release_date or None,
+			'posting_time': release_time or None,
 			'cmd': "kict.kict.doctype.railway_receipt.railway_receipt.get_auto_data"
 			})
 			available_batches=get_available_batches(args)
@@ -159,6 +159,7 @@ def create_delivery_note_from_railway_receipt(docname):
 			dn.submit()
 			row.is_dn_created = 'Yes'
 			doc.save(ignore_permissions=True)
+			frappe.db.commit()
 			frappe.msgprint(_('Delivery Note {0} is created').format(get_link_to_form("Delivery Note",dn.name)),alert=True)
 
 
@@ -255,6 +256,7 @@ def submit_bulk_railway_receipts(rr_list=None):
 	for rr in rr_ordered_list:
 		doc = frappe.get_doc('Railway Receipt', rr)
 		doc.submit()
+		frappe.db.commit()
 		submitted_rr.append(doc.name)
 	submitted_rr=" ,".join(submitted_rr)
 	frappe.msgprint(_("Railway Receipts {0} are submitted".format(frappe.bold(submitted_rr))))

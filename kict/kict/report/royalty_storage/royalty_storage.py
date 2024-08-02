@@ -119,6 +119,7 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 				sle.item_code,
 				batch_package.batch_no,	
 				item.customer,
+				sle.posting_time,
 				case 
 					when (sle.posting_time > '06:00:00'
 					and sle.posting_time <= '23:59:59')
@@ -154,6 +155,7 @@ UNION
 				sle.item_code,
 				batch_package.batch_no,
 				item.customer,
+				sle.posting_time,
 				sle.posting_date as show_date,
 				sum(batch_package.qty) as actual_qty,
 				manufacturing_date
@@ -178,7 +180,7 @@ UNION
 				sle.item_code,
 				batch_package.batch_no,
 				posting_date
-order by vessel ,item_code ,manufacturing_date,show_date				
+order by vessel ,item_code ,manufacturing_date,show_date,posting_time			
 		
 """.format(conditions),filters,as_dict=1,debug=1)	
 	return query
@@ -273,8 +275,12 @@ def execute(filters=None):
 					sc_row.remark=get_holiday_description(d['show_date'])
 					previous_batch_count=previous_batch_count
 				else:
-					sc_row.day_count=previous_batch_count+1
-					previous_batch_count=sc_row.day_count				
+					# it is ame day in and out, so not increasing day count	
+					if (flt(d.actual_qty) > 0  and flt(previous_out_qty) < 0)  or  (flt(d.actual_qty) < 0  and flt(previous_in_qty) > 0):
+						sc_row.day_count=previous_batch_count
+					else:
+						sc_row.day_count=previous_batch_count+1
+					previous_batch_count=sc_row.day_count			
 				sc_row.opening_qty=previous_balance_qty
 				sc_row.in_qty=flt(d.actual_qty, float_precision) if flt(d.actual_qty) > 0 else 0
 				sc_row.out_qty=abs(flt(d.actual_qty, float_precision))	 if flt(d.actual_qty) < 0 else 0

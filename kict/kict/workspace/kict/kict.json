@@ -368,7 +368,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-08-08 14:32:20.299197",
+ "modified": "2024-08-08 17:26:18.386905",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "KICT",
@@ -384,7 +384,7 @@
    "color": "Grey",
    "doc_view": "List",
    "label": "KICT MIS Dashboard",
-   "link_to": "KICT Operation",
+   "link_to": "KICT MIS Dashboard",
    "type": "Dashboard"
   }
  ],

@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"LFDHgpF1Sa\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">KICT</span>\",\"col\":12}},{\"id\":\"LgciQEuuXr\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}},{\"id\":\"eZDecRR9HV\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"ucpXSK56e4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"KICT Operation Dashboard\",\"col\":3}},{\"id\":\"jz22b0y3Dw\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"8B63SGI3D8\",\"type\":\"card\",\"data\":{\"card_name\":\"Vessel\",\"col\":4}},{\"id\":\"fi_Oq-w7mb\",\"type\":\"card\",\"data\":{\"card_name\":\"Other Info\",\"col\":4}},{\"id\":\"Ifelm4X9YD\",\"type\":\"card\",\"data\":{\"card_name\":\"Commercial Info\",\"col\":4}},{\"id\":\"Pn0CA4NaT4\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"7vN-lajsL3\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Doctype\",\"col\":4}},{\"id\":\"W_lEM4m7wx\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Master\",\"col\":4}},{\"id\":\"9u3I7mPleJ\",\"type\":\"spacer\",\"data\":{\"col\":12}}]",
+ "content": "[{\"id\":\"LFDHgpF1Sa\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">KICT</span>\",\"col\":12}},{\"id\":\"LgciQEuuXr\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}},{\"id\":\"eZDecRR9HV\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"ucpXSK56e4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"KICT MIS Dashboard\",\"col\":3}},{\"id\":\"jz22b0y3Dw\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"8B63SGI3D8\",\"type\":\"card\",\"data\":{\"card_name\":\"Vessel\",\"col\":4}},{\"id\":\"fi_Oq-w7mb\",\"type\":\"card\",\"data\":{\"card_name\":\"Other Info\",\"col\":4}},{\"id\":\"Ifelm4X9YD\",\"type\":\"card\",\"data\":{\"card_name\":\"Commercial Info\",\"col\":4}},{\"id\":\"Pn0CA4NaT4\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"7vN-lajsL3\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Doctype\",\"col\":4}},{\"id\":\"W_lEM4m7wx\",\"type\":\"card\",\"data\":{\"card_name\":\"Rake Master\",\"col\":4}},{\"id\":\"9u3I7mPleJ\",\"type\":\"spacer\",\"data\":{\"col\":12}}]",
  "creation": "2024-05-09 13:13:13.628115",
  "custom_blocks": [],
  "docstatus": 0,
@@ -368,7 +368,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-07-24 09:07:58.492189",
+ "modified": "2024-08-08 14:32:20.299197",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "KICT",
@@ -383,7 +383,7 @@
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "KICT Operation Dashboard",
+   "label": "KICT MIS Dashboard",
    "link_to": "KICT Operation",
    "type": "Dashboard"
   }

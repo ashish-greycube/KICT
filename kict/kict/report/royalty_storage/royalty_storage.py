@@ -220,6 +220,7 @@ def execute(filters=None):
 	previous_batch_count=0
 	previous_show_date=None
 	to_date = getdate(filters.to_date)
+	real_previous_date=None
 	result_length=len(data)
 
 	for d in data:
@@ -275,8 +276,8 @@ def execute(filters=None):
 					sc_row.remark=get_holiday_description(d['show_date'])
 					previous_batch_count=previous_batch_count
 				else:
-					# it is ame day in and out, so not increasing day count	
-					if (flt(d.actual_qty) > 0  and flt(previous_out_qty) < 0)  or  (flt(d.actual_qty) < 0  and flt(previous_in_qty) > 0):
+					# it is same day in and out, so not increasing day count	
+					if (real_previous_date==d['show_date']):
 						sc_row.day_count=previous_batch_count
 					else:
 						sc_row.day_count=previous_batch_count+1
@@ -413,7 +414,7 @@ def execute(filters=None):
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
 		loop=loop+1
-
+		real_previous_date=d['show_date']
 	return columns, sc_data	
 
 def get_conditions(filters):

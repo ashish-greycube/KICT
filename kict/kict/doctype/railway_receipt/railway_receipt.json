@@ -15,6 +15,7 @@
   "chargable_weight",
   "over_weight_qty",
   "over_weight_normal_rate",
+  "weighed_at",
   "punitive_qty",
   "freight",
   "destination_terminal_charges",
@@ -240,6 +241,11 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "weighed_at",
+   "fieldtype": "Data",
+   "label": "Weighed At"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -254,7 +260,7 @@
    "link_fieldname": "custom_rcn"
   }
  ],
- "modified": "2024-07-22 15:04:32.125471",
+ "modified": "2024-08-12 16:45:27.827899",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt",

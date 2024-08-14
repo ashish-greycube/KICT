@@ -38,20 +38,20 @@ def get_columns(filters):
 			"label":_("Recpt"),
 			"fieldtype": "Float",
 			"width":"150",
-			"precision":1
+			"precision":3
 		},		
 		{
 			"fieldname": "out_qty",
 			"label":_("Issue"),
 			"fieldtype": "Float",
 			"width":"150",
-			"precision":1
+			"precision":3
 		},
 		{
 			"fieldname": "balance",
 			"label":_("Balance"),
 			"fieldtype": "Float",
-			"precision":1,
+			"precision":3,
 			"width":"150"
 		},		
 		]

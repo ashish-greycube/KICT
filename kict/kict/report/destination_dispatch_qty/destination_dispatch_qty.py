@@ -76,7 +76,7 @@ def get_data(filters):
 				and rrd.docstatus < 2
 				{0}
 			group by
-				rrd.vessel,rrd.commercial_destination_item
+				vd.parent,rrd.commercial_destination_item
 				
 """.format(conditions),filters,as_dict=1,debug=1)
 
@@ -93,7 +93,7 @@ def get_data(filters):
 def get_conditions(filters):
 	conditions = ""
 	if filters.customer:
-		conditions += " where vd.customer_name = %(customer)s"
+		conditions += " and vd.customer_name = %(customer)s"
 	
 	return conditions
 

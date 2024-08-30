@@ -717,3 +717,10 @@ def get_amount_from_royalty_charges_report(vessel,start_date,end_date):
     if len(get_filtered_data)==0:
         free_vessel.append(vessel)
     return get_filtered_data,free_vessel
+
+def get_vessel_grade_details(vessel_name):
+    grade_list=frappe.db.get_list('Vessel Details', filters={'parent': ['=', vessel_name]},fields=['grade'],as_list=0)
+    if grade_list:
+        return ', '.join( ele.grade for ele in grade_list)
+    else:
+        return ''

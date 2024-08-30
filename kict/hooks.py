@@ -164,6 +164,10 @@ doc_events = {
     }        
 }
 
+jinja = {
+    "methods": [
+        "kict.api.get_vessel_grade_details"]
+}
 # Scheduled Tasks
 # ---------------
 

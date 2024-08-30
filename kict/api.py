@@ -322,12 +322,21 @@ def get_port_date(date,time):
 
 @frappe.whitelist()
 def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None,supplier_name=None,supplier_invoice_no=None,posting_date=None):
+    comment_1=[]
+    comment_2=[]
+    comment_3=[]
+    comment_4=[]
+    comment_5=[]
+    comment_6=[]
     source_name = frappe.get_last_doc('Vessel').name
     first_slot_item,first_slot_storage_charges,second_slot_item,second_slot_storage_charges = get_royalty_storage_items_and_rate(type="PI")
     distinct_vessel_list,free_vessel_list,charged_vessel = get_data_from_royalty_charges_report_for_vessel(posting_date,type="Comment")
  
     def set_missing_values(source, target):
+        
         eligible_vessels = []
+        royalty_charges_vessel_billed=[]
+        royalty_charges_report_data = get_data_from_royalty_charges_report_for_vessel(posting_date,type="PI")
         target.supplier = supplier_name
         target.bill_no = supplier_invoice_no
         target.custom_is_royalty_invoice = 1
@@ -364,7 +373,8 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
         # self.bill_no = ''
         # print("Condition satisfy",eligible_vessels)
         # alert 1
-        frappe.msgprint(_("[1/5] : Eligible vessels identified are <b>{0}<b>").format(len(eligible_vessels)),alert=True)        
+        comment_1.append("[1/5] : Eligible vessels identified are <b>{0}<b>".format(len(eligible_vessels)))
+        # frappe.msgprint(_("[1/5] : Eligible vessels identified are <b>{0}<b>").format(len(eligible_vessels)),alert=True)        
 
         for vessel in eligible_vessels:
             # print(vessel)
@@ -387,7 +397,8 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
 
             # print(distinct_item_commodity,"distinct_item_commodity")
             vessel_item_list = ",".join((ele if ele!=None else '') for ele in distinct_item_commodity)
-            frappe.msgprint(_("[2/5] : Berth Hire : Vessel items charged are <b>{0}<b> ").format(vessel_item_list),alert=True)
+            comment_2.append("[2/5] : Berth Hire : Vessel items charged are <b>{0}<b> ".format(vessel_item_list))
+            # frappe.msgprint(_("[2/5] : Berth Hire : Vessel items charged are <b>{0}<b> ").format(vessel_item_list),alert=True)
             # royalty charges for berth hire
             bh_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list)
 
@@ -417,12 +428,14 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
             print("="*10,"berth hire")
             print({"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,"qty":custom_qty,
             "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})
-            frappe.msgprint(_("[3/5] : Berth Hire : Qty is <b>{0}<b> and Rate is <b>{1}</b>").format(custom_qty,calculated_rate),alert=True)
+            comment_3.append("[3/5] : Berth Hire : Qty is <b>{0}<b> and Rate is <b>{1}</b>".format(custom_qty,calculated_rate))
+            # frappe.msgprint(_("[3/5] : Berth Hire : Qty is <b>{0}<b> and Rate is <b>{1}</b>").format(custom_qty,calculated_rate),alert=True)
             # royalty charges for cargo handling
             royalty_invoice_item = frappe.db.get_single_value("Coal Settings","ch_charges")
             cargo_handling_data = get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date)
             if len(cargo_handling_data)>0:
-                frappe.msgprint(_("[4/5] : Cargo Handling : Items idenfied for charging are <b>{0}<b>").format(len(cargo_handling_data)),alert=True)
+                comment_4.append("[4/5] : Cargo Handling : Items idenfied for charging are <b>{0}<b>".format(len(cargo_handling_data)))
+                # frappe.msgprint(_("[4/5] : Cargo Handling : Items idenfied for charging are <b>{0}<b>").format(len(cargo_handling_data)),alert=True)
                 print("="*10,"cargo handling")
                 for row in cargo_handling_data:
                     if row.get("vessel") == vessel:
@@ -437,11 +450,12 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                         print({"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":row.get("item"),"custom_grt":vessel_doc.total_tonnage_mt,"qty":row.get("qty"),
                         "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":vessel_doc.total_tonnage_mt,"rate":ch_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})
             # royalty charges for storage
-            royalty_charges_report_data = get_data_from_royalty_charges_report_for_vessel(posting_date,type="PI")
+            
             if len(royalty_charges_report_data)>0:
                 print("="*10,"storage")
-                frappe.msgprint(_("[5/5] : Storage : Items idenfied for charging are <b>{0}<b>").format(len(royalty_charges_report_data)),alert=True)
-                royalty_charges_vessel_billed=[]
+                comment_5.append("[5/5] : Storage : Items idenfied for charging are <b>{0}<b>".format(len(royalty_charges_report_data)))
+                # frappe.msgprint(_("[5/5] : Storage : Items idenfied for charging are <b>{0}<b>").format(len(royalty_charges_report_data)),alert=True)
+                
                 for row in royalty_charges_report_data:
                     if row.get("vessel") == vessel:
                         royalty_charges_vessel_billed.append(vessel)
@@ -461,13 +475,17 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                             "qty":row.get("qty"),"vessel":vessel,"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
 
         # for storage vessel which are not part of outer eligible vessels
+        print('royalty_charges_report_data,royalty_charges_vessel_billed')
+        print('1',royalty_charges_report_data,'2',royalty_charges_vessel_billed)
         if royalty_charges_report_data and len(royalty_charges_report_data)>0 and royalty_charges_vessel_billed and len(royalty_charges_vessel_billed)>0:
+            print('#'*100)
             for row in royalty_charges_report_data:       
                 if row.get("vessel") not in royalty_charges_vessel_billed:
                     vessel_closure = frappe.db.get_value('Vessel', row.get("vessel"), 'vessel_closure')
                     if vessel_closure==0:
                         print("="*10,"storage old")
-                        frappe.msgprint(_("[6] : Storage : Very old items that are not part of eligible vessels are <b>{0}<b>").format(row.get("vessel")),indicator="orange",alert=True)
+                        comment_6.append("[6] : Storage : Very old items that are not part of eligible vessels are <b>{0}<b>".format(row.get("vessel")))
+                        # frappe.msgprint(_("[6] : Storage : Very old items that are not part of eligible vessels are <b>{0}<b>").format(row.get("vessel")),indicator="orange",alert=True)
                         if  row.get("storage_item") == first_slot_item:
                             item_commodity = frappe.db.get_value("Item",row.get("customer_item"),"custom_coal_commodity")
                             purchase_invoice_item_sc = target.append("items",
@@ -509,8 +527,22 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
         print(ite.get("name",ite.get("vessel"),ite.get("rate"),ite.get("qty")))
     print("=="*10)
     doc.save(ignore_permissions=True)
- 
-    doc.add_comment("Comment", "<b>Eligible vessels</b> : {0} <br><b>Free vessels</b> : {1} <br><b>Charged vessels</b> : {2}".format(distinct_vessel_list,free_vessel_list,charged_vessel))
+    doc.add_comment("Comment", "<b>Eligible vessels</b> : {0} <br><hr><b>Free vessels</b> : {1} <br><hr><b>Charged vessels</b> : {2}".format(distinct_vessel_list,free_vessel_list,charged_vessel))
+    print("comment_1,comment_2,comment_3,comment_4,comment_5,comment_6")
+    print(comment_1,comment_2,comment_3,comment_4,comment_5,comment_6)
+    if len(comment_1)>0:
+        comment_1="<br>".join(ele for ele in comment_1)
+    if len(comment_2)>0:
+        comment_2="<br>".join(ele for ele in comment_2)
+    if len(comment_3)>0:
+        comment_3="<br>".join(ele for ele in comment_3)
+    if len(comment_4)>0:
+        comment_4="<br>".join(ele for ele in comment_4)   
+    if len(comment_5)>0:
+        comment_5="<br>".join(ele for ele in comment_5)         
+    if len(comment_6)>0:
+        comment_6="<br>".join(ele for ele in comment_6)               
+    doc.add_comment("Comment", "<b>{0}</b><br><hr><b>{1}</b><br><hr><b>{2}</b><br><hr><b>{3}</b><br><hr><b>{4}</b><br><hr><b>{5}</b><br><hr>".format(comment_1,comment_2,comment_3,comment_4,comment_5,comment_6))
     return doc.name
 
 

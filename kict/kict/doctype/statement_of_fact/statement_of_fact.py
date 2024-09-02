@@ -4,8 +4,9 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_to_date,get_last_day,getdate,get_datetime
+from frappe.utils import add_to_date,get_last_day,getdate,get_datetime,add_days
 from frappe.utils.data import get_date_str
+from kict.api import get_port_date
 
 class StatementofFact(Document):
 	def validate(self):
@@ -69,7 +70,10 @@ class StatementofFact(Document):
 			berth_stay_hours=int_hours
 			self.vessel_stay_hours = berth_stay_hours
 			month_end_date = get_last_day(self.first_line_ashore)
-			month_end_date_with_time=get_datetime(get_date_str(month_end_date)+' 23:59:59')
+			
+			# convert month_end_date to port date, because royalty is paid to port
+			month_end_date_with_time=get_datetime(get_date_str(add_days(month_end_date,1))+' 06:00:00')
+			
 			if get_datetime(self.all_line_cast_off) > month_end_date_with_time:
 				current_month_stay_seconds=frappe.utils.time_diff_in_seconds(month_end_date_with_time,self.first_line_ashore)
 				current_month_stay_hours_in_decimal=(current_month_stay_seconds/3600)

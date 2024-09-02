@@ -422,9 +422,11 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                 elif posting_date_month == all_line_month:
                     actual_berth_hours = sof[0].next_month_stay_hours
 
-            purchase_invoice_item_bh = target.append("items",
-            {"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,"qty":custom_qty,
-            "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})
+            item_details= {"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,"qty":custom_qty,
+            "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel}
+            purchase_invoice_item_bh = target.append("items",item_details)
+            if custom_qty==0:
+                frappe.throw(_("<b>Item quantity cannot be zero</b> <br> {0}".format(item_details)))
             print("="*10,"berth hire")
             print({"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,"qty":custom_qty,
             "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})

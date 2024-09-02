@@ -124,8 +124,10 @@ def create_delivery_note_from_railway_receipt(docname):
 			'posting_time': release_time or None,
 			'cmd': "kict.kict.doctype.railway_receipt.railway_receipt.get_auto_data"
 			})
+			print('='*10)
+			print('args',args)
 			available_batches=get_available_batches(args)
-			
+			print('available_batches=============',available_batches)
 			# check if batch total qty is less than required qty
 			
 			qty_from_batches=0
@@ -159,6 +161,8 @@ def create_delivery_note_from_railway_receipt(docname):
 			dn.submit()
 			row.is_dn_created = 'Yes'
 			doc.save(ignore_permissions=True)
+			print('delivery note info====')
+			print(dn.name,dn.posting_date,dn.posting_time)
 			frappe.db.commit()
 			frappe.msgprint(_('Delivery Note {0} is created').format(get_link_to_form("Delivery Note",dn.name)),alert=True)
 
@@ -225,7 +229,7 @@ def get_available_batches(kwargs):
 	elif kwargs.based_on == "Expiry":
 		query = query.orderby(batch_table.expiry_date)
 	else:
-		query = query.orderby(batch_table.creation)
+		query = query.orderby(batch_table.manufacturing_date)
 
 	if kwargs.get("ignore_voucher_nos"):
 		query = query.where(stock_ledger_entry.voucher_no.notin(kwargs.get("ignore_voucher_nos")))

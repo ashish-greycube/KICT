@@ -66,6 +66,7 @@ doctype_js = {"Item" : "public/js/item.js",
 jinja = {
     "methods": [
         "kict.kict.doctype.vessel.vessel.get_item_price",
+        "kict.api.get_vessel_grade_details"
     ]
 }
 
@@ -164,10 +165,6 @@ doc_events = {
     }        
 }
 
-jinja = {
-    "methods": [
-        "kict.api.get_vessel_grade_details"]
-}
 # Scheduled Tasks
 # ---------------
 

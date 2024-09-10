@@ -27,7 +27,7 @@
    "fieldname": "item",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Customer's Stock Item",
+   "label": "Customer's Stock Item (actual Stock & DN)",
    "options": "Item",
    "reqd": 1
   },
@@ -120,7 +120,7 @@
   {
    "fieldname": "commercial_destination_item",
    "fieldtype": "Link",
-   "label": "Destination Item",
+   "label": "Destination Item (for cargo handling & Destination Dispatch Qty)",
    "link_filters": "[[\"Item\",\"is_customer_provided_item\",\"=\",1]]",
    "options": "Item",
    "reqd": 1
@@ -141,7 +141,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-05 17:29:25.377886",
+ "modified": "2024-09-10 12:11:28.817512",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Railway Receipt Item Details",

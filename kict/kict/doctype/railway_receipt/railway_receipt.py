@@ -265,3 +265,14 @@ def submit_bulk_railway_receipts(rr_list=None):
 	submitted_rr=" ,".join(submitted_rr)
 	frappe.msgprint(_("Railway Receipts {0} are submitted".format(frappe.bold(submitted_rr))))
 
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_unique_customer_item_list(doctype, txt, searchfield, start, page_len, filters):
+	vcn_no = filters.get("vessel_name")
+	return frappe.get_all(
+		"Vessel Details",
+		parent_doctype="Vessel",
+		filters={"parent": vcn_no},
+		fields=["distinct item"],
+		as_list=1,
+	)

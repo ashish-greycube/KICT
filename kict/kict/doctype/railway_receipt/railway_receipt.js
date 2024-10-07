@@ -2,6 +2,30 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Railway Receipt", {
+    setup(frm) {
+        frm.set_query("item", "railway_receipt_item_details", function (doc, cdt, cdn) {
+            let row = locals[cdt][cdn];
+            if (row.vessel) {
+                return {
+                    query: "kict.kict.doctype.railway_receipt.railway_receipt.get_unique_customer_item_list",
+                    filters: {
+                        vessel_name: row.vessel
+                    },
+                };
+            }
+        });
+
+        frm.set_query("commercial_destination_item", "railway_receipt_item_details", function (doc, cdt, cdn) {
+            let row = locals[cdt][cdn];
+            return {
+                query: "kict.kict.doctype.railway_receipt.railway_receipt.get_unique_customer_item_list",
+                filters: {
+                    vessel_name: row.vessel,
+                    is_customer_provided_item: 1
+                },
+            };
+        });
+    },
     onload(frm) {
         frm.trigger('railway_receipt_on_refresh_load')
     },

@@ -76,7 +76,7 @@ def get_data(filters):
 				and rrd.docstatus < 2
 				{0}
 			group by
-				vd.parent,rrd.commercial_destination_item
+				vd.parent,vd.item
 				
 """.format(conditions),filters,as_dict=1,debug=1)
 

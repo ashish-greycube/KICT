@@ -66,7 +66,6 @@ def get_data(filters):
 					vd.customer_name customer ,
 					vd.item customer_item,
 					vd.tonnage_mt received_qty,
-					rrd.commercial_destination_item commercial_destination_item,
 					IFNULL(sum(rrd.rr_item_weight_mt), 0) dispatch_qty
 			FROM
 					`tabVessel Details` vd

@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 
 def get_columns(filters):
-	return [
+	columns = [
 		{
 			"fieldname": "vessel",
 			"label":_("Vessel"),
@@ -54,30 +54,57 @@ def get_columns(filters):
 			"fieldtype": "Float",
 			"precision":3,
 			"width":"150"
-		},
-		
+		}
 	]
+	if filters.get("show_stock_balance")==1:
+		for row in columns:
+			if row.get("fieldname") == "dispatch_qty":
+				row["label"] = "Stock Qty"
+	return columns
 
 def get_data(filters):
 	conditions = get_conditions(filters)
-	query = frappe.db.sql(
-		""" SELECT
-					vd.parent vessel,
-					vd.customer_name customer ,
-					vd.item customer_item,
-					vd.tonnage_mt received_qty,
-					IFNULL(sum(rrd.rr_item_weight_mt), 0) dispatch_qty
-			FROM
-					`tabVessel Details` vd
-			left outer join `tabRailway Receipt Item Details` rrd on
-					vd.parent = rrd.vessel
-				and vd.item = rrd.commercial_destination_item
-				and rrd.docstatus < 2
-				{0}
-			group by
-				vd.parent,vd.item
-				
-""".format(conditions),filters,as_dict=1,debug=1)
+	query = None
+	if filters.get("show_stock_balance")==1:
+		query = frappe.db.sql(
+			""" SELECT
+						vd.parent vessel,
+						vd.customer_name customer ,
+						vd.item customer_item,
+						vd.tonnage_mt received_qty,
+						IFNULL(sum(rrd.rr_item_weight_mt), 0) dispatch_qty
+				FROM
+						`tabVessel Details` vd
+				left outer join `tabRailway Receipt Item Details` rrd on
+						vd.parent = rrd.vessel
+					and vd.item = rrd.item
+					and rrd.docstatus < 2
+					{0}
+				group by
+					vd.parent,vd.item
+					
+	""".format(conditions),filters,as_dict=1,debug=1)
+		print("="*90)
+	else :
+		query = frappe.db.sql(
+			""" SELECT
+						vd.parent vessel,
+						vd.customer_name customer ,
+						vd.item customer_item,
+						vd.tonnage_mt received_qty,
+						IFNULL(sum(rrd.rr_item_weight_mt), 0) dispatch_qty
+				FROM
+						`tabVessel Details` vd
+				left outer join `tabRailway Receipt Item Details` rrd on
+						vd.parent = rrd.vessel
+					and vd.item = rrd.commercial_destination_item
+					and rrd.docstatus < 2
+					{0}
+				group by
+					vd.parent,vd.item
+					
+	""".format(conditions),filters,as_dict=1,debug=1)
+		print("*"*90)
 
 	from kict.kict.doctype.vessel.vessel import get_qty_for_handling_loss_and_audit_shortage
 
@@ -90,10 +117,11 @@ def get_data(filters):
 	return query
 
 def get_conditions(filters):
+	print(filters)
 	conditions = ""
 	if filters.customer:
-		conditions += " and vd.customer_name = %(customer)s"
-	
+		conditions += "where vd.customer_name = %(customer)s"
+	print(conditions,"--")
 	return conditions
 
 def execute(filters=None):

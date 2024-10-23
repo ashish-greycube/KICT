@@ -6,7 +6,13 @@ frappe.query_reports["Destination Dispatch Qty"] = {
 			"fieldname": "customer",
 			"label":__("Customer"),
 			"fieldtype": "Link",
-			"options": "Customer"
+			"options": "Customer",
+			// "reqd":1
+		},
+		{
+			"fieldname": "show_stock_balance",
+			"label":__("Show Based on Stock Balance"),
+			"fieldtype": "Check"
 		},
 	]
 };

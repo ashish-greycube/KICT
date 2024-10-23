@@ -727,3 +727,11 @@ def get_vessel_grade_details(vessel_name):
         return ', '.join( ele.grade for ele in grade_list)
     else:
         return ''
+    
+def validate_item_qty(self,method):
+    if len(self.items)>0:
+        for row in self.items:
+            if row.qty > 0:        
+                qty_from_vessel = frappe.db.get_value("Vessel Details",{"parent":self.custom_vessel,"item":row.item_code},["tonnage_mt"])
+                if qty_from_vessel and qty_from_vessel<row.qty:
+                    frappe.throw(_("Row #{0}: Qty cannot be greater than received qty <b>{1}</b>".format(row.idx,qty_from_vessel)))

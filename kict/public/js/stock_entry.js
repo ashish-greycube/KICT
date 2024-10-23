@@ -2,9 +2,11 @@ frappe.ui.form.on("Stock Entry", {
 
     onload: function(frm){
         frm.set_query("item_code","items", function (doc,cdt,cdn){
-            if (frm.doc.stock_entry_type=="Handling Loss" || frm.doc.stock_entry_type=="Audit Shortage" || frm.doc.stock_entry_type=="Cargo Received") {
+            if ((frm.doc.stock_entry_type=="Handling Loss" || frm.doc.stock_entry_type=="Audit Shortage" || frm.doc.stock_entry_type=="Cargo Received") && (frm.doc.custom_vessel)) {
                 return {
+                    query: "kict.kict.doctype.rake_dispatch.rake_dispatch.get_unique_customer_item_list",
                     filters: {
+                        vessel_name: frm.doc.custom_vessel,
                         is_stock_item: 1,
                         is_customer_provided_item: 1
                     }

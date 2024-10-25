@@ -66,7 +66,8 @@ doctype_js = {"Item" : "public/js/item.js",
 jinja = {
     "methods": [
         "kict.kict.doctype.vessel.vessel.get_item_price",
-        "kict.api.get_vessel_grade_details"
+        "kict.api.get_vessel_grade_details",
+        "kict.api.vessel_lay_time_calculation_sheet"
     ]
 }
 

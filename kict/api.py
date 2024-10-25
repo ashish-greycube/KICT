@@ -763,3 +763,21 @@ def validate_item_qty(self,method):
                             
                 if qty_from_vessel and qty_from_vessel<row.qty:
                     frappe.throw(_("Row #{0}: Qty cannot be greater than received qty <b>{1}</b>".format(row.idx,qty_from_vessel)))
+
+
+def vessel_lay_time_calculation_sheet(vessel_name):
+    # print('vessel_name',vessel_name)
+    query = frappe.db.sql(
+        """
+        SELECT
+        *
+        FROM `tabStatement of Fact` as sof
+        inner join `tabVessel` as vessel on
+            vessel.name=sof.name
+        inner join `tabVessel Details` as vessel_details on
+            vessel.name = vessel_details.parent
+        where
+            sof.name = '{0}'
+    """.format(vessel_name), as_dict=1, debug=1)
+    # print(query,'query')
+    return query

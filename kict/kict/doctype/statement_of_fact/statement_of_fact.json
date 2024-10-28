@@ -16,6 +16,7 @@
   "imo_no",
   "loa",
   "beam",
+  "berthing_clause",
   "column_break_bkwa",
   "igmjob_number",
   "total_tonnage_mt",
@@ -25,6 +26,10 @@
   "vessel_stay_hours",
   "current_month_stay_hours",
   "next_month_stay_hours",
+  "starting_of_lay_time",
+  "free_time_in_days",
+  "gross_total_lay_time_taken",
+  "time_used_on_actual_commencement_of_discharge",
   "section_break_ppjb",
   "radio_pratique_granted",
   "free_pratique_granted",
@@ -372,6 +377,31 @@
    "fieldname": "notice_of_readiness_retendered",
    "fieldtype": "Datetime",
    "label": "Notice of Readiness Re-tendered"
+  },
+  {
+   "fieldname": "berthing_clause",
+   "fieldtype": "Data",
+   "label": "Berthing Clause"
+  },
+  {
+   "fieldname": "starting_of_lay_time",
+   "fieldtype": "Datetime",
+   "label": "Starting Of Lay Time"
+  },
+  {
+   "fieldname": "free_time_in_days",
+   "fieldtype": "Float",
+   "label": "Free Time In Days"
+  },
+  {
+   "fieldname": "gross_total_lay_time_taken",
+   "fieldtype": "Float",
+   "label": "Gross Total Lay Time Taken"
+  },
+  {
+   "fieldname": "time_used_on_actual_commencement_of_discharge",
+   "fieldtype": "Float",
+   "label": "Time Used On Actual Commencement Of Discharge"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -381,7 +411,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-07-24 15:14:24.114636",
+ "modified": "2024-10-22 11:10:08.594536",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

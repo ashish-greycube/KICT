@@ -91,47 +91,45 @@ class StatementofFact(Document):
 			vessel_delay = frappe.db.get_all("Vessel Delay Details",
 									filters={"parent":self.name,"to_exempt_from_berth_hours":1},
 									fields=["account_delays","total_hours"])
-			print(vessel_delay,"---")
 			if len(vessel_delay)>0:
 				for row in vessel_delay:
 					total_vessel_delay = total_vessel_delay + row.total_hours
-			print(total_vessel_delay,"====")
 
 			if self.vessel_given_readiness__for_sailing:
 				diff_of_all_line_and_readiness = frappe.utils.time_diff_in_hours(self.all_line_cast_off,self.vessel_given_readiness__for_sailing)
-				print(diff_of_all_line_and_readiness,"diff_of_all_line_and_readiness")
+
 				if diff_of_all_line_and_readiness < 4:
 					diff_of_first_line_and_all_line = frappe.utils.time_diff_in_seconds(self.all_line_cast_off,self.first_line_ashore)
-					print(diff_of_first_line_and_all_line,"diff_of_first_line_and_all_line")
 					stay_hours = diff_of_first_line_and_all_line - total_vessel_delay
 					stay_int_hours, stay_dec_seconds = divmod(stay_hours/3600, 1)
-					print(stay_int_hours, stay_dec_seconds,"stay_int_hours, stay_dec_seconds")
 					if stay_dec_seconds > 0:
 						stay_int_hours = stay_int_hours + 1
 					self.vessel_stay_hours = stay_int_hours
-					print(stay_hours,"-=-=-=-")
-					self.vessel_stay_hours = stay_hours
+
+				elif diff_of_all_line_and_readiness >= 4 and self.is_delay_due_to_vessel_customer == 1:
+					diff_of_first_line_and_all_line = frappe.utils.time_diff_in_seconds(self.all_line_cast_off,self.first_line_ashore)
+					stay_hours = diff_of_first_line_and_all_line - total_vessel_delay
+					stay_int_hours, stay_dec_seconds = divmod(stay_hours/3600, 1)
+					if stay_dec_seconds > 0:
+						stay_int_hours = stay_int_hours + 1
+					self.vessel_stay_hours = stay_int_hours
+
 				elif diff_of_all_line_and_readiness >= 4:
 					new_vessel_readiness = frappe.utils.add_to_date(self.vessel_given_readiness__for_sailing, hours=4)
 					diff_of_first_line_and_readiness = frappe.utils.time_diff_in_seconds(new_vessel_readiness,self.first_line_ashore)
-					print(diff_of_first_line_and_readiness,'diff_of_first_line_and_readiness------')
 					stay_hours = diff_of_first_line_and_readiness - total_vessel_delay
 					stay_int_hours, stay_dec_seconds = divmod(stay_hours/3600, 1)
-					print(stay_int_hours, stay_dec_seconds,"stay_int_hours, stay_dec_seconds")
 					if stay_dec_seconds > 0:
 						stay_int_hours = stay_int_hours + 1
 					self.vessel_stay_hours = stay_int_hours
-					print(stay_hours,"--------------")
+					
 			else :
 				diff_of_first_line_and_all_line = frappe.utils.time_diff_in_seconds(self.all_line_cast_off,self.first_line_ashore)
-				print(diff_of_first_line_and_all_line,"diff_of_first_line_and_all_line")
 				stay_hours = diff_of_first_line_and_all_line - total_vessel_delay
 				stay_int_hours, stay_dec_seconds = divmod(stay_hours/3600, 1)
-				print(stay_int_hours, stay_dec_seconds,"stay_int_hours, stay_dec_seconds")
 				if stay_dec_seconds > 0:
 					stay_int_hours = stay_int_hours + 1
 				self.vessel_stay_hours = stay_int_hours
-				print(stay_hours,"-=-=-=-")
 
 			month_end_date = get_last_day(self.first_line_ashore)
 			

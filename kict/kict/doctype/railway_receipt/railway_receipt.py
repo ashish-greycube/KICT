@@ -42,6 +42,7 @@ class RailwayReceipt(Document):
 	def validate(self):
 		self.set_rr_weight()
 		self.set_item_cw_and_pcc()
+		self.claculate_total_punitive_amount()
 	
 	def set_rr_weight(self):
 		railway_item_detail = self.get("railway_receipt_item_details")
@@ -67,6 +68,10 @@ class RailwayReceipt(Document):
 			
 			row.item_cw = item_cw or 0
 			row.item_pcc = item_pcc or 0
+
+	def claculate_total_punitive_amount(self):
+		total_punitive_amount = (self.pol1 or 0) + (self.pol2 or 0)
+		self.total_punitive_amount = total_punitive_amount
 
 	def on_submit(self):
 		create_delivery_note_from_railway_receipt(self.name)

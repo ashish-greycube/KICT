@@ -17,6 +17,8 @@
   "loa",
   "beam",
   "berthing_clause",
+  "is_delay_due_to_vessel_customer",
+  "cases",
   "column_break_bkwa",
   "igmjob_number",
   "total_tonnage_mt",
@@ -402,6 +404,17 @@
    "fieldname": "time_used_on_actual_commencement_of_discharge",
    "fieldtype": "Float",
    "label": "Time Used On Actual Commencement Of Discharge"
+  },
+  {
+   "fieldname": "cases",
+   "fieldtype": "HTML",
+   "label": "Cases"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_delay_due_to_vessel_customer",
+   "fieldtype": "Check",
+   "label": "Is Delay Due To Vessel / Customer"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -411,7 +424,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2024-10-22 11:10:08.594536",
+ "modified": "2024-10-29 14:43:08.745675",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Statement of Fact",

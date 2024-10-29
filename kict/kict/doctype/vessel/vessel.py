@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe import _
-from frappe.utils import flt,cstr,today
+from frappe.utils import flt,cstr,today,cint
 from erpnext.stock.doctype.item.item import get_item_defaults
 from erpnext.stock.get_item_details import get_price_list_rate_for
 
@@ -418,7 +418,7 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 					handling_qty = get_qty_for_handling_loss_and_audit_shortage(source_name,cargo_item_field)
 					storage_charges_qty = flt(total_tonnage_field)
 					fixed_number_of_days = frappe.db.get_value("Customer",customer_name_field,"custom_no_of_days")
-					description = "Storage Charges for "+cstr(fixed_number_of_days)+" days <br>"+cargo_item_field
+					description = "Storage Charges for "+cstr(fixed_number_of_days)+" days"
 					item_row=target.append("items",{"item_code":storage_charges_item_fixed,"qty":storage_charges_qty,"description":description})
 				if storage_charges_type == "Actual Storage Days":
 					customer_doc=frappe.get_doc('Customer',customer_name_field)
@@ -428,11 +428,11 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 					charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26 = get_rate_and_qty_for_actual_storage_type_based_on_storage_report(source_name,customer_name_field)
 					print(charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26,"charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26")
 					if qty_for_16_25 > 0:
-						item_row=target.append("items",{"item_code":storage_charges_item_16_25,"qty":qty_for_16_25,"rate":charges_for_16_25,"description":cargo_item_field})
+						item_row=target.append("items",{"item_code":storage_charges_item_16_25,"qty":qty_for_16_25,"rate":charges_for_16_25})
 					else:
 						frappe.throw(_("You cannot create Tax Invoice for Storage Charges as there are no paid days."))
 					if qty_for_beyond_26 > 0:
-						item_row=target.append("items",{"item_code":storage_charges_item_beyond_26,"qty":qty_for_beyond_26,"rate":charges_for_beyond_26,"description":cargo_item_field})
+						item_row=target.append("items",{"item_code":storage_charges_item_beyond_26,"qty":qty_for_beyond_26,"rate":charges_for_beyond_26})
 			
 			doc = get_mapped_doc('Vessel', source_name, {
 				'Vessel': {

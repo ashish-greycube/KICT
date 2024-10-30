@@ -361,6 +361,8 @@ def execute(filters=None):
 
 def get_stock_ledger_entries_for_batch_bundle(filters):
 	conditions = get_conditions(filters)
+	# 1st query is of received
+	# 2nd query is of out
 	query = frappe.db.sql(
 		"""
 			select 
@@ -404,8 +406,12 @@ UNION
 				sle.item_code,
 				batch_package.batch_no,
 				item.customer,
-				sle.posting_time,
-				sle.posting_date as show_date,
+				sle.posting_time,				
+				case 
+					when (sle.posting_date <= '2024-10-31') then sle.posting_date
+					when (sle.posting_time > '06:00:00'	and sle.posting_time <= '23:59:59')	then  sle.posting_date
+					else date_add(sle.posting_date, INTERVAL -1 DAY)  
+				end as show_date,				
 				sum(batch_package.qty) as actual_qty,
 				manufacturing_date
 			from

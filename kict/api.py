@@ -3,7 +3,7 @@ from frappe import _
 from kict.kict.doctype.railway_receipt.railway_receipt import get_available_batches
 from erpnext.stock.get_item_details import get_item_details,get_basic_details,get_price_list_rate_for
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import getdate,add_days,get_time,get_first_day,get_last_day,cint,flt,cstr
+from frappe.utils import getdate,add_days,get_time,get_first_day,get_last_day,cint,flt,cstr,get_datetime,getdate
 from kict.kict.report.royalty_storage.royalty_storage import get_item_price
 from kict.kict.doctype.vessel.vessel import get_unique_item
 from kict.kict.report.royalty_storage.royalty_storage import get_royalty_storage_items_and_rate
@@ -781,3 +781,13 @@ def vessel_lay_time_calculation_sheet(vessel_name):
     """.format(vessel_name), as_dict=1, debug=1)
     # print(query,'query')
     return query
+
+def check_posting_date_time_and_batch_date(self,method):
+    if self.stock_entry_type == "Cargo Received":
+        port_date = get_port_date(self.posting_date,self.posting_time)
+        port_date_time = getdate(port_date)
+        if len(self.items)>0:
+            for row in self.items:
+               batch_date = frappe.db.get_value("Batch",row.batch_no,"manufacturing_date")
+               if port_date_time != batch_date:
+                   frappe.throw(_("Stock entry port date is {0}.<br>Row #{1}: Btach {2} has port date as {3}.<br>It is not matching").format(port_date,row.idx,row.batch_no,batch_date))

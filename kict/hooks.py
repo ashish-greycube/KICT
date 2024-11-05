@@ -159,7 +159,9 @@ doc_events = {
                             "kict.api.set_batch_no_and_warehouse_for_handling_loss_audit_sortage"
                            ],
         "validate":["kict.api.validate_vessel_is_present_in_items",
-                    "kict.api.validate_item_qty"]                                  
+                    "kict.api.validate_item_qty"],
+        "on_submit":"kict.api.check_posting_date_time_and_batch_date"  
+                                        
 	},
     "Sales Order": {
         "on_submit":"kict.api.set_grt_billed_for_bh_in_vessel_detail_on_submit_of_pi",

@@ -722,9 +722,16 @@ def get_amount_from_royalty_charges_report(vessel,start_date,end_date):
 
 def get_vessel_grade_details(vessel_name):
     grade_list=frappe.db.get_all('Vessel Details', filters={'parent': vessel_name},fields=['grade'])
-    print('grade_list',grade_list)
+    
     if grade_list:
-        return ', '.join( ele.grade for ele in grade_list)
+        unique_grade=[]
+        for grade in grade_list:
+            if grade.grade not in unique_grade:
+                unique_grade.append(grade.grade)
+        # print(unique_grade, '--unique_grade')
+        print(",".join(unique_grade), '----------')
+        return ",".join(unique_grade)
+        # return ', '.join( ele.grade for ele in grade_list)
     else:
         return ''
     

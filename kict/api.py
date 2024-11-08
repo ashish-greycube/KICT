@@ -229,6 +229,8 @@ def set_grt_billed_for_bh_in_vessel_detail_on_submit_of_si(self,method):
         customer_specific_total_tonnage = calculate_customer_specific_total_tonnage(self,method)
         for row in vessel_doc.get("vessel_details"):
             if row.customer_name==self.customer:
+                if not self.custom_quantity_in_mt:
+                    frappe.throw(_("Quantity in MT value in Sales Invoice is 0. Kindly put value in it"))
                 billed_qty = (flt((customer_specific_total_tonnage),3) / flt((self.custom_quantity_in_mt),3) ) * flt((row.tonnage_mt),3)
                 row.grt_billed_for_bh_for_si = billed_qty
 

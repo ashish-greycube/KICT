@@ -1117,9 +1117,14 @@ function show_storage_charges_report_from_vessel(frm) {
                 fields: dialog_field,
                 primary_action_label: 'Show Report',
                 primary_action: function (values) {
+                    console.log(values)
                     frappe.open_in_new_tab = true;
-                    frappe.set_route("query-report", "Storage Charges", { vessel: frm.doc.name,customer: values.customer_name_field,customer_item: values.cargo_item_field
-                    });
+					frappe.route_options = {
+                        vessel: frm.doc.name,
+                        customer: values.customer_name_field,
+                        customer_item: values.cargo_item_field
+					};                    
+                    frappe.set_route("query-report", "Storage Charges");
                     dialog.hide();                    
                 }
             })

@@ -425,7 +425,7 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 
 					storage_charges_item_16_25 = customer_doc.custom_chargeable_storage_charges_slots_details[0].item
 					storage_charges_item_beyond_26 = customer_doc.custom_chargeable_storage_charges_slots_details[1].item
-					charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26 = get_rate_and_qty_for_actual_storage_type_based_on_storage_report(source_name,customer_name_field)
+					charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26 = get_rate_and_qty_for_actual_storage_type_based_on_storage_report(source_name,customer_name_field,cargo_item_field)
 					print(charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26,"charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26")
 					if qty_for_16_25 > 0:
 						item_row=target.append("items",{"item_code":storage_charges_item_16_25,"qty":qty_for_16_25,"rate":charges_for_16_25})
@@ -456,7 +456,7 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 			frappe.msgprint(_("Tax Invoice of Storage Charges for {0} is created.").format(cargo_item_field),alert=True)	
 			return doc.name
 		
-def get_rate_and_qty_for_actual_storage_type_based_on_storage_report(vessel,customer_name):
+def get_rate_and_qty_for_actual_storage_type_based_on_storage_report(vessel,customer_name,cargo_item):
 	customer_doc=frappe.get_doc('Customer',customer_name)
 	if len(customer_doc.get("custom_chargeable_storage_charges_slots_details"))>0:
 		first_slot_item=customer_doc.custom_chargeable_storage_charges_slots_details[0].item
@@ -473,9 +473,9 @@ def get_rate_and_qty_for_actual_storage_type_based_on_storage_report(vessel,cust
 
 	first_slot_closing_balance, second_slot_closing_balance = 0,0
 	for item in storage_charges_report_data[1]:
-		if item.rate == first_slot_storage_charges:
+		if item.rate == first_slot_storage_charges and item.item_code==cargo_item:
 			first_slot_closing_balance = first_slot_closing_balance + item.bal_qty
-		if item.rate == second_slot_storage_charges:
+		if item.rate == second_slot_storage_charges and item.item_code==cargo_item:
 			second_slot_closing_balance = second_slot_closing_balance + item.bal_qty
 	
 	return first_slot_storage_charges, second_slot_storage_charges, first_slot_closing_balance, second_slot_closing_balance

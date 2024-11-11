@@ -23,7 +23,7 @@ frappe.query_reports["Storage Charges"] = {
 					}).then(r => {
 						console.log(r.message)
 						if (r.message) {
-							frappe.query_report.set_filter_value("customer", r.message[0][0]);
+							// frappe.query_report.set_filter_value("customer", r.message[0][0]);
 						}
 					})					
 				})

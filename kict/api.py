@@ -738,40 +738,41 @@ def get_vessel_grade_details(vessel_name):
         return ''
     
 def validate_item_qty(self,method):
-    if len(self.items)>0:
-        for row in self.items:
-            if row.qty > 0:        
-                qty_from_vessel = frappe.db.get_value("Vessel Details",{"parent":self.custom_vessel,"item":row.item_code},["tonnage_mt"])
+    if self.stock_entry_type == "Cargo Received":
+        if len(self.items)>0:
+            for row in self.items:
+                if row.qty > 0:        
+                    qty_from_vessel = frappe.db.get_value("Vessel Details",{"parent":self.custom_vessel,"item":row.item_code},["tonnage_mt"])
+                                    
+                    details = frappe.db.sql("""
+                        SELECT
+                            se.custom_vessel ,
+                            sed.item_code ,
+                            sum(sed.qty) as qty
+                        FROM
+                            `tabStock Entry` se
+                        inner join `tabStock Entry Detail` sed on
+                            se.name = sed.parent
+                        where
+                            se.docstatus = 1
+                            and sed.item_code = '{0}'
+                            and se.custom_vessel = '{1}'
+                            and se.stock_entry_type = 'Cargo Received'
+                        group by
+                            se.custom_vessel ,
+                            sed.item_code
+                                            """.format(row.item_code,self.custom_vessel),debug=1,as_dict=1)
+                    if len(details)>0:
+                        qty_in_warehouse = details[0].qty
+                        total_qty = qty_in_warehouse+row.qty
+                        if qty_from_vessel and total_qty > qty_from_vessel:
+                            if qty_from_vessel-qty_in_warehouse == 0:
+                                frappe.throw(_("You cannot create Stock Entry for Cargo Receive because qty in warehouses cannot be greater than total tonnage"))
+                            else :
+                                frappe.throw(_("Row #{0}:You canot add qty greater than <b>{1}</b>".format(row.idx,qty_from_vessel-qty_in_warehouse)))
                                 
-                details = frappe.db.sql("""
-                    SELECT
-                        se.custom_vessel ,
-                        sed.item_code ,
-                        sum(sed.qty) as qty
-                    FROM
-                        `tabStock Entry` se
-                    inner join `tabStock Entry Detail` sed on
-                        se.name = sed.parent
-                    where
-                        se.docstatus = 1
-                        and sed.item_code = '{0}'
-                        and se.custom_vessel = '{1}'
-                        and se.stock_entry_type = 'Cargo Received'
-                    group by
-                        se.custom_vessel ,
-                        sed.item_code
-                                        """.format(row.item_code,self.custom_vessel),debug=1,as_dict=1)
-                if len(details)>0:
-                    qty_in_warehouse = details[0].qty
-                    total_qty = qty_in_warehouse+row.qty
-                    if qty_from_vessel and total_qty > qty_from_vessel:
-                        if qty_from_vessel-qty_in_warehouse == 0:
-                            frappe.throw(_("You cannot create Stock Entry for Cargo Receive because qty in warehouses cannot be greater than total tonnage"))
-                        else :
-                            frappe.throw(_("Row #{0}:You canot add qty greater than <b>{1}</b>".format(row.idx,qty_from_vessel-qty_in_warehouse)))
-                            
-                if qty_from_vessel and qty_from_vessel<row.qty:
-                    frappe.throw(_("Row #{0}: Qty cannot be greater than received qty <b>{1}</b>".format(row.idx,qty_from_vessel)))
+                    if qty_from_vessel and qty_from_vessel<row.qty:
+                        frappe.throw(_("Row #{0}: Qty cannot be greater than received qty <b>{1}</b>".format(row.idx,qty_from_vessel)))
 
 
 def vessel_lay_time_calculation_sheet(vessel_name):

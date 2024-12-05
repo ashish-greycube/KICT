@@ -404,8 +404,6 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
             # royalty charges for berth hire
             bh_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list)
 
-            current_month_stay_hours = frappe.db.get_value("Statement of Fact",vessel,"current_month_stay_hours")
-            custom_qty = vessel_doc.grt * current_month_stay_hours
             royalty_percentage = frappe.db.get_single_value("Coal Settings","royalty_percentage")
             # custom_amount = custom_qty * bh_rate
             calculated_rate = bh_rate * (royalty_percentage/100)
@@ -413,16 +411,22 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                            filters={"name":vessel},
                            fields=["vessel_stay_hours","current_month_stay_hours","next_month_stay_hours","first_line_ashore","all_line_cast_off"])
             actual_berth_hours = None
+            current_month_stay_hours = 0
             # print(sof)
             if len(sof)>0:
                 first_line_month = (sof[0].first_line_ashore).month
                 all_line_month = (sof[0].all_line_cast_off).month
                 if posting_date_month==first_line_month and posting_date_month==all_line_month:
+                    current_month_stay_hours = sof[0].current_month_stay_hours
                     actual_berth_hours = sof[0].vessel_stay_hours
                 elif posting_date_month == first_line_month:
+                    current_month_stay_hours = sof[0].current_month_stay_hours
                     actual_berth_hours = sof[0].current_month_stay_hours
                 elif posting_date_month == all_line_month:
+                    current_month_stay_hours = sof[0].next_month_stay_hours
                     actual_berth_hours = sof[0].next_month_stay_hours
+            
+            custom_qty = vessel_doc.grt * current_month_stay_hours
 
             item_details= {"item_code":royalty_invoice_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":vessel_item_list,"custom_grt":vessel_doc.grt,"qty":custom_qty,
             "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel}

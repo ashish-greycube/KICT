@@ -434,7 +434,7 @@ UNION
 				item.customer,
 				sle.item_code,
 				batch_package.batch_no,
-				posting_date
+				show_date
 order by vessel ,item_code ,manufacturing_date,show_date,posting_time			
 		
 """.format(conditions),filters,as_dict=1,debug=1)	

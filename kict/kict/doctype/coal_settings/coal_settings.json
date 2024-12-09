@@ -243,7 +243,7 @@
   {
    "fieldname": "accounting_tab",
    "fieldtype": "Tab Break",
-   "label": "Accounting"
+   "label": "Royalty"
   },
   {
    "fieldname": "default_purchase_taxes_and_charges_template",
@@ -256,7 +256,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-09 13:14:39.564324",
+ "modified": "2024-12-09 18:05:02.869611",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

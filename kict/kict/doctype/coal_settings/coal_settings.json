@@ -33,7 +33,9 @@
   "food_meal_price_list",
   "column_break_czuv",
   "food_borne_by_company",
-  "food_salary_component"
+  "food_salary_component",
+  "accounting_tab",
+  "default_purchase_taxes_and_charges_template"
  ],
  "fields": [
   {
@@ -237,12 +239,24 @@
    "fieldname": "berth_hours_calculation_logic",
    "fieldtype": "HTML",
    "label": "Berth Hours Calculation logic"
+  },
+  {
+   "fieldname": "accounting_tab",
+   "fieldtype": "Tab Break",
+   "label": "Accounting"
+  },
+  {
+   "fieldname": "default_purchase_taxes_and_charges_template",
+   "fieldtype": "Link",
+   "label": "Default Purchase Taxes and Charges Template",
+   "options": "Purchase Taxes and Charges Template",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-10-29 16:03:44.421806",
+ "modified": "2024-12-09 13:14:39.564324",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

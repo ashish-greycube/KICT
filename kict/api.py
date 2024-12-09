@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+import erpnext
 from kict.kict.doctype.railway_receipt.railway_receipt import get_available_batches
 from erpnext.stock.get_item_details import get_item_details,get_basic_details,get_price_list_rate_for
 from frappe.model.mapper import get_mapped_doc
@@ -7,6 +8,7 @@ from frappe.utils import getdate,add_days,get_time,get_first_day,get_last_day,ci
 from kict.kict.report.royalty_storage.royalty_storage import get_item_price
 from kict.kict.doctype.vessel.vessel import get_unique_item
 from kict.kict.report.royalty_storage.royalty_storage import get_royalty_storage_items_and_rate
+from erpnext.controllers.accounts_controller import get_taxes_and_charges
 
 def set_cargo_handling_option_name_and_is_periodic(self,method):
     for row in self.get("custom_cargo_handling_charges_slots_details"):
@@ -509,9 +511,14 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                             print({"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,"rate":second_slot_storage_charges*(royalty_percentage/100),
                             "qty":row.get("qty"),"vessel":row.get("vessel"),"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})               
 
+        default_taxes_template = frappe.db.get_single_value("Coal Settings","default_purchase_taxes_and_charges_template")
+        if default_taxes_template:
+            taxes = get_taxes_and_charges("Purchase Taxes and Charges Template", default_taxes_template)
+            for tax in taxes:
+                target.append("taxes", tax)
+        else : 
+            frappe.throw(_("Please set Default Purchase Taxes and Charges Template in Coal Settings"))
 
-
-    
     doc = get_mapped_doc('Vessel', source_name, {
         'Vessel': {
             'doctype': 'Purchase Invoice',
@@ -526,15 +533,13 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
             "doctype": "Purchase Invoice Item",
             "condition":lambda doc:len(doc.name)<0,
             # "postprocess":update_item
-        },		
+        },	
     }, target_doc,set_missing_values)
     doc.run_method("set_missing_values")
     doc.run_method("calculate_taxes_and_totals")
-    print("=="*10)
     for ite in doc.get("items"):
         print(ite.get("name",ite.get("vessel"),ite.get("rate"),ite.get("qty")))
-    print("=="*10)
-    doc.save(ignore_permissions=True)
+    doc.save()
     doc.add_comment("Comment", "<b>Eligible vessels</b> : {0} <br><hr><b>Free vessels</b> : {1} <br><hr><b>Charged vessels</b> : {2}".format(distinct_vessel_list,free_vessel_list,charged_vessel))
     print("comment_1,comment_2,comment_3,comment_4,comment_5,comment_6")
     print(comment_1,comment_2,comment_3,comment_4,comment_5,comment_6)

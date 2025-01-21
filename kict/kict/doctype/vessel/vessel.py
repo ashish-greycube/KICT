@@ -161,7 +161,7 @@ def create_sales_order_from_vessel_for_berth_charges(source_name, target_doc=Non
 
 		cargo_name = frappe.db.get_list("Vessel Details",parent_doctype="Vessel",filters=vessel_details_filter_for_cargo,fields=["distinct item"])
 		all_cargo = ",".join((ele.item if ele.item!=None else '') for ele in cargo_name)
-		target.custom_cargo_item=all_cargo
+		target.custom_cargo_item= all_cargo[:139] if len(all_cargo) > 139 else all_cargo
 		target.custom_quantity_in_mt=custom_quantity_in_mt
 		target.custom_type_of_invoice="Berth Hire Charges"
 		target.customer=customer

@@ -686,12 +686,22 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 label: __("Type Of Billing"),
                 options:[""],
                 onchange: function(){
-                    console.log('inside type of billing')
+                    console.log('inside type of billing', billing_option_list)
                     let billing_option = dialog.get_field("type_of_billing_field")
                     let customer_name = dialog.get_field("customer_name_field")
+                    let qty_field = dialog.get_field("non_periodic_cargo_qty")
                     for (let row of billing_option_list){
                         if (billing_option.value == row.cargo_handling_option_name){
                             dialog.set_value("is_periodic_or_dispatch_field",row.billing_type)
+                            if (row.qty_billing_percent > 0){
+                                qty_based_on_percentage = (row.qty_billing_percent/100)*qty_field.value
+                                dialog.set_value("qty_billing_percentage_field",row.qty_billing_percent)
+                                dialog.set_value("qty_based_on_percentage_field",qty_based_on_percentage)
+                            }
+                            else {
+                                dialog.set_value("qty_billing_percentage_field",100)
+                                dialog.set_value("qty_based_on_percentage_field",qty_field.value)
+                            }
                         }
                     }
                     // console.log(dialog.get_field("is_periodic_or_dispatch_field").value)
@@ -715,7 +725,6 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             }
                         })                         
                     }
-                   
 
                 }
             }
@@ -799,6 +808,18 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 // hidden:1,
                 read_only:1
             }
+            qty_billing_percentage_field={
+                fieldtype: "Percent",
+                fieldname: "qty_billing_percentage_field",
+                label: __("Qty Billing %"),
+                read_only:1
+            }
+            qty_based_on_percentage_field={
+                fieldtype: "Float",
+                fieldname: "qty_based_on_percentage_field",
+                label: __("Qty Based on %"),
+                read_only:1
+            }
             customer_po_no_field={
                 fieldtype: "Data",
                 fieldname: "customer_po_no_field",
@@ -854,6 +875,11 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
             dialog_field.push(get_qty_button_field)
             dialog_field.push(periodic_cargo_qty)
             dialog_field.push(non_periodic_cargo_qty)
+            dialog_field.push({fieldtype: "Section Break",fieldname: "section_break_2"})
+            dialog_field.push(qty_billing_percentage_field)
+            dialog_field.push({fieldtype: "Column Break",fieldname: "column_break_3"})
+            dialog_field.push(qty_based_on_percentage_field)
+            dialog_field.push({fieldtype: "Section Break",fieldname: "section_break_2"})
             dialog_field.push(participant_detail_field)
             dialog_field.push(customer_po_no_field)
 
@@ -878,6 +904,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             "rate_field":values.rate_field,
                             "periodic_cargo_qty":values.periodic_cargo_qty,
                             "non_periodic_cargo_qty":values.non_periodic_cargo_qty,
+                            "qty_based_on_percentage":values.qty_based_on_percentage_field,
                             "customer_po_no_field":values.customer_po_no_field,
                             "from_date_field":values.from_date_field,
                             "to_date_field": values.to_date_field,

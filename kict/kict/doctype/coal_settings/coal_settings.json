@@ -25,6 +25,8 @@
   "terminal_holiday_list",
   "customer_group_for_cargo_customer",
   "berth_hours_calculation_logic",
+  "account_head_for_retention_labour_cess",
+  "account_head_for_retention_money",
   "royalty_storage_charges_slab_info_section",
   "free_storage_days",
   "storage_charges_slab_for_royalty",
@@ -251,12 +253,24 @@
    "label": "Default Purchase Taxes and Charges Template",
    "options": "Purchase Taxes and Charges Template",
    "reqd": 1
+  },
+  {
+   "fieldname": "account_head_for_retention_labour_cess",
+   "fieldtype": "Link",
+   "label": "Account Head For Retention Labour Cess",
+   "options": "Account"
+  },
+  {
+   "fieldname": "account_head_for_retention_money",
+   "fieldtype": "Link",
+   "label": "Account Head For Retention Money",
+   "options": "Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-09 18:05:02.869611",
+ "modified": "2025-01-22 17:03:20.146389",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",

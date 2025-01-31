@@ -57,6 +57,7 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval:(doc.billing_when=='On Complete Discharge' || doc.billing_when=='On Complete Dispatch')",
    "fieldname": "qty_billing_percent",
    "fieldtype": "Percent",
    "label": "Qty Billing Percent"
@@ -65,7 +66,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-16 17:09:00.686479",
+ "modified": "2025-01-27 15:41:13.734205",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Cargo Handling Charges Slots Details",

@@ -825,7 +825,7 @@ def bank_address(bank_account):
         doc = frappe.get_doc('Address', bank_address_id[0].parent)
         custom_addr = "{0} <br>{1}<br>{2}<br>{3} - {4}".format(doc.address_title,doc.address_line1,doc.address_line2,doc.state,doc.pincode)
         
-    return custom_addr
+    return custom_addr or None
 def get_sbi_non_sbi_data(docname):
     sbi_bank_data = frappe.db.sql("""
                     SELECT

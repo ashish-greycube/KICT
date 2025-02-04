@@ -10,6 +10,11 @@ from kict.kict.doctype.vessel.vessel import get_unique_item
 from kict.kict.report.royalty_storage.royalty_storage import get_royalty_storage_items_and_rate
 from erpnext.controllers.accounts_controller import get_taxes_and_charges
 
+import openpyxl
+from openpyxl.styles import Font, Alignment
+from openpyxl.styles import Border, Side
+import os
+
 def set_cargo_handling_option_name_and_is_periodic(self,method):
     for row in self.get("custom_cargo_handling_charges_slots_details"):
         option = str(row.percent_billing)+ "%" + " - " +row.billing_when
@@ -810,3 +815,471 @@ def check_posting_date_time_and_batch_date(self,method):
                batch_date = frappe.db.get_value("Batch",row.batch_no,"manufacturing_date")
                if port_date_time != batch_date:
                    frappe.throw(_("Stock entry port date is {0}.<br>Row #{1}: Btach {2} has port date as {3}.<br>It is not matching").format(port_date,row.idx,row.batch_no,batch_date))
+
+def bank_address(bank_account):
+    bank_name = frappe.db.get_value("Bank Account", bank_account, "bank")
+    bank_address_id = frappe.db.get_all("Dynamic Link", parent_doctype="Address",
+                                        filters={"link_doctype":"Bank","link_name":bank_name},
+                                        fields=["parent"])
+    if len(bank_address_id)>0:
+        doc = frappe.get_doc('Address', bank_address_id[0].parent)
+        custom_addr = "{0} <br>{1}<br>{2}<br>{3} - {4}".format(doc.address_title,doc.address_line1,doc.address_line2,doc.state,doc.pincode)
+        
+    return custom_addr
+def get_sbi_non_sbi_data(docname):
+    sbi_bank_data = frappe.db.sql("""
+                    SELECT
+                        por.amount,
+                        ba.bank_account_no,
+                        ba.branch_code,
+                        ba.account_name,
+                        por.custom_remarks
+                    FROM
+                        `tabPayment Order Reference` as por
+                    LEFT OUTER JOIN `tabBank Account` as ba on
+                        por.bank_account = ba.name
+                    WHERE ba.bank = 'State Bank of India' and por.parent = '{0}'
+                """.format(docname),as_dict=True,debug=1)
+    sbi_amount = 0
+    if len(sbi_bank_data)>0:
+        for data in sbi_bank_data:
+            sbi_amount = sbi_amount + data.amount
+    
+    non_sbi_bank_data = frappe.db.sql("""
+                SELECT
+                    por.amount,
+                    ba.bank_account_no,
+                    ba.branch_code,
+                    ba.account_name,
+                    por.custom_remarks
+                FROM
+                    `tabPayment Order Reference` as por
+                LEFT OUTER JOIN `tabBank Account` as ba on
+                    por.bank_account = ba.name
+                WHERE ba.bank != 'State Bank of India' and por.parent = '{0}'
+            """.format(docname),as_dict=True,debug=1)
+    non_sbi_amount = 0
+    if len(non_sbi_bank_data)>0:
+        for row in non_sbi_bank_data:
+            non_sbi_amount = non_sbi_amount + row.amount
+    
+    total_amount = sbi_amount + non_sbi_amount
+    print(sbi_amount, non_sbi_amount, total_amount, "sbi_amount, non_sbi_amount, total_amount")
+    print(sbi_bank_data, non_sbi_bank_data)
+    return sbi_amount, non_sbi_amount, total_amount, sbi_bank_data, non_sbi_bank_data
+    
+@frappe.whitelist()
+def get_sbi_account_details(docname):
+    
+    file_header = [
+        
+            "IFSC CODE",
+            "AMOUNT",
+            "BENEFICIARY AC NO",
+            "BENFICIARY NAME",
+            "BENEFICIARY ADDRESS"
+        
+    ]
+    print(file_header,"file_header")
+
+    po_data = frappe.db.sql("""
+                    SELECT
+                        ba.branch_code,
+                        por.amount,
+                        ba.bank_account_no,
+                        por.supplier,
+                        ad.city
+                    FROM
+                        `tabPayment Order Reference` as por
+                    LEFT OUTER JOIN `tabBank Account` as ba on
+                        por.bank_account = ba.name
+                    LEFT OUTER JOIN `tabDynamic Link` as dl on
+                        ba.bank = dl.link_name
+                    LEFT OUTER JOIN `tabAddress` as ad on
+                        ad.name = dl.parent
+                    WHERE ba.bank = 'State Bank of India' and por.parent = '{0}'
+                """.format(docname),as_dict = 1)
+    print(po_data,"po_data",type(po_data))
+
+    total_amount = 0
+    if len(po_data)>0:
+        for row in po_data:
+            total_amount = total_amount + row.amount
+
+    file_footer = [
+        "Total Amount",
+        total_amount,
+        "",
+        "",
+        ""
+    ]
+    # xlsx file creation
+
+    public_file_path = frappe.get_site_path("public", "files")
+    workbook = openpyxl.Workbook(write_only=True)
+    file_name=f"SBI-{docname}.xlsx"
+    file_url=os.path.join(public_file_path,file_name)
+    sheet = workbook.create_sheet("SBI", 0)
+    sheet.append(file_header)
+    for ele in po_data:
+        sheet.append([ele.branch_code,ele.amount,ele.bank_account_no,ele.supplier,ele.city])
+    sheet.append(file_footer)
+    workbook.save(file_url)
+
+    # excel fromatting
+
+    workBook = openpyxl.load_workbook(file_url)
+    workSheet = workBook.active
+
+    for i in range(1, workSheet.max_column + 1):
+        workSheet.cell(1, i).font = Font(bold=True, size=12, name="Calibri")
+        workSheet.cell(workSheet.max_row, i).font = Font(bold=True, size=10, name="Calibri")
+        workSheet.row_dimensions[1].height = 20
+        workSheet.column_dimensions['A'].width = 20
+        workSheet.column_dimensions['B'].width = 20
+        workSheet.column_dimensions['C'].width = 35
+        workSheet.column_dimensions['D'].width = 35
+        workSheet.column_dimensions['E'].width = 30
+
+    border_thin = Side(style='thin')
+    for i in range (1, workSheet.max_row + 1):
+        for j in range(1, workSheet.max_column + 1):
+            workSheet.cell(i, j).alignment = Alignment(horizontal="center", vertical="center")
+            workSheet.cell(i, j).border = Border(top=border_thin, left=border_thin, right=border_thin, bottom=border_thin)
+
+    workBook.save(file_url)
+    return frappe.utils.get_url()+"/files/"+file_name
+
+@frappe.whitelist()
+def get_non_sbi_account_details(docname):
+
+    file_header = [
+        "IFSC CODE",
+        "AMOUNT",
+        "BENEFICIARY AC NO",
+        "BENFICIARY NAME",
+        "BENEFICIARY ADDRESS"
+    ]
+
+    po_data = frappe.db.sql("""
+                    SELECT
+                        ba.branch_code,
+                        por.amount,
+                        ba.bank_account_no,
+                        s.supplier_name,
+                        ad.city
+                    FROM
+                        `tabPayment Order Reference` as por
+                    INNER JOIN `tabSupplier` as s on 
+                        s.name = por.supplier 
+                    LEFT OUTER JOIN `tabBank Account` as ba on
+                        por.bank_account = ba.name
+                    LEFT OUTER JOIN `tabDynamic Link` as dl on
+                        ba.bank = dl.link_name
+                    LEFT OUTER JOIN `tabAddress` as ad on
+                        ad.name = dl.parent
+                    WHERE ba.bank != 'State Bank of India' and por.parent = '{0}'
+                """.format(docname),as_dict = 1)
+    print(po_data,"po_data",type(po_data))
+    
+    total_amount = 0
+    if len(po_data)>0:
+        for row in po_data:
+            total_amount = total_amount + row.amount
+    
+    file_footer = [
+        "Total Amount",
+        total_amount,
+        "",
+        "",
+        ""
+    ]
+
+    # xlsx file creation
+
+    public_file_path = frappe.get_site_path("public", "files")
+    workbook = openpyxl.Workbook(write_only=True)
+    file_name=f"Non-SBI-{docname}.xlsx"
+    file_url=os.path.join(public_file_path,file_name)
+    sheet = workbook.create_sheet("Non-SBI", 0)
+    sheet.append(file_header)
+    for ele in po_data:
+        sheet.append([ele.branch_code,ele.amount,ele.bank_account_no,ele.supplier,ele.city])
+    sheet.append(file_footer)
+    workbook.save(file_url)
+
+    workBook = openpyxl.load_workbook(file_url)
+    workSheet = workBook.active
+
+    for i in range(1, workSheet.max_column + 1):
+        workSheet.cell(1, i).font = Font(bold=True, size=12, name="Calibri")
+        workSheet.cell(workSheet.max_row, i).font = Font(bold=True, size=10, name="Calibri")
+        workSheet.row_dimensions[1].height = 20
+        workSheet.column_dimensions['A'].width = 20
+        workSheet.column_dimensions['B'].width = 20
+        workSheet.column_dimensions['C'].width = 40
+        workSheet.column_dimensions['D'].width = 30
+        workSheet.column_dimensions['E'].width = 30
+
+    border_thin = Side(style='thin')
+    for i in range (1, workSheet.max_row + 1):
+        for j in range(1, workSheet.max_column + 1):
+            workSheet.cell(i, j).alignment = Alignment(horizontal="center", vertical="center")
+            workSheet.cell(i, j).border = Border(top=border_thin, left=border_thin, right=border_thin, bottom=border_thin)
+
+    workBook.save(file_url)
+    return frappe.utils.get_url()+"/files/"+file_name
+
+@frappe.whitelist()
+def get_statement_with_remarks_data(docname):
+    file_header = [
+        "Sl No",
+        "Name of the Party",
+        "Amount Rs.",
+        "Bank Type",
+        "Description",
+        "On Account of"
+    ]
+    print(file_header,"file_header")
+
+    po_data = frappe.db.sql("""
+                        SELECT
+                            s.supplier_name,
+                            por.amount,
+                            ba.bank,
+                            por.custom_remarks
+                        FROM
+                            `tabPayment Order Reference` as por
+                        inner join `tabSupplier` as s 
+                            on por.supplier = s.name
+                        LEFT OUTER JOIN `tabBank Account` as ba 
+                            on por.bank_account = ba.name 
+                        WHERE por.parent = '{0}'
+                """.format(docname),as_dict = 1)
+    
+    print(po_data,"po_data",type(po_data))
+    updated_data = []
+    idx = 1
+    total_amount = 0
+    if len(po_data)>0:
+        for row in po_data:
+            row_idx = list(row.keys()).index('supplier_name')
+            items = list(row.items())
+            items.insert(row_idx, ('sr_no',idx))
+            row = dict(items)
+            total_amount = total_amount + row.get("amount")
+            if row.get("bank") == "State Bank of India":
+                row.update({"bank": "SBI"})
+            else :
+                row.update({"bank": "Non-SBI"})
+            row["on_account_of"] = "KICTPPL"
+            idx = idx + 1
+            print(row,"---")
+            updated_data.append(row)
+    print(updated_data,"+++===+++")
+
+    file_footer = [
+            "",
+            "Total Amount",
+            total_amount,
+            "",
+            "",
+            ""
+        ]
+
+    # xlsx file creation
+
+    public_file_path = frappe.get_site_path("public", "files")
+    workbook = openpyxl.Workbook(write_only=True)
+    file_name=f"Statement-with-remarks-{docname}.xlsx"
+    file_url=os.path.join(public_file_path,file_name)
+    sheet = workbook.create_sheet("Statement With Remarks", 0)
+    sheet.append(file_header)
+    for ele in updated_data:
+        sheet.append([ele.get("sr_no"),ele.get("supplier_name"),ele.get("amount"),ele.get("bank"),ele.get("custom_remarks"),ele.get("on_account_of")])
+    sheet.append(file_footer)
+    workbook.save(file_url)
+
+    # file formatting
+    workBook = openpyxl.load_workbook(file_url)
+    workSheet = workBook.active
+
+    for i in range(1, workSheet.max_column + 1):
+        workSheet.cell(1, i).font = Font(bold=True, size=12, name="Calibri")
+        workSheet.cell(workSheet.max_row, i).font = Font(bold=True, size=10, name="Calibri")
+        workSheet.row_dimensions[1].height = 20
+        workSheet.column_dimensions['A'].width = 15
+        workSheet.column_dimensions['B'].width = 30
+        workSheet.column_dimensions['C'].width = 20
+        workSheet.column_dimensions['D'].width = 20
+        workSheet.column_dimensions['E'].width = 30
+        workSheet.column_dimensions['F'].width = 20
+
+    border_thin = Side(style='thin')
+    for i in range (1, workSheet.max_row + 1):
+        for j in range(1, workSheet.max_column + 1):
+            workSheet.cell(i, j).alignment = Alignment(horizontal="center", vertical="center")
+            workSheet.cell(i, j).border = Border(top=border_thin, left=border_thin, right=border_thin, bottom=border_thin)
+
+    workBook.save(file_url)
+
+    return frappe.utils.get_url()+"/files/"+file_name
+
+@frappe.whitelist()
+def get_purchase_invoice_data(docname):
+    
+    file_header = [
+        ["","","","","KALINGA INTERNATIONAL COAL TERMINAL PARADIP PVT LTD (KICTPPL)"],
+        ["","","","","List of Local expenses 2024"],
+        [
+            "Sr No",
+            "Date of Invoices",
+            "Invoice No.",
+            "Date of Certificatation(MSME vendor)",
+            "Vendor",
+            "Description",
+            "Basic Taxable Amount",
+            "Non-taxable Amount",
+            "GST",
+            "TDS",
+            "Retention Labour Cess",
+            "Retention Money",
+            "Adjustment",
+            "Net Payble"
+    ]
+    ]
+    print(file_header,"file header -------------")
+
+    pi_data = frappe.db.sql("""
+                    SELECT
+                        pi.posting_date,
+                        pi.name,
+                        s.custom_msme_certification_date,
+                        s.supplier_name,
+                        por.custom_remarks,
+                        pi.itc_integrated_tax,
+                        pi.itc_central_tax,
+                        pi.itc_state_tax
+                    FROM
+                        `tabPayment Order Reference` por
+                    inner join `tabPurchase Invoice` pi on
+                        pi.name = por.reference_name
+                    inner join `tabSupplier` s on
+                        s.name = por.supplier
+                    WHERE por.parent = '{0}'
+            """.format(docname),as_dict = 1, debug=1)
+    print(pi_data,"pi data ==========")
+
+    new_row = {}
+    updated_data = []
+    idx = 1
+
+    account_head_for_retention_labour_cess = frappe.db.get_single_value("Coal Settings","account_head_for_retention_labour_cess")
+    account_head_for_retention_money = frappe.db.get_single_value("Coal Settings","account_head_for_retention_money")
+
+    for row in pi_data:
+        print(row.name)
+        taxable_amount = 0
+        non_taxable_amount = 0
+        tds_amount = 0
+        total_gst = 0
+        pi_doc = frappe.get_doc("Purchase Invoice",row.name)
+        if len(pi_doc.items)>0:
+            for pi_child in pi_doc.items:
+                if pi_child.gst_treatment == "Taxable":
+                    taxable_amount = taxable_amount + pi_child.amount
+                elif pi_child.gst_treatment == "Nil-Rated":
+                    non_taxable_amount = non_taxable_amount + pi_child.amount
+
+        total_gst = (pi_doc.itc_integrated_tax or 0) + (pi_doc.itc_central_tax or 0) + (pi_doc.itc_state_tax or 0)
+        retention_labour_cess_amount = 0
+        retention_money = 0
+
+        if len(pi_doc.taxes)>0:
+            for tax_row in pi_doc.taxes:
+                parent_of_account_head = frappe.db.get_value("Account",tax_row.account_head,"parent_account")
+                if parent_of_account_head and parent_of_account_head == account_head_for_retention_labour_cess:
+                    retention_labour_cess_amount = retention_labour_cess_amount + tax_row.tax_amount
+                if parent_of_account_head and parent_of_account_head == account_head_for_retention_money:
+                    retention_money = retention_money + tax_row.tax_amount
+                if tax_row.is_tax_withholding_account == 1:
+                    tds_amount = tds_amount + tax_row.tax_amount
+
+        new_row = {}
+        new_row["sr_no"] = idx
+        new_row["date_of_invoice"] = row.posting_date
+        new_row["invoice_no"] = row.name
+        new_row["msme_date"] = row.custom_msme_certification_date
+        new_row["supplier"] = row.supplier_name
+        new_row["description"] = row.custom_remarks
+        new_row["basic_taxable_amount"] = taxable_amount if taxable_amount > 0 else "-"
+        new_row["non_taxable_amount"] = non_taxable_amount if non_taxable_amount > 0 else "-"
+        new_row["gst_amount"] = total_gst if total_gst > 0 else "-"
+        new_row["tds_amount"] = tds_amount if tds_amount > 0 else "-"
+        new_row["retention_labour_cess_amount"] = retention_labour_cess_amount or "-"
+        new_row["retention_money"] = retention_money or "-"
+        new_row["adjustment"] = ""
+        new_row["net_payable_amount"] = pi_doc.grand_total
+
+        updated_data.append(new_row)
+        idx = idx + 1
+       
+    print(updated_data,"))))))))))))")
+
+    # xlsx file creation
+
+    public_file_path = frappe.get_site_path("public", "files")
+    workbook = openpyxl.Workbook(write_only=True)
+    file_name=f"Purchase-Invoice-{docname}.xlsx"
+    file_url=os.path.join(public_file_path,file_name)
+    sheet = workbook.create_sheet("Statement With Remarks", 0)
+    for header in file_header:
+        sheet.append(header)
+    for ele in updated_data:
+        sheet.append([ele.get("sr_no"),ele.get("date_of_invoice"),ele.get("invoice_no"),ele.get("msme_date"),ele.get("supplier"),ele.get("description"),ele.get("basic_taxable_amount"),
+                      ele.get("non_taxable_amount"),ele.get("gst_amount"),ele.get("tds_amount"),ele.get("retention_labour_cess_amount"),ele.get("retention_money"),ele.get("adjustment"),ele.get("net_payable_amount")])
+    workbook.save(file_url)
+
+    # file Formatting
+    workBook = openpyxl.load_workbook(file_url)
+    workSheet = workBook.active
+
+    for i in range(1, workSheet.max_column + 1):
+        workSheet.cell(1, i).font = Font(bold=True, size=12, name="Calibri", underline='single')
+        workSheet.row_dimensions[1].height = 25
+        workSheet.cell(2, i).font = Font(bold=True, size=10, name="Calibri", underline='single')
+        workSheet.row_dimensions[2].height = 20
+        workSheet.cell(3, i).font = Font(bold=True, size=10, name="Calibri")
+
+        workSheet.column_dimensions['A'].width = 15
+        workSheet.column_dimensions['B'].width = 30
+        workSheet.column_dimensions['C'].width = 20
+        workSheet.column_dimensions['D'].width = 20
+        workSheet.column_dimensions['E'].width = 30
+        workSheet.column_dimensions['F'].width = 20
+        workSheet.column_dimensions['G'].width = 25
+        workSheet.column_dimensions['H'].width = 25
+        workSheet.column_dimensions['I'].width = 20
+        workSheet.column_dimensions['J'].width = 20
+        workSheet.column_dimensions['K'].width = 30
+        workSheet.column_dimensions['L'].width = 20
+        workSheet.column_dimensions['M'].width = 20
+        workSheet.column_dimensions['N'].width = 20
+    
+    workSheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=workSheet.max_column)
+    row1 = workSheet.cell(row = 1, column = 1) 
+    row1.value = "KALINGA INTERNATIONAL COAL TERMINAL PARADIP PVT LTD (KICTPPL)"
+
+    workSheet.merge_cells(start_row=2, start_column=1, end_row=2, end_column=workSheet.max_column)
+    row2 = workSheet.cell(row = 2, column = 1)
+    row2.value="List of Local Expenses"
+
+    border_thin = Side(style='thin')
+    for i in range (1, workSheet.max_row + 1):
+        for j in range(1, workSheet.max_column + 1):
+            workSheet.cell(i, j).alignment = Alignment(horizontal="center", vertical="center")
+            workSheet.cell(i, j).border = Border(top=border_thin, left=border_thin, right=border_thin, bottom=border_thin)
+
+    workBook.save(file_url)
+
+    return frappe.utils.get_url()+"/files/"+file_name

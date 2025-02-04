@@ -31,7 +31,8 @@ app_license = "unlicense"
 doctype_js = {"Item" : "public/js/item.js",
               "Stock Entry" : "public/js/stock_entry.js",
               "Purchase Invoice":"public/js/purchase_invoice.js",
-              "Customer":"public/js/customer.js"
+              "Customer":"public/js/customer.js",
+              "Payment Order":"public/js/payment_order.js"
               }
 
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
@@ -67,7 +68,9 @@ jinja = {
     "methods": [
         "kict.kict.doctype.vessel.vessel.get_item_price",
         "kict.api.get_vessel_grade_details",
-        "kict.api.vessel_lay_time_calculation_sheet"
+        "kict.api.vessel_lay_time_calculation_sheet",
+        "kict.api.bank_address",
+        "kict.api.get_sbi_non_sbi_data"
     ]
 }
 

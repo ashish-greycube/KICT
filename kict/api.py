@@ -1094,7 +1094,7 @@ def get_statement_with_remarks_data(docname):
 
     file_footer = [
             "",
-            "Total Amount",
+            "Payout(A)",
             total_amount,
             "",
             "",
@@ -1191,6 +1191,12 @@ def get_purchase_invoice_data(docname):
     account_head_for_retention_labour_cess = frappe.db.get_single_value("Coal Settings","account_head_for_retention_labour_cess")
     account_head_for_retention_money = frappe.db.get_single_value("Coal Settings","account_head_for_retention_money")
 
+    basic_tax_total = 0
+    non_tax_total = 0
+    gst_total = 0
+    tds_total = 0
+    net_payable = 0
+
     for row in pi_data:
         print(row.name)
         taxable_amount = 0
@@ -1235,8 +1241,42 @@ def get_purchase_invoice_data(docname):
         new_row["adjustment"] = ""
         new_row["net_payable_amount"] = pi_doc.grand_total
 
+        basic_tax_total = basic_tax_total + (taxable_amount or 0)
+        non_tax_total = non_tax_total + (non_taxable_amount or 0)
+        gst_total = gst_total + (total_gst or 0)
+        tds_total = tds_total + (tds_amount or 0)
+        net_payable = net_payable + pi_doc.grand_total
+    
+
         updated_data.append(new_row)
         idx = idx + 1
+
+    # total_row = {}
+    # total_row["description"] = "Total"
+    # total_row["basic_taxable_amount"] = basic_tax_total
+    # total_row["non_taxable_amount"] = non_tax_total
+    # total_row["gst_amount"] = gst_total
+    # total_row["tds_amount"] = tds_total
+    # total_row["net_payable_amount"] = net_payable
+
+    # updated_data.append(total_row)
+
+    file_footer = [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Total",
+            basic_tax_total,
+            non_tax_total,
+            gst_total,
+            tds_total,
+            "",
+            "",
+            "",
+            net_payable
+        ]
        
     print(updated_data,"))))))))))))")
 
@@ -1252,6 +1292,7 @@ def get_purchase_invoice_data(docname):
     for ele in updated_data:
         sheet.append([ele.get("sr_no"),ele.get("date_of_invoice"),ele.get("invoice_no"),ele.get("msme_date"),ele.get("supplier"),ele.get("description"),ele.get("basic_taxable_amount"),
                       ele.get("non_taxable_amount"),ele.get("gst_amount"),ele.get("tds_amount"),ele.get("retention_labour_cess_amount"),ele.get("retention_money"),ele.get("adjustment"),ele.get("net_payable_amount")])
+    sheet.append(file_footer)
     workbook.save(file_url)
 
     # file Formatting
@@ -1289,10 +1330,14 @@ def get_purchase_invoice_data(docname):
     row2.value="List of Local Expenses"
 
     border_thin = Side(style='thin')
+    print(workSheet.max_column, "---workSheet.max_column---", workSheet.max_row, "---workSheet.max_row----")
     for i in range (1, workSheet.max_row + 1):
         for j in range(1, workSheet.max_column + 1):
             workSheet.cell(i, j).alignment = Alignment(horizontal="center", vertical="center")
             workSheet.cell(i, j).border = Border(top=border_thin, left=border_thin, right=border_thin, bottom=border_thin)
+
+            if (workSheet.max_row) == i:
+                    workSheet.cell(i, j).font = Font(bold=True, size=11, name="Calibri")
 
     workBook.save(file_url)
 

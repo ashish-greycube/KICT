@@ -870,9 +870,20 @@ def get_sbi_non_sbi_data(docname):
     print(sbi_amount, non_sbi_amount, total_amount, "sbi_amount, non_sbi_amount, total_amount")
     print(sbi_bank_data, non_sbi_bank_data)
     return sbi_amount, non_sbi_amount, total_amount, sbi_bank_data, non_sbi_bank_data
-    
+
 @frappe.whitelist()
-def get_sbi_account_details(docname):
+def delete_file(file_name):
+    print("+"*100)
+    public_file_path = frappe.get_site_path("public", "files")
+    file_path = os.path.join(public_file_path, file_name)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        return True
+    else:
+        return False
+
+@frappe.whitelist()
+def get_sbi_account_details(docname,file_name):
     
     file_header = [
         
@@ -920,7 +931,7 @@ def get_sbi_account_details(docname):
 
     public_file_path = frappe.get_site_path("public", "files")
     workbook = openpyxl.Workbook(write_only=True)
-    file_name=f"SBI-{docname}.xlsx"
+    # file_name=f"SBI-{docname}.xlsx"
     file_url=os.path.join(public_file_path,file_name)
     sheet = workbook.create_sheet("SBI", 0)
     sheet.append(file_header)

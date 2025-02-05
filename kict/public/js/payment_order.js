@@ -3,10 +3,12 @@ frappe.ui.form.on("Payment Order", {
         frm.add_custom_button(
             __("Bulk TRFR"),
             () => {
+              let file_name="SBI-"+frm.doc.name+".xlsx"
               return frappe.call({
                   method: "kict.api.get_sbi_account_details",
                   args: {
-                    docname:frm.doc.name
+                    docname:frm.doc.name,
+                    file_name:file_name
                   },
                   callback: function (r) {
                     console.log(r.message)
@@ -22,6 +24,16 @@ frappe.ui.form.on("Payment Order", {
                         link.remove();
                     }                    
                     downloadURI(r.message,"SBI-"+frm.doc.name)
+                    console.log("22")
+                    frappe.call({
+                      method: "kict.api.delete_file",
+                      args: {
+                        file_name:file_name
+                      },
+                      callback: function (r) {
+                        console.log(r.message)
+                      }
+                    })
                     }
                 })
             },

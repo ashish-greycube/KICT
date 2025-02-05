@@ -821,11 +821,14 @@ def bank_address(bank_account):
     bank_address_id = frappe.db.get_all("Dynamic Link", parent_doctype="Address",
                                         filters={"link_doctype":"Bank","link_name":bank_name},
                                         fields=["parent"])
+    
+    custom_addr = ''
     if len(bank_address_id)>0:
         doc = frappe.get_doc('Address', bank_address_id[0].parent)
         custom_addr = "{0} <br>{1}<br>{2}<br>{3} - {4}".format(doc.address_title,doc.address_line1,doc.address_line2,doc.state,doc.pincode)
         
-    return custom_addr or None
+    return custom_addr
+
 def get_sbi_non_sbi_data(docname):
     sbi_bank_data = frappe.db.sql("""
                     SELECT

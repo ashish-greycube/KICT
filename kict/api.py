@@ -1252,9 +1252,60 @@ def get_purchase_invoice_data(docname):
         tds_total = tds_total + (tds_amount or 0)
         net_payable = net_payable + pi_doc.grand_total
     
-
         updated_data.append(new_row)
         idx = idx + 1
+    
+    po_data = frappe.db.sql("""
+                    SELECT
+                        po.transaction_date,
+                        po.name,
+                        s.custom_msme_certification_date,
+                        s.supplier_name,
+                        por.custom_remarks,
+                        por.amount,
+                        pr.custom_basic_taxable_amount as taxable_amount,
+                        pr.custom_nontaxable_amount as non_taxable_amount,
+                        pr.custom_gst_amount as total_gst,
+                        pr.custom_tds as tds_amount,
+                        pr.custom_retention_labour_cess as retention_labour_cess_amount,
+                        pr.custom_retention_money as retention_money                       
+                    FROM
+                        `tabPayment Order Reference` por
+                    inner join `tabPurchase Order` po on
+                        po.name = por.reference_name
+                    inner join `tabSupplier` s on
+                        s.name = por.supplier
+                    inner join `tabPayment Request` pr on
+                        pr.name = por.payment_request
+                    WHERE por.parent = '{0}'
+            """.format(docname),as_dict = 1, debug=1)
+    print(po_data,"po data ==========")
+    if len(po_data)>0:
+        for po in po_data:
+            new_po_row = {}
+            new_po_row["sr_no"] = idx
+            new_po_row["date_of_invoice"] = po.transaction_date
+            new_po_row["invoice_no"] = po.name
+            new_po_row["msme_date"] = po.custom_msme_certification_date
+            new_po_row["supplier"] = po.supplier_name
+            new_po_row["description"] = po.custom_remarks
+            new_po_row["basic_taxable_amount"] = po.taxable_amount if po.taxable_amount > 0 else "-"
+            new_po_row["non_taxable_amount"] = po.non_taxable_amount if po.non_taxable_amount > 0 else "-"
+            new_po_row["gst_amount"] = po.total_gst if po.total_gst > 0 else "-"
+            new_po_row["tds_amount"] = po.tds_amount if po.tds_amount > 0 else "-"
+            new_po_row["retention_labour_cess_amount"] = po.retention_labour_cess_amount or "-"
+            new_po_row["retention_money"] = po.retention_money or "-"
+            new_po_row["adjustment"] = ""
+            new_po_row["net_payable_amount"] = po.amount
+
+            basic_tax_total = basic_tax_total + (po.taxable_amount or 0)
+            non_tax_total = non_tax_total + (po.non_taxable_amount or 0)
+            gst_total = gst_total + (po.total_gst or 0)
+            tds_total = tds_total + (po.tds_amount or 0)
+            net_payable = net_payable + po.amount
+        
+            updated_data.append(new_po_row)
+            idx = idx + 1
 
     # total_row = {}
     # total_row["description"] = "Total"

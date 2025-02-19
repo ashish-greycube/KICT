@@ -1342,7 +1342,7 @@ def get_purchase_invoice_data(docname):
     workbook = openpyxl.Workbook(write_only=True)
     file_name=f"Purchase-Invoice-{docname}.xlsx"
     file_url=os.path.join(public_file_path,file_name)
-    sheet = workbook.create_sheet("Statement With Remarks", 0)
+    sheet = workbook.create_sheet("Invoices", 0)
     for header in file_header:
         sheet.append(header)
     for ele in updated_data:

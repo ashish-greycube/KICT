@@ -63,19 +63,19 @@
    "fieldname": "no_of_wagons_placed",
    "fieldtype": "Float",
    "label": "No of Wagons Placed",
-   "precision": "5"
+   "precision": "2"
   },
   {
    "fieldname": "no_of_wagons_loaded",
    "fieldtype": "Float",
    "label": "No of Wagons Loaded",
-   "precision": "5"
+   "precision": "2"
   },
   {
    "fieldname": "no_of_wagons_reject",
    "fieldtype": "Float",
    "label": "No of Wagons Reject",
-   "precision": "5",
+   "precision": "2",
    "read_only": 1
   },
   {
@@ -88,13 +88,13 @@
    "fieldname": "no_of_wagon_rejected_by_railway",
    "fieldtype": "Float",
    "label": "No of Wagon Rejected by Railway",
-   "precision": "5"
+   "precision": "2"
   },
   {
    "fieldname": "no_of_wagon_rejected_due_to_foreign_material",
    "fieldtype": "Float",
    "label": "No of Wagon Rejected due to Foreign Material",
-   "precision": "5"
+   "precision": "2"
   },
   {
    "fieldname": "column_break_kuys",
@@ -144,13 +144,13 @@
    "fieldname": "no_of_wagon_rejected_due_to_others",
    "fieldtype": "Float",
    "label": "No of Wagon Rejected due to Others",
-   "precision": "5"
+   "precision": "2"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-18 13:14:50.917695",
+ "modified": "2025-02-19 09:19:39.046664",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Rake Prelim Entry",

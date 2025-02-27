@@ -906,14 +906,16 @@ def get_sbi_account_details(docname,file_name):
                         ba.branch_code,
                         por.amount,
                         ba.bank_account_no,
-                        por.supplier,
+                        s.supplier_name,
                         ad.city
                     FROM
                         `tabPayment Order Reference` as por
+                    INNER JOIN `tabSupplier` as s on 
+                        s.name = por.supplier
                     LEFT OUTER JOIN `tabBank Account` as ba on
                         por.bank_account = ba.name
                     LEFT OUTER JOIN `tabDynamic Link` as dl on
-                        ba.bank = dl.link_name
+                        ba.name = dl.link_name
                     LEFT OUTER JOIN `tabAddress` as ad on
                         ad.name = dl.parent
                     WHERE ba.bank = 'State Bank of India' and por.parent = '{0}'
@@ -941,7 +943,7 @@ def get_sbi_account_details(docname,file_name):
     sheet = workbook.create_sheet("SBI", 0)
     sheet.append(file_header)
     for ele in po_data:
-        sheet.append([ele.branch_code,ele.amount,ele.bank_account_no,ele.supplier,ele.city])
+        sheet.append([ele.branch_code,ele.amount,ele.bank_account_no,ele.supplier_name,ele.city])
     sheet.append(file_footer)
     workbook.save(file_url)
 
@@ -954,11 +956,17 @@ def get_sbi_account_details(docname,file_name):
         workSheet.cell(1, i).font = Font(bold=True, size=12, name="Calibri")
         workSheet.cell(workSheet.max_row, i).font = Font(bold=True, size=10, name="Calibri")
         workSheet.row_dimensions[1].height = 20
-        workSheet.column_dimensions['A'].width = 20
-        workSheet.column_dimensions['B'].width = 20
-        workSheet.column_dimensions['C'].width = 35
-        workSheet.column_dimensions['D'].width = 35
-        workSheet.column_dimensions['E'].width = 30
+        # workSheet.column_dimensions['A'].width = 20
+        # workSheet.column_dimensions['B'].width = 20
+        # workSheet.column_dimensions['C'].width = 35
+        # workSheet.column_dimensions['D'].width = 35
+        # workSheet.column_dimensions['E'].width = 30
+    
+    for column_cells in workSheet.columns:
+        new_column_length = max(len(str(cell.value)) for cell in column_cells)
+        new_column_letter = (chr(64+(column_cells[0].column)))
+        if new_column_length > 0:
+            workSheet.column_dimensions[new_column_letter].width = new_column_length+5
 
     border_thin = Side(style='thin')
     for i in range (1, workSheet.max_row + 1):
@@ -994,7 +1002,7 @@ def get_non_sbi_account_details(docname):
                     LEFT OUTER JOIN `tabBank Account` as ba on
                         por.bank_account = ba.name
                     LEFT OUTER JOIN `tabDynamic Link` as dl on
-                        ba.bank = dl.link_name
+                        ba.name = dl.link_name
                     LEFT OUTER JOIN `tabAddress` as ad on
                         ad.name = dl.parent
                     WHERE ba.bank != 'State Bank of India' and por.parent = '{0}'
@@ -1023,7 +1031,7 @@ def get_non_sbi_account_details(docname):
     sheet = workbook.create_sheet("Non-SBI", 0)
     sheet.append(file_header)
     for ele in po_data:
-        sheet.append([ele.branch_code,ele.amount,ele.bank_account_no,ele.supplier,ele.city])
+        sheet.append([ele.branch_code,ele.amount,ele.bank_account_no,ele.supplier_name,ele.city])
     sheet.append(file_footer)
     workbook.save(file_url)
 
@@ -1034,11 +1042,17 @@ def get_non_sbi_account_details(docname):
         workSheet.cell(1, i).font = Font(bold=True, size=12, name="Calibri")
         workSheet.cell(workSheet.max_row, i).font = Font(bold=True, size=10, name="Calibri")
         workSheet.row_dimensions[1].height = 20
-        workSheet.column_dimensions['A'].width = 20
-        workSheet.column_dimensions['B'].width = 20
-        workSheet.column_dimensions['C'].width = 40
-        workSheet.column_dimensions['D'].width = 30
-        workSheet.column_dimensions['E'].width = 30
+        # workSheet.column_dimensions['A'].width = 20
+        # workSheet.column_dimensions['B'].width = 20
+        # workSheet.column_dimensions['C'].width = 40
+        # workSheet.column_dimensions['D'].width = 30
+        # workSheet.column_dimensions['E'].width = 30
+    
+    for column_cells in workSheet.columns:
+        new_column_length = max(len(str(cell.value)) for cell in column_cells)
+        new_column_letter = (chr(64+(column_cells[0].column)))
+        if new_column_length > 0:
+            workSheet.column_dimensions[new_column_letter].width = new_column_length+5
 
     border_thin = Side(style='thin')
     for i in range (1, workSheet.max_row + 1):
@@ -1127,12 +1141,18 @@ def get_statement_with_remarks_data(docname):
         workSheet.cell(1, i).font = Font(bold=True, size=12, name="Calibri")
         workSheet.cell(workSheet.max_row, i).font = Font(bold=True, size=10, name="Calibri")
         workSheet.row_dimensions[1].height = 20
-        workSheet.column_dimensions['A'].width = 15
-        workSheet.column_dimensions['B'].width = 30
-        workSheet.column_dimensions['C'].width = 20
-        workSheet.column_dimensions['D'].width = 20
-        workSheet.column_dimensions['E'].width = 30
-        workSheet.column_dimensions['F'].width = 20
+        # workSheet.column_dimensions['A'].width = 15
+        # workSheet.column_dimensions['B'].width = 30
+        # workSheet.column_dimensions['C'].width = 20
+        # workSheet.column_dimensions['D'].width = 20
+        # workSheet.column_dimensions['E'].width = 30
+        # workSheet.column_dimensions['F'].width = 20
+    
+    for column_cells in workSheet.columns:
+        new_column_length = max(len(str(cell.value)) for cell in column_cells)
+        new_column_letter = (chr(64+(column_cells[0].column)))
+        if new_column_length > 0:
+            workSheet.column_dimensions[new_column_letter].width = new_column_length+5
 
     border_thin = Side(style='thin')
     for i in range (1, workSheet.max_row + 1):
@@ -1172,19 +1192,22 @@ def get_purchase_invoice_data(docname):
     pi_data = frappe.db.sql("""
                     SELECT
                         pi.posting_date,
+                        pi.bill_date,
                         pi.name,
-                        s.custom_msme_certification_date,
                         s.supplier_name,
                         por.custom_remarks,
                         pi.itc_integrated_tax,
                         pi.itc_central_tax,
-                        pi.itc_state_tax
+                        pi.itc_state_tax,
+                        pr.custom_adjustment
                     FROM
                         `tabPayment Order Reference` por
                     inner join `tabPurchase Invoice` pi on
                         pi.name = por.reference_name
                     inner join `tabSupplier` s on
                         s.name = por.supplier
+                    inner join `tabPayment Request` pr on
+                        pr.name = por.payment_request
                     WHERE por.parent = '{0}'
             """.format(docname),as_dict = 1, debug=1)
     print(pi_data,"pi data ==========")
@@ -1232,9 +1255,9 @@ def get_purchase_invoice_data(docname):
 
         new_row = {}
         new_row["sr_no"] = idx
-        new_row["date_of_invoice"] = row.posting_date
+        new_row["date_of_invoice"] = row.bill_date
         new_row["invoice_no"] = row.name
-        new_row["msme_date"] = row.custom_msme_certification_date
+        new_row["msme_date"] = row.posting_date
         new_row["supplier"] = row.supplier_name
         new_row["description"] = row.custom_remarks
         new_row["basic_taxable_amount"] = taxable_amount if taxable_amount > 0 else "-"
@@ -1243,8 +1266,8 @@ def get_purchase_invoice_data(docname):
         new_row["tds_amount"] = tds_amount if tds_amount > 0 else "-"
         new_row["retention_labour_cess_amount"] = retention_labour_cess_amount or "-"
         new_row["retention_money"] = retention_money or "-"
-        new_row["adjustment"] = ""
-        new_row["net_payable_amount"] = pi_doc.grand_total
+        new_row["adjustment"] = row.custom_adjustment if row.custom_adjustment else ""
+        new_row["net_payable_amount"] = (pi_doc.grand_total + row.custom_adjustment) if row.custom_adjustment else pi_doc.grand_total
 
         basic_tax_total = basic_tax_total + (taxable_amount or 0)
         non_tax_total = non_tax_total + (non_taxable_amount or 0)
@@ -1259,7 +1282,6 @@ def get_purchase_invoice_data(docname):
                     SELECT
                         po.transaction_date,
                         po.name,
-                        s.custom_msme_certification_date,
                         s.supplier_name,
                         por.custom_remarks,
                         por.amount,
@@ -1268,7 +1290,8 @@ def get_purchase_invoice_data(docname):
                         pr.custom_gst_amount as total_gst,
                         pr.custom_tds as tds_amount,
                         pr.custom_retention_labour_cess as retention_labour_cess_amount,
-                        pr.custom_retention_money as retention_money                       
+                        pr.custom_retention_money as retention_money,
+                        pr.custom_adjustment                       
                     FROM
                         `tabPayment Order Reference` por
                     inner join `tabPurchase Order` po on
@@ -1286,7 +1309,7 @@ def get_purchase_invoice_data(docname):
             new_po_row["sr_no"] = idx
             new_po_row["date_of_invoice"] = po.transaction_date
             new_po_row["invoice_no"] = po.name
-            new_po_row["msme_date"] = po.custom_msme_certification_date
+            new_po_row["msme_date"] = "-"
             new_po_row["supplier"] = po.supplier_name
             new_po_row["description"] = po.custom_remarks
             new_po_row["basic_taxable_amount"] = po.taxable_amount if po.taxable_amount > 0 else "-"
@@ -1295,8 +1318,8 @@ def get_purchase_invoice_data(docname):
             new_po_row["tds_amount"] = po.tds_amount if po.tds_amount > 0 else "-"
             new_po_row["retention_labour_cess_amount"] = po.retention_labour_cess_amount or "-"
             new_po_row["retention_money"] = po.retention_money or "-"
-            new_po_row["adjustment"] = ""
-            new_po_row["net_payable_amount"] = po.amount
+            new_po_row["adjustment"] = po.custom_adjustment if po.custom_adjustment else ""
+            new_po_row["net_payable_amount"] = (po.amount + po.custom_adjustment) if po.custom_adjustment else po.amount
 
             basic_tax_total = basic_tax_total + (po.taxable_amount or 0)
             non_tax_total = non_tax_total + (po.non_taxable_amount or 0)
@@ -1362,20 +1385,26 @@ def get_purchase_invoice_data(docname):
         workSheet.row_dimensions[2].height = 20
         workSheet.cell(3, i).font = Font(bold=True, size=10, name="Calibri")
 
-        workSheet.column_dimensions['A'].width = 15
-        workSheet.column_dimensions['B'].width = 30
-        workSheet.column_dimensions['C'].width = 20
-        workSheet.column_dimensions['D'].width = 20
-        workSheet.column_dimensions['E'].width = 30
-        workSheet.column_dimensions['F'].width = 20
-        workSheet.column_dimensions['G'].width = 25
-        workSheet.column_dimensions['H'].width = 25
-        workSheet.column_dimensions['I'].width = 20
-        workSheet.column_dimensions['J'].width = 20
-        workSheet.column_dimensions['K'].width = 30
-        workSheet.column_dimensions['L'].width = 20
-        workSheet.column_dimensions['M'].width = 20
-        workSheet.column_dimensions['N'].width = 20
+        # workSheet.column_dimensions['A'].width = 15
+        # workSheet.column_dimensions['B'].width = 30
+        # workSheet.column_dimensions['C'].width = 20
+        # workSheet.column_dimensions['D'].width = 20
+        # workSheet.column_dimensions['E'].width = 30
+        # workSheet.column_dimensions['F'].width = 20
+        # workSheet.column_dimensions['G'].width = 25
+        # workSheet.column_dimensions['H'].width = 25
+        # workSheet.column_dimensions['I'].width = 20
+        # workSheet.column_dimensions['J'].width = 20
+        # workSheet.column_dimensions['K'].width = 30
+        # workSheet.column_dimensions['L'].width = 20
+        # workSheet.column_dimensions['M'].width = 20
+        # workSheet.column_dimensions['N'].width = 20
+    
+    for column_cells in workSheet.columns:
+        new_column_length = max(len(str(cell.value)) for cell in column_cells)
+        new_column_letter = (chr(64+(column_cells[0].column)))
+        if new_column_length > 0:
+            workSheet.column_dimensions[new_column_letter].width = new_column_length+5    
     
     workSheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=workSheet.max_column)
     row1 = workSheet.cell(row = 1, column = 1) 

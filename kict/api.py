@@ -1224,6 +1224,9 @@ def get_purchase_invoice_data(docname):
     gst_total = 0
     tds_total = 0
     net_payable = 0
+    total_retention_labour_cess_amount = 0
+    total_retention_money = 0
+    total_adjustment = 0
 
     for row in pi_data:
         print(row.name)
@@ -1267,13 +1270,16 @@ def get_purchase_invoice_data(docname):
         new_row["retention_labour_cess_amount"] = retention_labour_cess_amount or "-"
         new_row["retention_money"] = retention_money or "-"
         new_row["adjustment"] = row.custom_adjustment if row.custom_adjustment else ""
-        new_row["net_payable_amount"] = (pi_doc.grand_total + row.custom_adjustment) if row.custom_adjustment else pi_doc.grand_total
+        new_row["net_payable_amount"] = pi_doc.grand_total
 
         basic_tax_total = basic_tax_total + (taxable_amount or 0)
         non_tax_total = non_tax_total + (non_taxable_amount or 0)
         gst_total = gst_total + (total_gst or 0)
         tds_total = tds_total + (tds_amount or 0)
         net_payable = net_payable + pi_doc.grand_total
+        total_retention_labour_cess_amount = total_retention_labour_cess_amount + (retention_labour_cess_amount or 0)
+        total_retention_money = total_retention_money + (retention_money or 0)
+        total_adjustment = total_adjustment + (row.custom_adjustment or 0)
     
         updated_data.append(new_row)
         idx = idx + 1
@@ -1319,13 +1325,16 @@ def get_purchase_invoice_data(docname):
             new_po_row["retention_labour_cess_amount"] = po.retention_labour_cess_amount or "-"
             new_po_row["retention_money"] = po.retention_money or "-"
             new_po_row["adjustment"] = po.custom_adjustment if po.custom_adjustment else ""
-            new_po_row["net_payable_amount"] = (po.amount + po.custom_adjustment) if po.custom_adjustment else po.amount
+            new_po_row["net_payable_amount"] = po.amount
 
             basic_tax_total = basic_tax_total + (po.taxable_amount or 0)
             non_tax_total = non_tax_total + (po.non_taxable_amount or 0)
             gst_total = gst_total + (po.total_gst or 0)
             tds_total = tds_total + (po.tds_amount or 0)
             net_payable = net_payable + po.amount
+            total_retention_labour_cess_amount = total_retention_labour_cess_amount + (po.retention_labour_cess_amount or 0)
+            total_retention_money = total_retention_money + (po.retention_money or 0)
+            total_adjustment = total_adjustment + (po.custom_adjustment or 0)
         
             updated_data.append(new_po_row)
             idx = idx + 1
@@ -1351,9 +1360,9 @@ def get_purchase_invoice_data(docname):
             non_tax_total,
             gst_total,
             tds_total,
-            "",
-            "",
-            "",
+            total_retention_labour_cess_amount,
+            total_retention_money,
+            total_adjustment,
             net_payable
         ]
        

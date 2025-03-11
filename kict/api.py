@@ -822,9 +822,9 @@ def check_posting_date_time_and_batch_date(self,method):
                    frappe.throw(_("Stock entry port date is {0}.<br>Row #{1}: Btach {2} has port date as {3}.<br>It is not matching").format(port_date,row.idx,row.batch_no,batch_date))
 
 def bank_address(bank_account):
-    bank_name = frappe.db.get_value("Bank Account", bank_account, "bank")
+    # bank_name = frappe.db.get_value("Bank Account", bank_account, "bank")
     bank_address_id = frappe.db.get_all("Dynamic Link", parent_doctype="Address",
-                                        filters={"link_doctype":"Bank","link_name":bank_name},
+                                        filters={"link_doctype":"Bank Account","link_name":bank_account},
                                         fields=["parent"])
     
     custom_addr = ''
@@ -841,7 +841,9 @@ def get_sbi_non_sbi_data(docname):
                         ba.bank_account_no,
                         ba.branch_code,
                         ba.account_name,
-                        por.custom_remarks
+                        por.custom_remarks,
+                        por.reference_doctype,
+                        por.reference_name
                     FROM
                         `tabPayment Order Reference` as por
                     LEFT OUTER JOIN `tabBank Account` as ba on
@@ -849,9 +851,17 @@ def get_sbi_non_sbi_data(docname):
                     WHERE ba.bank = 'State Bank of India' and por.parent = '{0}'
                 """.format(docname),as_dict=True,debug=1)
     sbi_amount = 0
+    ref_doc_remarks = None
     if len(sbi_bank_data)>0:
         for data in sbi_bank_data:
             sbi_amount = sbi_amount + data.amount
+            if data.reference_doctype == "Purchase Invoice":
+                ref_doc_remarks = frappe.db.get_value(data.reference_doctype, data.reference_name, "remarks")
+            elif data.reference_doctype == "Purchase Order":
+                ref_doc_remarks = frappe.db.get_value(data.reference_doctype, data.reference_name, "custom_remarks")
+            
+            if ref_doc_remarks:
+                data.custom_remarks = ref_doc_remarks
     
     non_sbi_bank_data = frappe.db.sql("""
                 SELECT
@@ -859,7 +869,9 @@ def get_sbi_non_sbi_data(docname):
                     ba.bank_account_no,
                     ba.branch_code,
                     ba.account_name,
-                    por.custom_remarks
+                    por.custom_remarks,
+                    por.reference_doctype,
+                    por.reference_name
                 FROM
                     `tabPayment Order Reference` as por
                 LEFT OUTER JOIN `tabBank Account` as ba on
@@ -870,6 +882,13 @@ def get_sbi_non_sbi_data(docname):
     if len(non_sbi_bank_data)>0:
         for row in non_sbi_bank_data:
             non_sbi_amount = non_sbi_amount + row.amount
+            if row.reference_doctype == "Purchase Invoice":
+                ref_doc_remarks = frappe.db.get_value(row.reference_doctype, row.reference_name, "remarks")
+            elif row.reference_doctype == "Purchase Order":
+                ref_doc_remarks = frappe.db.get_value(row.reference_doctype, row.reference_name, "custom_remarks")
+            
+            if ref_doc_remarks:
+                row.custom_remarks = ref_doc_remarks
     
     total_amount = sbi_amount + non_sbi_amount
     print(sbi_amount, non_sbi_amount, total_amount, "sbi_amount, non_sbi_amount, total_amount")

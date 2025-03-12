@@ -841,9 +841,7 @@ def get_sbi_non_sbi_data(docname):
                         ba.bank_account_no,
                         ba.branch_code,
                         ba.account_name,
-                        por.custom_remarks,
-                        por.reference_doctype,
-                        por.reference_name
+                        por.custom_remarks
                     FROM
                         `tabPayment Order Reference` as por
                     LEFT OUTER JOIN `tabBank Account` as ba on
@@ -851,17 +849,9 @@ def get_sbi_non_sbi_data(docname):
                     WHERE ba.bank = 'State Bank of India' and por.parent = '{0}'
                 """.format(docname),as_dict=True,debug=1)
     sbi_amount = 0
-    ref_doc_remarks = None
     if len(sbi_bank_data)>0:
         for data in sbi_bank_data:
             sbi_amount = sbi_amount + data.amount
-            if data.reference_doctype == "Purchase Invoice":
-                ref_doc_remarks = frappe.db.get_value(data.reference_doctype, data.reference_name, "remarks")
-            elif data.reference_doctype == "Purchase Order":
-                ref_doc_remarks = frappe.db.get_value(data.reference_doctype, data.reference_name, "custom_remarks")
-            
-            if ref_doc_remarks:
-                data.custom_remarks = ref_doc_remarks
     
     non_sbi_bank_data = frappe.db.sql("""
                 SELECT
@@ -869,9 +859,7 @@ def get_sbi_non_sbi_data(docname):
                     ba.bank_account_no,
                     ba.branch_code,
                     ba.account_name,
-                    por.custom_remarks,
-                    por.reference_doctype,
-                    por.reference_name
+                    por.custom_remarks
                 FROM
                     `tabPayment Order Reference` as por
                 LEFT OUTER JOIN `tabBank Account` as ba on
@@ -882,13 +870,6 @@ def get_sbi_non_sbi_data(docname):
     if len(non_sbi_bank_data)>0:
         for row in non_sbi_bank_data:
             non_sbi_amount = non_sbi_amount + row.amount
-            if row.reference_doctype == "Purchase Invoice":
-                ref_doc_remarks = frappe.db.get_value(row.reference_doctype, row.reference_name, "remarks")
-            elif row.reference_doctype == "Purchase Order":
-                ref_doc_remarks = frappe.db.get_value(row.reference_doctype, row.reference_name, "custom_remarks")
-            
-            if ref_doc_remarks:
-                row.custom_remarks = ref_doc_remarks
     
     total_amount = sbi_amount + non_sbi_amount
     print(sbi_amount, non_sbi_amount, total_amount, "sbi_amount, non_sbi_amount, total_amount")

@@ -409,7 +409,7 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
             comment_2.append("[2/5] : Berth Hire : Vessel items charged are <b>{0}<b> ".format(vessel_item_list))
             # frappe.msgprint(_("[2/5] : Berth Hire : Vessel items charged are <b>{0}<b> ").format(vessel_item_list),alert=True)
             # royalty charges for berth hire
-            bh_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list)
+            bh_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list,posting_date)
 
             royalty_percentage = frappe.db.get_single_value("Coal Settings","royalty_percentage")
             # custom_amount = custom_qty * bh_rate
@@ -459,7 +459,7 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
                 print("="*10,"cargo handling")
                 for row in cargo_handling_data:
                     if row.get("vessel") == vessel:
-                        ch_price_list_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list)
+                        ch_price_list_rate = get_item_price_list_rate(vessel,royalty_invoice_item,price_list,posting_date)
                         qty = vessel_doc.total_tonnage_mt
                         # ch_amount = qty * ch_price_list_rate
                         ch_rate = ch_price_list_rate * (royalty_percentage/100)
@@ -620,11 +620,11 @@ def get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date):
                     data.append({'vessel':current_vessel,'qty':current_vessel_qty,'item':",".join(current_vessel_item)})
         return data
 
-def get_item_price_list_rate(vessel,royalty_invoice_item,price_list):
+def get_item_price_list_rate(vessel,royalty_invoice_item,price_list,transaction_date=None):
     vessel_doc = frappe.get_doc("Vessel",vessel)
     item_args=frappe._dict({'item_code':royalty_invoice_item,'buying_price_list':price_list,'company':vessel_doc.company,"doctype":"Purchase Invoice"})
     item_defaults=get_basic_details(item_args,item=None)
-    args = frappe._dict({'price_list':'Standard Buying','qty':1,'uom':item_defaults.get('stock_uom')})
+    args = frappe._dict({'price_list':price_list or 'Standard Buying','qty':1,'uom':item_defaults.get('stock_uom'),'transaction_date':transaction_date})
     price_list_rate=get_price_list_rate_for(args,royalty_invoice_item)
     return price_list_rate
 

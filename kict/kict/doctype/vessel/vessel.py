@@ -310,7 +310,7 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 			target.currency = currency
 
 		target.custom_cargo_item = cargo_item_field
-		target.custom_quantity_in_mt = flt(qty_based_on_percentage)
+		target.custom_quantity_in_mt = flt(non_periodic_cargo_qty)
 
 		# target.type_of_invoice=type_of_invoice
 		target.custom_type_of_cargo_handling_invoice=is_periodic_or_dispatch_field

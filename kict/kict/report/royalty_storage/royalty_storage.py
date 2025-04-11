@@ -102,12 +102,13 @@ def get_holiday_description(holiday_date):
 		description=description[0].description
 	return description
 
-def get_item_price(item_code,price_list):
+def get_item_price(item_code,price_list,transaction_date=None):
 	from erpnext.stock.get_item_details import get_price_list_rate_for
 	args=frappe._dict({
 		'price_list':price_list,
 		'qty':1,
-		'uom':frappe.db.get_value('Item', item_code, 'stock_uom')})
+		'uom':frappe.db.get_value('Item', item_code, 'stock_uom'),
+		'transaction_date':transaction_date})
 	return get_price_list_rate_for(args,item_code)		
 
 def get_stock_ledger_entries_for_batch_bundle(filters):
@@ -447,19 +448,19 @@ def get_conditions(filters):
 
 	return conditions
 
-def get_royalty_storage_items_and_rate(type='report'):
+def get_royalty_storage_items_and_rate(type='report',transaction_date=None):
 	coal_settings=frappe.get_doc('Coal Settings','Coal Settings')
 	custom_free_storage_days=cint(coal_settings.free_storage_days)
 	if len(coal_settings.get("storage_charges_slab_for_royalty"))>0:
 		first_slot_from_days=cint(coal_settings.storage_charges_slab_for_royalty[0].from_days)
 		first_slot_to_days=cint(coal_settings.storage_charges_slab_for_royalty[0].to_days)
 		first_slot_item=coal_settings.storage_charges_slab_for_royalty[0].item
-		first_slot_storage_charges = get_item_price(first_slot_item,coal_settings.royalty_price_list) or 0
+		first_slot_storage_charges = get_item_price(first_slot_item,coal_settings.royalty_price_list,transaction_date) or 0
 		
 		if len(coal_settings.get("storage_charges_slab_for_royalty"))>1:
 			second_slot_from_days=cint(coal_settings.storage_charges_slab_for_royalty[1].from_days)
 			second_slot_item=coal_settings.storage_charges_slab_for_royalty[1].item
-			second_slot_storage_charges = get_item_price(second_slot_item,coal_settings.royalty_price_list) or 0
+			second_slot_storage_charges = get_item_price(second_slot_item,coal_settings.royalty_price_list,transaction_date) or 0
 	if type=='report':
 		return 	custom_free_storage_days,first_slot_from_days,first_slot_to_days,first_slot_storage_charges,second_slot_from_days,second_slot_storage_charges
 	if type=='PI':

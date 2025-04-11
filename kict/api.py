@@ -338,7 +338,7 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
     comment_5=[]
     comment_6=[]
     source_name = frappe.get_last_doc('Vessel').name
-    first_slot_item,first_slot_storage_charges,second_slot_item,second_slot_storage_charges = get_royalty_storage_items_and_rate(type="PI")
+    first_slot_item,first_slot_storage_charges,second_slot_item,second_slot_storage_charges = get_royalty_storage_items_and_rate(type="PI",transaction_date=posting_date)
     distinct_vessel_list,free_vessel_list,charged_vessel = get_data_from_royalty_charges_report_for_vessel(posting_date,type="Comment")
  
     def set_missing_values(source, target):

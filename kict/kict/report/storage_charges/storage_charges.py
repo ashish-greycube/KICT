@@ -187,10 +187,10 @@ def execute(filters=None):
 					sc_row.rate=0
 					sc_row.amount=0
 					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-						sc_row.rate=first_slot_storage_charges
+						sc_row.rate=get_item_price(first_slot_item,sc_row.datewise) or 0
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-						sc_row.rate=second_slot_storage_charges
+						sc_row.rate=get_item_price(second_slot_item,sc_row.datewise) or 0
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
@@ -223,10 +223,10 @@ def execute(filters=None):
 				sc_row.rate=0
 				sc_row.amount=0
 				if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-					sc_row.rate=first_slot_storage_charges
+					sc_row.rate=get_item_price(first_slot_item,sc_row.datewise) or 0
 					sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 				elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-					sc_row.rate=second_slot_storage_charges
+					sc_row.rate=get_item_price(second_slot_item,sc_row.datewise) or 0
 					sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 				sc_data.append(sc_row)
 				previous_batch_no=d['batch_no']
@@ -263,10 +263,10 @@ def execute(filters=None):
 					sc_row.rate=0
 					sc_row.amount=0
 					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-						sc_row.rate=first_slot_storage_charges
+						sc_row.rate=get_item_price(first_slot_item,sc_row.datewise) or 0
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-						sc_row.rate=second_slot_storage_charges
+						sc_row.rate=get_item_price(second_slot_item,sc_row.datewise) or 0
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
@@ -293,10 +293,10 @@ def execute(filters=None):
 			sc_row.rate=0
 			sc_row.amount=0
 			if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-				sc_row.rate=first_slot_storage_charges
+				sc_row.rate=get_item_price(first_slot_item,sc_row.datewise) or 0
 				sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 			elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-				sc_row.rate=second_slot_storage_charges
+				sc_row.rate=get_item_price(second_slot_item,sc_row.datewise) or 0
 				sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 			sc_data.append(sc_row)
 			
@@ -337,10 +337,10 @@ def execute(filters=None):
 					sc_row.rate=0
 					sc_row.amount=0
 					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-						sc_row.rate=first_slot_storage_charges
+						sc_row.rate=get_item_price(first_slot_item,sc_row.datewise) or 0
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-						sc_row.rate=second_slot_storage_charges
+						sc_row.rate=get_item_price(second_slot_item,sc_row.datewise) or 0
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
@@ -471,12 +471,13 @@ def get_conditions(filters):
 	return conditions
 
 
-def get_item_price(item_code):
+def get_item_price(item_code,transacion_date=None):
 	from erpnext.stock.get_item_details import get_price_list_rate_for
 	args=frappe._dict({
 		'price_list':"Standard Selling",
 		'qty':1,
-		'uom':frappe.db.get_value('Item', item_code, 'stock_uom')})
+		'uom':frappe.db.get_value('Item', item_code, 'stock_uom'),
+		"transaction_date":transacion_date})
 	return get_price_list_rate_for(args,item_code)		
 
 

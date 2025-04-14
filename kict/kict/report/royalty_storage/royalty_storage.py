@@ -241,6 +241,7 @@ def execute(filters=None):
 					sc_row.customer=d['customer']
 					sc_row.batch_no=d['batch_no']
 					sc_row.datewise=next_date
+					items_rate = get_royalty_storage_items_and_rate(type='report',transaction_date=sc_row.datewise)
 					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
 						sc_row.day_count='H'
 						sc_row.remark=get_holiday_description(next_date)
@@ -255,10 +256,10 @@ def execute(filters=None):
 					sc_row.rate=0
 					sc_row.amount=0
 					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-						sc_row.rate=first_slot_storage_charges
+						sc_row.rate=items_rate[3]
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-						sc_row.rate=second_slot_storage_charges
+						sc_row.rate=items_rate[5]
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
@@ -274,6 +275,7 @@ def execute(filters=None):
 				sc_row.customer=d['customer']
 				sc_row.batch_no=d['batch_no']
 				sc_row.datewise=d['show_date']
+				items_rate = get_royalty_storage_items_and_rate(type='report',transaction_date=sc_row.datewise)
 				if custom_is_holiday_applicable_for_free_storage_days==1 and (d['show_date'] in holiday_list_days and previous_batch_count <custom_free_storage_days):
 					sc_row.day_count='H'
 					sc_row.remark=get_holiday_description(d['show_date'])
@@ -292,10 +294,10 @@ def execute(filters=None):
 				sc_row.rate=0
 				sc_row.amount=0
 				if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-					sc_row.rate=first_slot_storage_charges
+					sc_row.rate=items_rate[3]
 					sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 				elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-					sc_row.rate=second_slot_storage_charges
+					sc_row.rate=items_rate[5]
 					sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 				sc_data.append(sc_row)
 				previous_batch_no=d['batch_no']
@@ -319,6 +321,7 @@ def execute(filters=None):
 					sc_row.customer=d['customer']
 					sc_row.batch_no=previous_batch_no				
 					sc_row.datewise=next_date
+					items_rate = get_royalty_storage_items_and_rate(type='report',transaction_date=sc_row.datewise)
 					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
 						sc_row.day_count='H'
 						sc_row.remark=get_holiday_description(next_date)
@@ -333,10 +336,10 @@ def execute(filters=None):
 					sc_row.rate=0
 					sc_row.amount=0
 					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-						sc_row.rate=first_slot_storage_charges
+						sc_row.rate=items_rate[3]
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-						sc_row.rate=second_slot_storage_charges
+						sc_row.rate=items_rate[5]
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
@@ -348,6 +351,7 @@ def execute(filters=None):
 			sc_row.customer=d['customer']
 			sc_row.batch_no=d['batch_no']
 			sc_row.datewise=d['show_date']
+			items_rate = get_royalty_storage_items_and_rate(type='report',transaction_date=sc_row.datewise)
 			sc_row.day_count=1
 			if custom_is_holiday_applicable_for_free_storage_days==1 and (d['show_date'] in holiday_list_days and previous_batch_count <=custom_free_storage_days):
 				sc_row.day_count='H'
@@ -364,10 +368,10 @@ def execute(filters=None):
 			sc_row.rate=0
 			sc_row.amount=0
 			if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-				sc_row.rate=first_slot_storage_charges
+				sc_row.rate=items_rate[3]
 				sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 			elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-				sc_row.rate=second_slot_storage_charges
+				sc_row.rate=items_rate[5]
 				sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 			sc_data.append(sc_row)
 			
@@ -395,6 +399,7 @@ def execute(filters=None):
 					sc_row.customer=d['customer']
 					sc_row.batch_no=previous_batch_no				
 					sc_row.datewise=next_date
+					items_rate = get_royalty_storage_items_and_rate(type='report',transaction_date=sc_row.datewise)
 					if custom_is_holiday_applicable_for_free_storage_days==1 and (next_date in holiday_list_days and previous_batch_count <custom_free_storage_days):
 						sc_row.day_count='H'
 						sc_row.remark=get_holiday_description(next_date)
@@ -409,10 +414,10 @@ def execute(filters=None):
 					sc_row.rate=0
 					sc_row.amount=0
 					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
-						sc_row.rate=first_slot_storage_charges
+						sc_row.rate=items_rate[3]
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
-						sc_row.rate=second_slot_storage_charges
+						sc_row.rate=items_rate[5]
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)

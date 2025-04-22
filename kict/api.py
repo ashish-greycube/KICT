@@ -878,9 +878,10 @@ def get_sbi_non_sbi_data(docname):
 
 @frappe.whitelist()
 def delete_file(file_name):
+    updated_file_name = file_name.replace("/","-")
     print("+"*100)
     public_file_path = frappe.get_site_path("public", "files")
-    file_path = os.path.join(public_file_path, file_name)
+    file_path = os.path.join(public_file_path, updated_file_name)
     if os.path.exists(file_path):
         os.remove(file_path)
         return True
@@ -889,7 +890,7 @@ def delete_file(file_name):
 
 @frappe.whitelist()
 def get_sbi_account_details(docname,file_name):
-    
+    updated_file_name = file_name.replace("/","-")
     file_header = [
         
             "IFSC CODE",
@@ -939,7 +940,7 @@ def get_sbi_account_details(docname,file_name):
     public_file_path = frappe.get_site_path("public", "files")
     workbook = openpyxl.Workbook(write_only=True)
     # file_name=f"SBI-{docname}.xlsx"
-    file_url=os.path.join(public_file_path,file_name)
+    file_url=os.path.join(public_file_path,updated_file_name)
     sheet = workbook.create_sheet("SBI", 0)
     sheet.append(file_header)
     for ele in po_data:
@@ -975,10 +976,11 @@ def get_sbi_account_details(docname,file_name):
             workSheet.cell(i, j).border = Border(top=border_thin, left=border_thin, right=border_thin, bottom=border_thin)
 
     workBook.save(file_url)
-    return frappe.utils.get_url()+"/files/"+file_name
+    return frappe.utils.get_url()+"/files/"+updated_file_name
 
 @frappe.whitelist()
-def get_non_sbi_account_details(docname):
+def get_non_sbi_account_details(docname,file_name):
+    updated_file_name = file_name.replace("/","-")
 
     file_header = [
         "IFSC CODE",
@@ -1026,8 +1028,8 @@ def get_non_sbi_account_details(docname):
 
     public_file_path = frappe.get_site_path("public", "files")
     workbook = openpyxl.Workbook(write_only=True)
-    file_name=f"Non-SBI-{docname}.xlsx"
-    file_url=os.path.join(public_file_path,file_name)
+    # file_name=f"Non-SBI-{docname}.xlsx"
+    file_url=os.path.join(public_file_path,updated_file_name)
     sheet = workbook.create_sheet("Non-SBI", 0)
     sheet.append(file_header)
     for ele in po_data:
@@ -1061,10 +1063,11 @@ def get_non_sbi_account_details(docname):
             workSheet.cell(i, j).border = Border(top=border_thin, left=border_thin, right=border_thin, bottom=border_thin)
 
     workBook.save(file_url)
-    return frappe.utils.get_url()+"/files/"+file_name
+    return frappe.utils.get_url()+"/files/"+updated_file_name
 
 @frappe.whitelist()
-def get_statement_with_remarks_data(docname):
+def get_statement_with_remarks_data(docname,file_name):
+    updated_file_name = file_name.replace("/","-")
     file_header = [
         "Sl No",
         "Name of the Party",
@@ -1124,8 +1127,8 @@ def get_statement_with_remarks_data(docname):
 
     public_file_path = frappe.get_site_path("public", "files")
     workbook = openpyxl.Workbook(write_only=True)
-    file_name=f"Statement-with-remarks-{docname}.xlsx"
-    file_url=os.path.join(public_file_path,file_name)
+    # file_name=f"Statement-with-remarks-{docname}.xlsx"
+    file_url=os.path.join(public_file_path,updated_file_name)
     sheet = workbook.create_sheet("Statement With Remarks", 0)
     sheet.append(file_header)
     for ele in updated_data:
@@ -1162,11 +1165,11 @@ def get_statement_with_remarks_data(docname):
 
     workBook.save(file_url)
 
-    return frappe.utils.get_url()+"/files/"+file_name
+    return frappe.utils.get_url()+"/files/"+updated_file_name
 
 @frappe.whitelist()
-def get_purchase_invoice_data(docname):
-    
+def get_purchase_invoice_data(docname,file_name):
+    updated_file_name = file_name.replace("/","-")
     file_header = [
         ["","","","","KALINGA INTERNATIONAL COAL TERMINAL PARADIP PVT LTD (KICTPPL)"],
         ["","","","","List of Local expenses 2024"],
@@ -1372,8 +1375,8 @@ def get_purchase_invoice_data(docname):
 
     public_file_path = frappe.get_site_path("public", "files")
     workbook = openpyxl.Workbook(write_only=True)
-    file_name=f"Purchase-Invoice-{docname}.xlsx"
-    file_url=os.path.join(public_file_path,file_name)
+    # file_name=f"Purchase-Invoice-{docname}.xlsx"
+    file_url=os.path.join(public_file_path,updated_file_name)
     sheet = workbook.create_sheet("Invoices", 0)
     for header in file_header:
         sheet.append(header)
@@ -1435,4 +1438,4 @@ def get_purchase_invoice_data(docname):
 
     workBook.save(file_url)
 
-    return frappe.utils.get_url()+"/files/"+file_name
+    return frappe.utils.get_url()+"/files/"+updated_file_name

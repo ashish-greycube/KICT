@@ -59,7 +59,8 @@ frappe.ui.form.on("Payment Order", {
               return frappe.call({
                   method: "kict.api.get_non_sbi_account_details",
                   args: {
-                    docname : frm.doc.name
+                    docname : frm.doc.name,
+                    file_name:file_name
                   },
                   callback: function (r) {
                     console.log(r.message)
@@ -103,7 +104,8 @@ frappe.ui.form.on("Payment Order", {
               return frappe.call({
                   method: "kict.api.get_statement_with_remarks_data",
                   args: {
-                    docname:frm.doc.name
+                    docname:frm.doc.name,
+                    file_name:file_name
                   },
                   callback: function (r) {
                     console.log(r.message)
@@ -147,7 +149,8 @@ frappe.ui.form.on("Payment Order", {
               return frappe.call({
                   method: "kict.api.get_purchase_invoice_data",
                   args: {
-                    docname:frm.doc.name
+                    docname:frm.doc.name,
+                    file_name:file_name
                   },
                   callback: function (r) {
                     console.log(r.message)

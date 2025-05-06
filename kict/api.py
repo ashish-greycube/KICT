@@ -9,7 +9,7 @@ from kict.kict.report.royalty_storage.royalty_storage import get_item_price
 from kict.kict.doctype.vessel.vessel import get_unique_item
 from kict.kict.report.royalty_storage.royalty_storage import get_royalty_storage_items_and_rate
 from erpnext.controllers.accounts_controller import get_taxes_and_charges
-
+from frappe.utils import get_link_to_form
 import openpyxl
 from openpyxl.styles import Font, Alignment
 from openpyxl.styles import Border, Side
@@ -567,7 +567,8 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
         if len(comment_6)>0:
             comment_6="<br>".join(ele for ele in comment_6)               
         doc.add_comment("Comment", "<b>{0}</b><br><hr><b>{1}</b><br><hr><b>{2}</b><br><hr><b>{3}</b><br><hr><b>{4}</b><br><hr><b>{5}</b><br><hr>".format(comment_1,comment_2,comment_3,comment_4,comment_5,comment_6))
-        return doc.name
+        frappe.msgprint(_("Purchase Invoice {0} created successfully").format( frappe.bold(get_link_to_form("Purchase Invoice", doc.name))))
+        # return doc.name
     except Exception as e:
             frappe.log_error(
                 title="Error: create_pi_for_royalty_charges",

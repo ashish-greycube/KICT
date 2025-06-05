@@ -112,7 +112,7 @@ def get_item_price(item_code,price_list,transaction_date=None):
 	return get_price_list_rate_for(args,item_code)		
 
 def get_stock_ledger_entries_for_batch_bundle(filters):
-	conditions = get_conditions(filters)
+	conditions0,conditions1 = get_conditions(filters)
 	query = frappe.db.sql(
 		"""
 			select 
@@ -183,9 +183,73 @@ UNION
 				sle.item_code,
 				batch_package.batch_no,
 				show_date
+UNION
+			select 
+				sle.vessel,
+				sle.item_code,
+				batch_package.batch_no,	
+				item.customer,
+				sle.posting_time,
+				date_add(sle.posting_date, INTERVAL -1 DAY)  as show_date,				
+				sum(batch_package.qty) as actual_qty,
+				manufacturing_date
+			from
+				`tabStock Ledger Entry` sle
+			inner join `tabSerial and Batch Entry` batch_package
+			on
+				sle.serial_and_batch_bundle = batch_package.parent
+			inner join `tabBatch` batch 
+			on batch_package.batch_no =batch.name 
+			inner join `tabItem` item
+			on item.name=sle.item_code
+			where
+				sle.docstatus < 2
+				and sle.is_cancelled = 0
+				and sle.has_batch_no = 1
+				and actual_qty >0
+				and sle.posting_time <= '06:00:00'
+			 {1}
+			group by
+				sle.vessel,
+				item.customer,
+				sle.item_code,
+				batch_package.batch_no,
+				show_date
+UNION 
+			select 
+				sle.vessel,
+				sle.item_code,
+				batch_package.batch_no,
+				item.customer,
+				sle.posting_time,
+				date_add(sle.posting_date, INTERVAL -1 DAY)  as show_date,
+				sum(batch_package.qty) as actual_qty,
+				manufacturing_date
+			from
+				`tabStock Ledger Entry` sle
+			inner join `tabSerial and Batch Entry` batch_package
+			on
+				sle.serial_and_batch_bundle = batch_package.parent
+			inner join `tabBatch` batch 
+			on batch_package.batch_no =batch.name 
+			inner join `tabItem` item
+			on item.name=sle.item_code			
+			where
+				sle.docstatus < 2
+				and sle.is_cancelled = 0
+				and sle.has_batch_no = 1
+				and actual_qty <0
+				and sle.posting_time <= '06:00:00'
+			{1}
+			group by
+				sle.vessel,
+				item.customer,
+				sle.item_code,
+				batch_package.batch_no,
+				show_date				
 order by vessel ,item_code ,manufacturing_date,show_date,posting_time			
 		
-""".format(conditions),filters,as_dict=1,debug=1)	
+""".format(conditions0,conditions1),filters,as_dict=1,debug=1)	
 	return query
 
 
@@ -426,10 +490,12 @@ def execute(filters=None):
 	return columns, sc_data	
 
 def get_conditions(filters):
-	conditions =""
+	conditions0 =""
+	conditions1 =""
 
 	if filters.vessel:
-		conditions += " and sle.vessel = %(vessel)s"
+		conditions0 += " and sle.vessel = %(vessel)s"
+		conditions1 += " and sle.vessel = %(vessel)s"
 
 	first_line_ashore=frappe.db.get_value('Statement of Fact', filters.vessel, 'first_line_ashore')
 	if not first_line_ashore:
@@ -442,16 +508,19 @@ def get_conditions(filters):
 			frappe.throw(_("To Date should be greater then From Date for {0} vessel".format(filters.vessel)))
 
 		if filters.get("to_date") >= filters.get("from_date"):
-			conditions += " and sle.posting_date between '{0}' and '{1}'".format(filters.get("from_date"),filters.get("to_date"))
+			conditions0 += " and sle.posting_date between '{0}' and '{1}'".format(filters.get("from_date"),filters.get("to_date"))
+			conditions1 += " and sle.posting_date = '{0}' ".format(add_to_date(filters.get("to_date"),days=1))
 
 
 	if filters.customer_item:
-		conditions += " and sle.item_code = %(customer_item)s"
+		conditions0 += " and sle.item_code = %(customer_item)s"
+		conditions1 += " and sle.item_code = %(customer_item)s"
 
 	if filters.batch_no:
-		conditions += " and batch_package.batch_no = %(batch_no)s"
+		conditions0 += " and batch_package.batch_no = %(batch_no)s"
+		conditions1 += " and batch_package.batch_no = %(batch_no)s"
 
-	return conditions
+	return conditions0,conditions1
 
 def get_royalty_storage_items_and_rate(type='report',transaction_date=None):
 	coal_settings=frappe.get_doc('Coal Settings','Coal Settings')

@@ -370,7 +370,7 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 	company_name=frappe.get_value(doctype,source_name,"company")
 	first_line_ashore = frappe.db.get_value('Statement of Fact', source_name, 'first_line_ashore')
 	filter_for_lv =frappe._dict({"company":company_name,"from_date":first_line_ashore,"to_date":today(),
-							  "item_code":cargo_item_field,"valuation_field_type":"Currency","vessel":[source_name],"include_zero_stock_items":1})
+							  "item_code":[cargo_item_field],"valuation_field_type":"Currency","vessel":[source_name],"include_zero_stock_items":1})
 	# sle_count=frappe.db.count('Stock Ledger Entry',filters={
 	# 	'item_code':cargo_item_field,
     #      'posting_date':['between', [first_line_ashore, today()]],

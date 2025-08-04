@@ -89,7 +89,7 @@ class Vessel(Document):
 				from erpnext.stock.report.stock_balance.stock_balance import execute
 				company_name=frappe.get_value("Vessel",self.name,"company")
 				first_line_ashore = frappe.db.get_value('Statement of Fact', self.name, 'first_line_ashore')
-				filter_for_lv =frappe._dict({"company":company_name,"from_date":first_line_ashore,"to_date":today(),"item_code":row.item,"valuation_field_type":"Currency","vessel":[self.name]})
+				filter_for_lv =frappe._dict({"company":company_name,"from_date":first_line_ashore,"to_date":today(),"item_code":[row.item],"valuation_field_type":"Currency","vessel":[self.name]})
 				data = execute(filter_for_lv)
 				total_bal_val = 0
 				for record in data[1]:

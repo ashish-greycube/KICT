@@ -277,7 +277,7 @@ UNION
 				and sle.has_batch_no = 1
 				and actual_qty <0
 			{0}
-order by vessel ,item_code ,manufacturing_date,datewise				
+order by vessel ,item_code ,manufacturing_date,datewise,sle_name			
 		
 """.format(conditions),filters,as_dict=1,debug=1)	
 	return query

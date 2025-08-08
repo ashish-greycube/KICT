@@ -366,6 +366,7 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 	query = frappe.db.sql(
 		"""
 			select 
+				sle.name,
 				sle.vessel,
 				sle.item_code,
 				batch_package.batch_no,	
@@ -400,6 +401,7 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 				show_date
 UNION 
 			select 
+				sle.name,
 				sle.vessel,
 				sle.item_code,
 				batch_package.batch_no,
@@ -433,7 +435,7 @@ UNION
 				sle.item_code,
 				batch_package.batch_no,
 				show_date
-order by vessel ,item_code ,manufacturing_date,show_date,posting_time			
+order by vessel ,item_code ,manufacturing_date,show_date,posting_time,name		
 		
 """.format(conditions),filters,as_dict=1,debug=1)	
 	return query

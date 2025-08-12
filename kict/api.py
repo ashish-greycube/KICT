@@ -328,9 +328,22 @@ def get_port_date(date,time):
     elif time > get_time('06:00:00') and time <= get_time('23:59:59'):
         return date
     
-
 @frappe.whitelist()
 def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None,supplier_name=None,supplier_invoice_no=None,posting_date=None):
+    frappe.enqueue( method='kict.kict.api._create_purchase_invoice_for_royalty_charges',
+        queue="long",
+        timeout=2000,
+		is_async=True,
+        job_name="create_purchase_invoice_for_royalty_charges",
+        **{"source_name":source_name,
+                 "target_doc":target_doc,
+                 "supplier_name":supplier_name,
+                 "supplier_invoice_no":supplier_invoice_no,
+                 "posting_date":posting_date}
+        )
+
+@frappe.whitelist()
+def _create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None,supplier_name=None,supplier_invoice_no=None,posting_date=None):
     try:
         comment_1=[]
         comment_2=[]

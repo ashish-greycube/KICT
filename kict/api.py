@@ -330,7 +330,7 @@ def get_port_date(date,time):
     
 @frappe.whitelist()
 def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None,supplier_name=None,supplier_invoice_no=None,posting_date=None):
-    frappe.enqueue( method='kict.kict.api._create_purchase_invoice_for_royalty_charges',
+    frappe.enqueue( method='kict.api._create_purchase_invoice_for_royalty_charges',
         queue="long",
         timeout=2000,
 		is_async=True,

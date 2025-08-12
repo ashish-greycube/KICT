@@ -335,12 +335,17 @@ def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None
         timeout=2000,
 		is_async=True,
         job_name="create_purchase_invoice_for_royalty_charges",
+        enqueue_after_commit= True,
         **{"source_name":source_name,
                  "target_doc":target_doc,
                  "supplier_name":supplier_name,
                  "supplier_invoice_no":supplier_invoice_no,
                  "posting_date":posting_date}
         )
+    frappe.msgprint(_('Purchase Invoice for Royalty Charges is being created. Please check the comment section after 30 mins.'),
+        alert=True,
+        indicator='green')
+    
 
 @frappe.whitelist()
 def _create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None,supplier_name=None,supplier_invoice_no=None,posting_date=None):
@@ -581,6 +586,8 @@ def _create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=Non
             comment_6="<br>".join(ele for ele in comment_6)               
         doc.add_comment("Comment", "<b>{0}</b><br><hr><b>{1}</b><br><hr><b>{2}</b><br><hr><b>{3}</b><br><hr><b>{4}</b><br><hr><b>{5}</b><br><hr>".format(comment_1,comment_2,comment_3,comment_4,comment_5,comment_6))
         frappe.msgprint(_("Purchase Invoice {0} created successfully").format( frappe.bold(get_link_to_form("Purchase Invoice", doc.name))))
+        coal_settings = frappe.get_doc('Coal Settings')
+        coal_settings.add_comment("Comment", "<b>Purchase Invoice {0} created successfully</b>".format(get_link_to_form("Purchase Invoice", doc.name)))
         # return doc.name
     except Exception as e:
             frappe.log_error(

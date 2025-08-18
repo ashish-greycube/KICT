@@ -590,10 +590,13 @@ def _create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=Non
         coal_settings.add_comment("Comment", "<b>Purchase Invoice {0} created successfully</b>".format(get_link_to_form("Purchase Invoice", doc.name)))
         # return doc.name
     except Exception as e:
-            frappe.log_error(
+            error_log=frappe.log_error(
                 title="Error: create_pi_for_royalty_charges",
                 message=frappe.get_traceback(),
             )
+            coal_settings = frappe.get_doc('Coal Settings')
+            coal_settings.add_comment("Comment", "Error in creating Purchase Invoice for Royalty Charges. To check error click - {0}".format(frappe.bold(get_link_to_form("Error Log", error_log.name))))
+            frappe.db.commit()
             frappe.throw(_("Error in creating Purchase Invoice for Royalty Charges. <br> Please check logs with title create_pi_for_royalty_charges"))
 
 def get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date):

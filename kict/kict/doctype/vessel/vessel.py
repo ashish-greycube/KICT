@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe import _
-from frappe.utils import flt,cstr,today,cint
+from frappe.utils import flt,cstr,today,cint,getdate
 from erpnext.stock.doctype.item.item import get_item_defaults
 from erpnext.stock.get_item_details import get_price_list_rate_for
 
@@ -461,12 +461,12 @@ def get_rate_and_qty_for_actual_storage_type_based_on_storage_report(vessel,cust
 	customer_doc=frappe.get_doc('Customer',customer_name)
 	if len(customer_doc.get("custom_chargeable_storage_charges_slots_details"))>0:
 		first_slot_item=customer_doc.custom_chargeable_storage_charges_slots_details[0].item
-		first_slot_storage_charges = get_item_price(first_slot_item) or 0
-		print(first_slot_storage_charges,"---first")
+		# first_slot_storage_charges = get_item_price(first_slot_item) or 0
+		# print(first_slot_storage_charges,"---first")
 		if len(customer_doc.get("custom_chargeable_storage_charges_slots_details"))>1:
 			second_slot_item=customer_doc.custom_chargeable_storage_charges_slots_details[1].item
-			second_slot_storage_charges = get_item_price(second_slot_item) or 0
-			print(second_slot_storage_charges,"---second")
+			# second_slot_storage_charges = get_item_price(second_slot_item) or 0
+			# print(second_slot_storage_charges,"---second")
 	
 	from kict.kict.report.storage_charges.storage_charges import execute
 	report_filters = frappe._dict({"vessel":vessel,"customer":customer_name})
@@ -474,6 +474,8 @@ def get_rate_and_qty_for_actual_storage_type_based_on_storage_report(vessel,cust
 
 	first_slot_closing_balance, second_slot_closing_balance = 0,0
 	for item in storage_charges_report_data[1]:
+		first_slot_storage_charges = get_item_price(first_slot_item,getdate(item.datewise)) or 0
+		second_slot_storage_charges = get_item_price(second_slot_item,getdate(item.datewise)) or 0
 		if item.rate == first_slot_storage_charges and item.item_code==cargo_item:
 			first_slot_closing_balance = first_slot_closing_balance + item.bal_qty
 		if item.rate == second_slot_storage_charges and item.item_code==cargo_item:
@@ -482,12 +484,13 @@ def get_rate_and_qty_for_actual_storage_type_based_on_storage_report(vessel,cust
 	return first_slot_storage_charges, second_slot_storage_charges, first_slot_closing_balance, second_slot_closing_balance
 
 
-def get_item_price(item_code):
+def get_item_price(item_code,transaction_date):
 	from erpnext.stock.get_item_details import get_price_list_rate_for
 	args=frappe._dict({
 		'price_list':"Standard Selling",
 		'qty':1,
-		'uom':frappe.db.get_value('Item', item_code, 'stock_uom')})
+		'uom':frappe.db.get_value('Item', item_code, 'stock_uom'),
+		'transaction_date':transaction_date})
 	return get_price_list_rate_for(args,item_code)
 
 @frappe.whitelist()
@@ -504,7 +507,8 @@ def get_cargo_handling_rate_for_customer_based_on_billing_type(docname,customer,
 		'customer':customer,
 		'price_list':customer_selling_price_list,
 		'qty':1,
-		'uom':uom})
+		'uom':uom,
+		'transaction_date':today()})
 	item_price= get_price_list_rate_for(args,item_code_for_si)
 	percent_billing,is_periodic=get_rate_percent_billing(customer,billing_type)
 	calculated_item_price=(item_price*percent_billing)/100

@@ -18,6 +18,7 @@ frappe.ui.form.on("Employee Fooding", {
             method: "kict.kict.doctype.employee_fooding.employee_fooding.get_meal_price",
             args: {
                 "meal_type": frm.doc.meal_type,
+                "meal_date": frm.doc.meal_date
             },
             callback: function (response) {
                 console.log(response.message)

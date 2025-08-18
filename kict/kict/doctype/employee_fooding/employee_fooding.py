@@ -40,13 +40,14 @@ class EmployeeFooding(Document):
 				  .format(get_link_to_form('Employee Fooding', prev_list[0].name))))
 
 @frappe.whitelist()
-def get_meal_price(meal_type):
+def get_meal_price(meal_type,meal_date):
 	meal_price_list = frappe.db.get_single_value("Coal Settings","food_meal_price_list")
 	from erpnext.stock.get_item_details import get_price_list_rate_for
 	args=frappe._dict({
 		'price_list':meal_price_list,
 		'qty':1,
-		'uom':frappe.db.get_value('Item', meal_type, 'stock_uom')})
+		'uom':frappe.db.get_value('Item', meal_type, 'stock_uom'),
+		'transaction_date':meal_date})
 	return get_price_list_rate_for(args,meal_type)		
 
 

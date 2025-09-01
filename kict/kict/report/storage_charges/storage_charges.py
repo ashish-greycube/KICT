@@ -185,12 +185,15 @@ def execute(filters=None):
 					sc_row.out_qty=0
 					sc_row.bal_qty=previous_balance_qty
 					sc_row.rate=0
+					sc_row.storage_item_name=''
 					sc_row.amount=0
 					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
 						sc_row.rate=get_item_price(first_slot_item,sc_row.datewise) or 0
+						sc_row.storage_item_name=first_slot_item
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
 						sc_row.rate=get_item_price(second_slot_item,sc_row.datewise) or 0
+						sc_row.storage_item_name=second_slot_item
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
@@ -221,12 +224,15 @@ def execute(filters=None):
 				sc_row.out_qty=abs(flt(d.actual_qty, float_precision))	 if flt(d.actual_qty) < 0 else 0
 				sc_row.bal_qty=flt(sc_row.opening_qty+flt(d.actual_qty, float_precision),float_precision)
 				sc_row.rate=0
+				sc_row.storage_item_name=''
 				sc_row.amount=0
 				if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
 					sc_row.rate=get_item_price(first_slot_item,sc_row.datewise) or 0
+					sc_row.storage_item_name=first_slot_item
 					sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 				elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
 					sc_row.rate=get_item_price(second_slot_item,sc_row.datewise) or 0
+					sc_row.storage_item_name=second_slot_item
 					sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 				sc_data.append(sc_row)
 				previous_batch_no=d['batch_no']
@@ -261,12 +267,15 @@ def execute(filters=None):
 					sc_row.out_qty=0
 					sc_row.bal_qty=previous_balance_qty
 					sc_row.rate=0
+					sc_row.storage_item_name=''
 					sc_row.amount=0
 					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
 						sc_row.rate=get_item_price(first_slot_item,sc_row.datewise) or 0
+						sc_row.storage_item_name=first_slot_item
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
 						sc_row.rate=get_item_price(second_slot_item,sc_row.datewise) or 0
+						sc_row.storage_item_name=second_slot_item
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)
@@ -291,12 +300,15 @@ def execute(filters=None):
 			sc_row.out_qty=abs(flt(d.actual_qty, float_precision))	 if flt(d.actual_qty) < 0 else 0
 			sc_row.bal_qty=flt(sc_row.opening_qty+flt(d.actual_qty, float_precision),float_precision)
 			sc_row.rate=0
+			sc_row.storage_item_name=''
 			sc_row.amount=0
 			if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
 				sc_row.rate=get_item_price(first_slot_item,sc_row.datewise) or 0
+				sc_row.storage_item_name=first_slot_item
 				sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 			elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
 				sc_row.rate=get_item_price(second_slot_item,sc_row.datewise) or 0
+				sc_row.storage_item_name=second_slot_item
 				sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 			sc_data.append(sc_row)
 			
@@ -335,12 +347,15 @@ def execute(filters=None):
 					sc_row.out_qty=0
 					sc_row.bal_qty=previous_balance_qty
 					sc_row.rate=0
+					sc_row.storage_item_name=''
 					sc_row.amount=0
 					if sc_row.day_count!='H' and cint(sc_row.day_count)>=first_slot_from_days and cint(sc_row.day_count)<=first_slot_to_days:
 						sc_row.rate=get_item_price(first_slot_item,sc_row.datewise) or 0
+						sc_row.storage_item_name=first_slot_item
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					elif sc_row.day_count!='H' and cint(sc_row.day_count)>=second_slot_from_days:
 						sc_row.rate=get_item_price(second_slot_item,sc_row.datewise) or 0
+						sc_row.storage_item_name=second_slot_item
 						sc_row.amount=flt(sc_row.bal_qty*sc_row.rate)
 					sc_data.append(sc_row)
 					next_date=add_days(next_date,1)

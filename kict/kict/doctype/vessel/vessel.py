@@ -422,18 +422,25 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 					description = "Storage Charges for "+cstr(fixed_number_of_days)+" days"
 					item_row=target.append("items",{"item_code":storage_charges_item_fixed,"qty":storage_charges_qty,"description":description})
 				if storage_charges_type == "Actual Storage Days":
-					customer_doc=frappe.get_doc('Customer',customer_name_field)
-
-					storage_charges_item_16_25 = customer_doc.custom_chargeable_storage_charges_slots_details[0].item
-					storage_charges_item_beyond_26 = customer_doc.custom_chargeable_storage_charges_slots_details[1].item
-					charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26 = get_rate_and_qty_for_actual_storage_type_based_on_storage_report(source_name,customer_name_field,cargo_item_field)
-					print(charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26,"charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26")
-					if qty_for_16_25 > 0:
-						item_row=target.append("items",{"item_code":storage_charges_item_16_25,"qty":qty_for_16_25,"rate":charges_for_16_25})
-					else:
+					si_item_details = get_item_details_for_actual_storage_type_based_on_storage_report(source_name,customer_name_field,cargo_item_field)
+					if len(si_item_details)==0:
 						frappe.throw(_("You cannot create Tax Invoice for Storage Charges as there are no paid days."))
-					if qty_for_beyond_26 > 0:
-						item_row=target.append("items",{"item_code":storage_charges_item_beyond_26,"qty":qty_for_beyond_26,"rate":charges_for_beyond_26})
+					for item in si_item_details:
+						item_row=target.append("items",item)
+
+					# no longer used
+					# customer_doc=frappe.get_doc('Customer',customer_name_field)
+
+					# storage_charges_item_16_25 = customer_doc.custom_chargeable_storage_charges_slots_details[0].item
+					# storage_charges_item_beyond_26 = customer_doc.custom_chargeable_storage_charges_slots_details[1].item
+					# charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26 = get_rate_and_qty_for_actual_storage_type_based_on_storage_report(source_name,customer_name_field,cargo_item_field)
+					# print(charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26,"charges_for_16_25, charges_for_beyond_26, qty_for_16_25, qty_for_beyond_26")
+					# if qty_for_16_25 > 0:
+					# 	item_row=target.append("items",{"item_code":storage_charges_item_16_25,"qty":qty_for_16_25,"rate":charges_for_16_25})
+					# else:
+					# 	frappe.throw(_("You cannot create Tax Invoice for Storage Charges as there are no paid days."))
+					# if qty_for_beyond_26 > 0:
+					# 	item_row=target.append("items",{"item_code":storage_charges_item_beyond_26,"qty":qty_for_beyond_26,"rate":charges_for_beyond_26})
 			
 			doc = get_mapped_doc('Vessel', source_name, {
 				'Vessel': {
@@ -456,7 +463,61 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 			doc.save()
 			frappe.msgprint(_("Tax Invoice of Storage Charges for {0} is created.").format(cargo_item_field),alert=True)	
 			return doc.name
+
+# from kict.kict.doctype.vessel.vessel import get_item_details_for_actual_storage_type_based_on_storage_report
+# get_item_details_for_actual_storage_type_based_on_storage_report('MV VASSOS 2-11072024','Ripley & Co Stevedoring and Handling Pvt Ltd','STEAM COAL_Indonesian Steam Coal_RSHPL')
+def get_item_details_for_actual_storage_type_based_on_storage_report(vessel,customer_name,cargo_item):
+
+	from kict.kict.report.storage_charges.storage_charges import execute
+	report_filters = frappe._dict({"vessel":vessel,"customer":customer_name,'customer_item':cargo_item})
+	storage_charges_report_data = execute(report_filters)
+	# Group the data
+	grouped_result = group_by_storage_and_rate(storage_charges_report_data[1])
+	si_item_details=[]
+	# We can iterate through the dictionary and print the keys and the number of items in each group
+	for key, items in grouped_result.items():
+		storage_name, rate = key
 		
+		# Calculate the sum of bal_qty for the group
+		total_bal_qty = sum(item['bal_qty'] for item in items)
+		
+		# Get all dates in the group
+		dates = [item['datewise'] for item in items]
+		
+		# Find the first and last date
+		first_date = min(dates)
+		last_date = max(dates)
+		if rate>0:
+			description = "Storage Charges of {0} with rate {1} such that first date of appereance is {2} and last date of appearence is {3} for the said rate.".format(cargo_item,rate,first_date,last_date)
+			si_item_details.append({'item_code':storage_name,'rate':rate,'qty':flt(total_bal_qty),'description':description})
+	return si_item_details
+
+def group_by_storage_and_rate(storage_charges_report_data):
+    """
+    Groups a list of inventory records by storage_item_name and rate.
+
+    Args:
+        data: A list of dictionaries, where each dictionary represents an inventory record.
+
+    Returns:
+        A dictionary where keys are tuples of (storage_item_name, rate)
+        and values are lists of the corresponding records.
+    """
+    grouped_data = {}
+    for item in storage_charges_report_data:
+        # Create a tuple key from the storage item name and rate
+        key = (item['storage_item_name'], item['rate'])
+
+        # If the key is not yet in our dictionary, add it with a new list
+        if key not in grouped_data:
+            grouped_data[key] = []
+
+        # Append the current item to the list for this key
+        grouped_data[key].append(item)
+
+    return grouped_data
+
+# no longer used
 def get_rate_and_qty_for_actual_storage_type_based_on_storage_report(vessel,customer_name,cargo_item):
 	customer_doc=frappe.get_doc('Customer',customer_name)
 	if len(customer_doc.get("custom_chargeable_storage_charges_slots_details"))>0:

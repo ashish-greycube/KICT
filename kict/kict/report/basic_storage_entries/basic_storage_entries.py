@@ -217,6 +217,7 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 		"""
 			select 
 				sle.name as sle_name,
+				sle.creation as sle_creation,
 				sle.voucher_no,
 				sle.voucher_type,
 				sle.vessel,
@@ -251,6 +252,7 @@ def get_stock_ledger_entries_for_batch_bundle(filters):
 UNION 
 			select 
 				sle.name as sle_name,
+				sle.creation as sle_creation,
 				sle.voucher_no,
 				sle.voucher_type,
 				sle.vessel,
@@ -277,7 +279,7 @@ UNION
 				and sle.has_batch_no = 1
 				and actual_qty <0
 			{0}
-order by vessel ,item_code ,manufacturing_date,datewise,sle_name			
+order by vessel ,item_code ,manufacturing_date,datewise,sle_creation			
 		
 """.format(conditions),filters,as_dict=1,debug=1)	
 	return query

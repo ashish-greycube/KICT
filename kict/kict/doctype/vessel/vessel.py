@@ -426,7 +426,8 @@ def create_sales_invoice_for_storage_charges_from_vessel(source_name, target_doc
 					if len(si_item_details)==0:
 						frappe.throw(_("You cannot create Tax Invoice for Storage Charges as there are no paid days."))
 					for item in si_item_details:
-						item_row=target.append("items",item)
+						if item.get("qty")>0:
+							item_row=target.append("items",item)
 
 					# no longer used
 					# customer_doc=frappe.get_doc('Customer',customer_name_field)

@@ -1,6 +1,10 @@
 # Copyright (c) 2024, GreyCube Technologies and contributors
 # For license information, please see license.txt
 
+from warnings import filters
+
+from warnings import filters
+
 import frappe
 from frappe import msgprint, _
 from frappe.utils import flt,getdate
@@ -294,6 +298,8 @@ def execute(filters=None):
 	previous_batch_no=None
 	previous_batch_count=0
 	previous_show_date=None
+	previous_item_code = None
+	previous_customer = None	
 	to_date = getdate(filters.to_date)
 	real_previous_date=None
 	result_length=len(data)
@@ -309,8 +315,10 @@ def execute(filters=None):
 				while next_date <  d['show_date']:
 				# sequential data
 					sc_row= frappe._dict({})
-					sc_row.item_code=d['item_code']
-					sc_row.customer=d['customer']
+					# sc_row.item_code=d['item_code']
+					sc_row.item_code=previous_item_code
+					# sc_row.customer=d['customer']
+					sc_row.customer=previous_customer
 					sc_row.batch_no=d['batch_no']
 					sc_row.datewise=next_date
 					items_rate = get_royalty_storage_items_and_rate(type='report',transaction_date=sc_row.datewise)
@@ -379,6 +387,8 @@ def execute(filters=None):
 				previous_opening_qty=sc_row.opening_qty
 				previous_in_qty=sc_row.in_qty
 				previous_out_qty=sc_row.out_qty				
+				previous_item_code=d['item_code']
+				previous_customer=d['customer']
 
 		# case 2 : new batch
 		elif previous_batch_no!=d['batch_no']:
@@ -389,8 +399,10 @@ def execute(filters=None):
 				while next_date <= to_date:
 				# sequential data
 					sc_row= frappe._dict({})
+					# sc_row.item_code=previous_item_code
 					sc_row.item_code=previous_item_code
-					sc_row.customer=d['customer']
+					# sc_row.customer=d['customer']
+					sc_row.customer=previous_customer
 					sc_row.batch_no=previous_batch_no				
 					sc_row.datewise=next_date
 					items_rate = get_royalty_storage_items_and_rate(type='report',transaction_date=sc_row.datewise)
@@ -457,6 +469,7 @@ def execute(filters=None):
 			previous_out_qty=sc_row.out_qty
 			#  use for dummy and to date filler
 			previous_item_code=d['item_code']
+			previous_customer=d['customer']
 
 		if loop==result_length:
 			# last raw is reached
@@ -468,7 +481,8 @@ def execute(filters=None):
 				# sequential data
 					sc_row= frappe._dict({})
 					sc_row.item_code=previous_item_code
-					sc_row.customer=d['customer']
+					# sc_row.customer=d['customer']
+					sc_row.customer=previous_customer
 					sc_row.batch_no=previous_batch_no				
 					sc_row.datewise=next_date
 					items_rate = get_royalty_storage_items_and_rate(type='report',transaction_date=sc_row.datewise)

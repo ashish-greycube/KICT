@@ -749,7 +749,7 @@ def get_amount_from_royalty_charges_report(vessel,start_date,end_date):
     filter_for_royalty =frappe._dict({"vessel":vessel,"from_date":getdate(first_line_ashore_of_vessel),"to_date":getdate(end_date),"only_for_royalty":1})
     unique_items=get_unique_item(vessel)
     print(unique_items,"items")
-    first_slot_item,first_slot_storage_charges,second_slot_item,second_slot_storage_charges=get_royalty_storage_items_and_rate(type="PI")
+    first_slot_item,first_slot_storage_charges,second_slot_item,second_slot_storage_charges=get_royalty_storage_items_and_rate(type="PI",transaction_date=getdate(end_date))
     col,report_data = execute(filter_for_royalty)
     get_filtered_data = []
     free_vessel = []

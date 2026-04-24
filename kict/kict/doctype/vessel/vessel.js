@@ -685,6 +685,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 fieldname: "type_of_billing_field",
                 label: __("Type Of Billing"),
                 options:[""],
+                hidden:1,
                 onchange: function(){
                     console.log('inside type of billing', billing_option_list)
                     let billing_option = dialog.get_field("type_of_billing_field")
@@ -753,18 +754,58 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                     let cargo_item_name = dialog.get_field("cargo_item_field")
                     let billing_option = dialog.get_field("type_of_billing_field")
                     let customer_name = dialog.get_field("customer_name_field")
+                    let fiscal_year = dialog.get_field("fiscal_year_field")
+                    if (fiscal_year.value == null || fiscal_year.value == "") {
+                        dialog.set_value("type_of_billing_field",null)
+                        frappe.throw(__("Please select fiscal year first"))
+                    }
                     frappe.call({
                         method: "kict.kict.doctype.vessel.vessel.get_cargo_handling_rate_for_customer_based_on_billing_type",
                         args: {
                             docname: cur_frm.doc.name,
                             item_code:cargo_item_name.value,
                             customer: customer_name.value,
-                            billing_type:billing_option.value
+                            billing_type:billing_option.value,
+                            fiscal_year:fiscal_year.value
                         },
                         callback: function (r) {
                             dialog.set_value("rate_field",r.message)
                         }
                     })
+                }
+            }
+            fiscal_year_field={
+                fieldtype: "Link",
+                fieldname: "fiscal_year_field",
+                label: __("Fiscal Year"),
+                options:"Fiscal Year",
+                description:'<p class="alert alert-warning">Rate will be calculated based on selected FY end date</p>',
+                reqd: 1,
+                onchange: function(){
+                    let cargo_item_name = dialog.get_field("cargo_item_field")
+                    let billing_option = dialog.get_field("type_of_billing_field")
+                    let customer_name = dialog.get_field("customer_name_field")
+                    let fiscal_year = dialog.get_field("fiscal_year_field")
+                    if (fiscal_year.value != null && fiscal_year.value != "") {
+                        dialog.set_df_property('type_of_billing_field','hidden',0)
+                    } else {
+                        dialog.set_df_property('type_of_billing_field','hidden',1)
+                    }
+                    if (cargo_item_name.value && billing_option.value && customer_name.value && fiscal_year.value) {
+                        frappe.call({
+                        method: "kict.kict.doctype.vessel.vessel.get_cargo_handling_rate_for_customer_based_on_billing_type",
+                        args: {
+                            docname: cur_frm.doc.name,
+                            item_code:cargo_item_name.value,
+                            customer: customer_name.value,
+                            billing_type:billing_option.value,
+                            fiscal_year:fiscal_year.value
+                        },
+                        callback: function (r) {
+                            dialog.set_value("rate_field",r.message)
+                        }
+                    })
+                    }
                 }
             }
             rate_field={
@@ -867,6 +908,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                 fieldname: "section_break_1",
             })
             dialog_field.push(customer_name_field)
+            dialog_field.push(fiscal_year_field)
             dialog_field.push(type_of_billing_field)
             dialog_field.push(is_periodic_or_dispatch_field)
             dialog_field.push(rate_field)

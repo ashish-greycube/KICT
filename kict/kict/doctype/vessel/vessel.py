@@ -556,12 +556,13 @@ def get_item_price(item_code,transaction_date):
 	return get_price_list_rate_for(args,item_code)
 
 @frappe.whitelist()
-def get_cargo_handling_rate_for_customer_based_on_billing_type(docname,customer,billing_type)	:
+def get_cargo_handling_rate_for_customer_based_on_billing_type(docname,customer,billing_type,fiscal_year)	:
 	doctype_name='Vessel'
 	item_code_for_si = frappe.db.get_single_value("Coal Settings","ch_charges")
 	customer_selling_price_list=get_customer_selling_price_list(customer)
 	company = frappe.db.get_value(doctype_name, docname, 'company')
 	item_defaults=get_item_defaults(item_code_for_si,company)
+	fy_end_date = frappe.db.get_value("Fiscal Year",fiscal_year,"year_end_date")
 	uom=item_defaults.get('stock_uom')
 	if uom==None:
 		frappe.throw(_("Please set uom of item"))
@@ -570,7 +571,7 @@ def get_cargo_handling_rate_for_customer_based_on_billing_type(docname,customer,
 		'price_list':customer_selling_price_list,
 		'qty':1,
 		'uom':uom,
-		'transaction_date':today()})
+		'transaction_date':getdate(fy_end_date)})
 	item_price= get_price_list_rate_for(args,item_code_for_si)
 	percent_billing,is_periodic=get_rate_percent_billing(customer,billing_type)
 	calculated_item_price=(item_price*percent_billing)/100

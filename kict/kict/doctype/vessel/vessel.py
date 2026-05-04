@@ -298,7 +298,7 @@ def get_unique_item_and_customer_from_vessel(docname):
 	return item_list
 
 @frappe.whitelist()
-def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,type_of_billing_field=None,is_periodic_or_dispatch_field=None,rate_field=None,periodic_cargo_qty=None,non_periodic_cargo_qty=None,qty_based_on_percentage=None,customer_po_no_field=None,from_date_field=None,to_date_field=None,doctype=None):
+def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, target_doc=None,cargo_item_field=None,customer_name_field=None,type_of_billing_field=None,is_periodic_or_dispatch_field=None,rate_field=None,periodic_cargo_qty=None,non_periodic_cargo_qty=None,qty_based_on_percentage=None,customer_po_no_field=None,from_date_field=None,to_date_field=None,fiscal_year_field=None,doctype=None):
 	# def update_item(source, target,source_parent):
 	# 	pass
 	def set_missing_values(source, target):
@@ -328,11 +328,14 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 		target.po_no = customer_po_no_field
 		item_code = frappe.db.get_single_value("Coal Settings","ch_charges")
 
+		last_date_of_selected_fy = frappe.db.get_value("Fiscal Year",fiscal_year_field,"year_end_date")
+		price_list_rate = get_item_price(item_code,last_date_of_selected_fy)
+
 		# nothing on vessel type
 		if is_periodic_or_dispatch_field in ["Non-Periodic","Dispatch"]:
-			item_row=target.append("items",{"item_code":item_code,"qty":flt(qty_based_on_percentage),"description":cargo_item_field,"rate":rate_field})
+			item_row=target.append("items",{"item_code":item_code,"qty":flt(qty_based_on_percentage),"description":cargo_item_field,"rate":rate_field,"price_list_rate":price_list_rate})
 		elif is_periodic_or_dispatch_field=="Periodic":
-			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field})
+			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field,"price_list_rate":price_list_rate})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {

@@ -950,6 +950,7 @@ function create_sales_invoice_for_cargo_handling_charges_from_vessel(frm){
                             "customer_po_no_field":values.customer_po_no_field,
                             "from_date_field":values.from_date_field,
                             "to_date_field": values.to_date_field,
+                            "fiscal_year_field": values.fiscal_year_field,
                             "doctype": frm.doc.doctype
                         },
                         callback: function (response) {

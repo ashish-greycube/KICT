@@ -333,9 +333,9 @@ def create_sales_invoice_for_cargo_handling_charges_from_vessel(source_name, tar
 
 		# nothing on vessel type
 		if is_periodic_or_dispatch_field in ["Non-Periodic","Dispatch"]:
-			item_row=target.append("items",{"item_code":item_code,"qty":flt(qty_based_on_percentage),"description":cargo_item_field,"rate":rate_field,"price_list_rate":price_list_rate})
+			item_row=target.append("items",{"item_code":item_code,"qty":flt(qty_based_on_percentage),"description":cargo_item_field,"rate":rate_field,"custom_rate_as_per_fy":price_list_rate})
 		elif is_periodic_or_dispatch_field=="Periodic":
-			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field,"price_list_rate":price_list_rate})
+			item_row=target.append("items",{"item_code":item_code,"qty":flt(periodic_cargo_qty),"description":cargo_item_field,"rate":rate_field,"custom_rate_as_per_fy":price_list_rate})
 	
 	doc = get_mapped_doc('Vessel', source_name, {
 		'Vessel': {

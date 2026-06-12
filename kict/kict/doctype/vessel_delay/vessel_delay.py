@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe import _
 
 
 class VesselDelay(Document):
@@ -10,6 +11,7 @@ class VesselDelay(Document):
 			self.set_total_hours()
 			self.set_total_delay_hours()
 			self.validate_terminal_account()
+			self.trigger_statements_of_facts_validate()
 		
 	def set_total_hours(self):  
 		for row in self.get("vessel_delay_details"):
@@ -34,3 +36,10 @@ class VesselDelay(Document):
 				terminal_account_found=True
 			elif row.account_delays == terminal_account and terminal_account_found==True:
 				frappe.throw(_("Row #{0}: You cannot select {1} account again.").format(row.idx,row.account_delays))			
+
+	def trigger_statements_of_facts_validate(self):
+		statements_of_facts_exists = frappe.db.exists("Statement of Fact",self.name)
+		if statements_of_facts_exists:
+			statements_of_facts_doc = frappe.get_doc("Statement of Fact",self.name)
+			statements_of_facts_doc.save()
+			statements_of_facts_doc.add_comment("Comment", "Vessel Delay details have been updated. Therefore, stay hours and related fields have been recalculated based on the updated vessel delay details.")

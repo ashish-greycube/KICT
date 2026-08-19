@@ -15,6 +15,7 @@
   "handling_loss",
   "audit_shortage",
   "donot_set_rr_weight_from_silo_weight_in_rr",
+  "penal_charges_royalty_item",
   "column_break_fars",
   "default_uom_for_cargo",
   "default_item_group_for_cargo",
@@ -265,12 +266,21 @@
    "fieldtype": "Link",
    "label": "Account Head For Retention Money",
    "options": "Account"
+  },
+  {
+   "fieldname": "penal_charges_royalty_item",
+   "fieldtype": "Link",
+   "label": "Penal Charges Royalty Item",
+   "link_filters": "[[\"Item\",\"is_stock_item\",\"=\",0]]",
+   "options": "Item",
+   "reqd": 1
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-01-22 17:03:20.146389",
+ "modified": "2026-08-13 13:41:01.397183",
  "modified_by": "Administrator",
  "module": "Kict",
  "name": "Coal Settings",
@@ -307,6 +317,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

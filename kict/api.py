@@ -327,7 +327,58 @@ def get_port_date(date,time):
         return add_days(date,-1)
     elif time > get_time('06:00:00') and time <= get_time('23:59:59'):
         return date
+
+def get_penal_charges_for_false_signal_invoice_rows(vessel,filter__from_date,filter__to_date,penal_charges_for_false_signal_item):
+    return frappe.db.sql("""
+                    SELECT
+                        si.name,
+                        si.custom_grt,
+                        sii.item_code,
+                        sii.custom_proportionate_berth_hours
+                    FROM
+                        `tabSales Invoice` si
+                    INNER JOIN `tabSales Invoice Item` sii ON
+                        si.name = sii.parent
+                    WHERE
+                        si.vessel = '{0}'
+                        AND si.posting_date between '{1}' AND '{2}'
+                        AND sii.item_code = '{3}'
+                        AND si.docstatus = 1
+                    """.format(vessel,filter__from_date,filter__to_date,penal_charges_for_false_signal_item),as_dict=1)
+
+def append_penal_charges_for_false_signal(target,vessel,vessel_doc,penal_invoice_rows,penal_charges_for_false_signal_item,price_list,posting_date,royalty_percentage,penal_charges_for_false_signal_vessel_considered,custom_grt,current_month_stay_hours=None,actual_berth_hours=None,vessel_item_list=None):
     
+    false_signal_price_list_rate = get_item_price_list_rate(vessel,penal_charges_for_false_signal_item,price_list,posting_date)
+    false_signal_rate = false_signal_price_list_rate * (royalty_percentage/100)
+
+    if vessel_item_list is None:
+        penal_item_commodity = frappe.db.get_all("Vessel Details",
+                                                parent_doctype = "Vessel",
+                                                filters={"parent":vessel_doc.name},
+                                                fields=["coal_commodity"])
+        distinct_penal_item_commodity = []
+        if len(penal_item_commodity)>0:
+            for commodity_row in penal_item_commodity:
+                if commodity_row.coal_commodity not in distinct_penal_item_commodity:
+                    distinct_penal_item_commodity.append(commodity_row.coal_commodity)
+        vessel_item_list = ",".join((ele if ele!=None else '') for ele in distinct_penal_item_commodity)
+
+    if len(penal_invoice_rows)>0:
+        for penal_invoice_row in penal_invoice_rows:
+            if vessel not in penal_charges_for_false_signal_vessel_considered:
+                penal_charges_for_false_signal_vessel_considered.append(vessel)
+                print('penal_charges_for_false_signal_vessel_considered',penal_charges_for_false_signal_vessel_considered)
+
+                ####### custom_qty = vessel_doc.grt * current_month_stay_hours (Same as berth hire qty)
+                false_signal_qty = penal_invoice_row.custom_proportionate_berth_hours * penal_invoice_row.custom_grt
+                row_current_month_stay_hours = current_month_stay_hours if current_month_stay_hours is not None else penal_invoice_row.custom_proportionate_berth_hours
+                row_actual_berth_hours = actual_berth_hours if actual_berth_hours is not None else penal_invoice_row.custom_proportionate_berth_hours
+                target.append("items",
+                    {"item_code":penal_charges_for_false_signal_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_commodity":vessel_item_list,"custom_grt":custom_grt,"qty":false_signal_qty,
+                "custom_current_month_stay_hours":row_current_month_stay_hours,"custom_custom_qty":false_signal_qty,"rate":false_signal_rate,"custom_actual_berth_hours":row_actual_berth_hours,"vessel":vessel})
+                print({"item_code":penal_charges_for_false_signal_item,"custom_vessel_name":vessel_doc.vessel_name,"custom_grt":vessel_doc.total_tonnage_mt,"rate":false_signal_rate,
+                    "qty":false_signal_qty,"vessel":vessel_doc.name},"--------------------penal charges")
+
 @frappe.whitelist()
 def create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=None,supplier_name=None,supplier_invoice_no=None,posting_date=None):
     frappe.enqueue( method='kict.api._create_purchase_invoice_for_royalty_charges',
@@ -364,11 +415,13 @@ def _create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=Non
             
             eligible_vessels = []
             royalty_charges_vessel_billed=[]
+            penal_charges_for_false_signal_vessel_considered=[]
             royalty_charges_report_data = get_data_from_royalty_charges_report_for_vessel(posting_date,type="PI")
             target.supplier = supplier_name
             target.bill_no = supplier_invoice_no
             target.custom_is_royalty_invoice = 1
             price_list= frappe.db.get_single_value("Coal Settings", "royalty_price_list")
+            penal_charges_for_false_signal_item = frappe.db.get_single_value("Coal Settings","penal_charges_royalty_item")
             currency= frappe.db.get_value("Supplier", {"name": supplier_name}, ["default_currency"])
             if price_list:
                 target.buying_price_list = price_list
@@ -406,6 +459,7 @@ def _create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=Non
 
             for vessel in eligible_vessels:
                 # print(vessel)
+                custom_qty = 0
                 vessel_doc = frappe.get_doc("Vessel",vessel)
                 type_of_vessel = vessel_doc.costal_foreign_vessle
                 if type_of_vessel == "Foreign":
@@ -469,6 +523,15 @@ def _create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=Non
                     "custom_current_month_stay_hours":current_month_stay_hours,"custom_custom_qty":custom_qty,"rate":calculated_rate,"custom_actual_berth_hours":actual_berth_hours,"vessel":vessel})
                     comment_3.append("[3/5] : Berth Hire : Qty is <b>{0}<b> and Rate is <b>{1}</b>".format(custom_qty,calculated_rate))
                     # frappe.msgprint(_("[3/5] : Berth Hire : Qty is <b>{0}<b> and Rate is <b>{1}</b>").format(custom_qty,calculated_rate),alert=True)
+                
+                ### Penal Charges for False Signal
+                if not penal_charges_for_false_signal_item or penal_charges_for_false_signal_item=="":
+                    frappe.throw(_("Please set Penal Charges for False Signal item in {0}".format(get_link_to_form("Coal Settings","Coal Settings"))))
+
+                check_invoice_raised_for_false_signal = get_penal_charges_for_false_signal_invoice_rows(vessel_doc.name,filter__from_date,filter__to_date,penal_charges_for_false_signal_item)
+                append_penal_charges_for_false_signal(target,vessel,vessel_doc,check_invoice_raised_for_false_signal,penal_charges_for_false_signal_item,price_list,posting_date,royalty_percentage,
+                    penal_charges_for_false_signal_vessel_considered,vessel_doc.grt,current_month_stay_hours,actual_berth_hours,vessel_item_list)
+
                 # royalty charges for cargo handling
                 royalty_invoice_item = frappe.db.get_single_value("Coal Settings","ch_charges")
                 cargo_handling_data = get_cargo_handling_qty_for_royalty_purchase_invoice(posting_date)
@@ -511,7 +574,7 @@ def _create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=Non
                                 {"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,"rate":second_slot_storage_charges*(royalty_percentage/100),
                                 "qty":row.get("qty"),"vessel":vessel,"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
                                 print({"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,"rate":second_slot_storage_charges*(royalty_percentage/100),
-                                "qty":row.get("qty"),"vessel":vessel,"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
+                                "qty":row.get("qty"),"vessel":vessel,"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})                                          
 
             # for storage vessel which are not part of outer eligible vessels
             print('royalty_charges_report_data,royalty_charges_vessel_billed')
@@ -524,6 +587,14 @@ def _create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=Non
                         if vessel_closure==0:
                             print("="*10,"storage old")
                             comment_6.append("[6] : Storage : Very old items that are not part of eligible vessels are <b>{0}<b>".format(row.get("vessel")))
+
+                            ### Penal Charges for False Signal - storage vessel not part of eligible vessels
+                            storage_vessel_doc = frappe.get_doc("Vessel",row.get("vessel"))
+                            check_invoice_raised_for_false_signal = get_penal_charges_for_false_signal_invoice_rows(storage_vessel_doc.name,filter__from_date,filter__to_date,penal_charges_for_false_signal_item)
+                            if len(check_invoice_raised_for_false_signal)>0:
+                                append_penal_charges_for_false_signal(target,row.get("vessel"),storage_vessel_doc,check_invoice_raised_for_false_signal,penal_charges_for_false_signal_item,price_list,posting_date,royalty_percentage,
+                                    penal_charges_for_false_signal_vessel_considered,storage_vessel_doc.total_tonnage_mt)
+                                
                             # frappe.msgprint(_("[6] : Storage : Very old items that are not part of eligible vessels are <b>{0}<b>").format(row.get("vessel")),indicator="orange",alert=True)
                             if  row.get("storage_item") == first_slot_item:
                                 item_commodity = frappe.db.get_value("Item",row.get("customer_item"),"custom_coal_commodity")
@@ -538,7 +609,36 @@ def _create_purchase_invoice_for_royalty_charges(source_name=None,target_doc=Non
                                 {"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,"rate":second_slot_storage_charges*(royalty_percentage/100),
                                 "qty":row.get("qty"),"vessel":row.get("vessel"),"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})     
                                 print({"item_code":second_slot_item,"custom_vessel_name":row.get("vessel"),"custom_grt":vessel_doc.total_tonnage_mt,"rate":second_slot_storage_charges*(royalty_percentage/100),
-                                "qty":row.get("qty"),"vessel":row.get("vessel"),"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})               
+                                "qty":row.get("qty"),"vessel":row.get("vessel"),"custom_for_stock_item":row.get("customer_item"),"custom_commodity":item_commodity})
+
+            ##### penal charges for false signal - non eligible vessels
+            all_penal_charges_raised_in_current_month = frappe.db.sql("""
+                SELECT
+                    si.name,
+                    si.vessel,
+                    si.custom_grt,
+                    sii.item_code,
+                    sii.custom_proportionate_berth_hours
+                FROM
+                    `tabSales Invoice` si
+                INNER JOIN `tabSales Invoice Item` sii ON
+                    si.name = sii.parent
+                WHERE
+                    si.posting_date between '{0}' AND '{1}'
+                    AND sii.item_code = '{2}'
+                    AND si.docstatus = 1
+                """.format(filter__from_date,filter__to_date,penal_charges_for_false_signal_item),as_dict=1)
+
+            if len(all_penal_charges_raised_in_current_month)>0:
+                for row in all_penal_charges_raised_in_current_month:
+                    if row.get("vessel") not in penal_charges_for_false_signal_vessel_considered:
+                        vessel_closure = frappe.db.get_value('Vessel', row.get("vessel"), 'vessel_closure')
+                        if vessel_closure==0:
+                            comment_6.append("[6] : Penal Charges for False Signal : Very old items that are not part of eligible vessels are <b>{0}<b>".format(row.get("vessel")))
+
+                            non_eligible_vessel_doc = frappe.get_doc("Vessel",row.get("vessel"))
+                            append_penal_charges_for_false_signal(target,row.get("vessel"),non_eligible_vessel_doc,[row],penal_charges_for_false_signal_item,price_list,posting_date,royalty_percentage,
+                                penal_charges_for_false_signal_vessel_considered,non_eligible_vessel_doc.total_tonnage_mt)
 
             default_taxes_template = frappe.db.get_single_value("Coal Settings","default_purchase_taxes_and_charges_template")
             if default_taxes_template:

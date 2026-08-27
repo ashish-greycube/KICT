@@ -19,7 +19,8 @@ frappe.ui.form.on('Purchase Invoice Item', {
                         method : "kict.api.apply_royalty_percentage",
                         args: {
                             item_code: row.item_code,
-                            vessel : row.vessel
+                            vessel : row.vessel,
+                            posting_date : frm.doc.posting_date
                         },
                         callback: function(r) {
                             if (r.message) {

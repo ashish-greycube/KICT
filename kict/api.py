@@ -1571,11 +1571,17 @@ def get_purchase_invoice_data(docname,file_name):
     return frappe.utils.get_url()+"/files/"+updated_file_name
 
 @frappe.whitelist()
-def apply_royalty_percentage(item_code,vessel=None):
+def apply_royalty_percentage(item_code,vessel=None,posting_date=None):
     if item_code :
         price_list= frappe.db.get_single_value("Coal Settings", "royalty_price_list")
         royalty_percentage = frappe.db.get_single_value("Coal Settings","royalty_percentage")
 
-        item_rate = get_item_price_list_rate(vessel,item_code,price_list,transaction_date=today())
-        royalty_rate = item_rate * (royalty_percentage/100)
+        if posting_date == None:
+            posting_date = today()
+        item_args=frappe._dict({'item_code':item_code,'buying_price_list':price_list,'company':erpnext.get_default_company(),"doctype":"Purchase Invoice"})
+        item_defaults=get_basic_details(item_args,item=None)
+        args = frappe._dict({'price_list':price_list or 'Standard Buying','qty':1,'uom':item_defaults.get('stock_uom'),'transaction_date':posting_date})
+        price_list_rate=get_price_list_rate_for(args,item_code)
+        
+        royalty_rate = price_list_rate * (royalty_percentage/100)
         return royalty_rate
